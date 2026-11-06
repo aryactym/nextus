@@ -46,15 +46,24 @@ Stack: Laravel 13, PHP 8.4, MySQL/SQLite, Blade + Tabler UI, Alpine.js, Vite, Mi
 - Rate limit login, cookie Secure/HttpOnly/SameSite
 - `APP_DEBUG=false` di production, security headers Nginx
 
-### Progress Fase 1
-Belum dimulai.
+### Progress Fase 1 — SELESAI
+- 1.1 Dependensi composer & npm, `.env`, virtual host alias localhost/nextus, hosts nextus.test, storage:link, migrate (SQLite) — OK.
+- 1.2 Tata direktori modular monolith `app/Domain/*` + `app/Support/*` + resources/views — OK.
+- 1.3 Auth kerangka + RBAC Spatie (role Super Admin/Admin/Instructor/Learner/Guest) + User model (HasRoles, HasUuid, BelongsToOrganization, SoftDeletes) — OK.
+- 1.4 Skema DB inti: organizations, organization_user, users(+uuid/org/locale/linkedin/softdelete), categories, courses, course_modules, lessons, enrollments, lesson_progress, orders, payment_events + Spatie permission & media tables — OK. Seed: organisasi default + Super Admin admin@example.com/password — OK.
+- 1.5 Reusable komponen Blade: belum (pindah ke batch berikutnya) — support traits (HasUuid, BelongsToOrganization) + helpers (organization_id, format_date_id/en, currency_idr) + SupportServiceProvider — OK.
+- 1.6 Baseline keamanan OWASP: belum (selanjutnya).
 
 ### Masalah saat ini Fase 1
-- PHP CLI bawaan 8.3.30 tidak cocok komponen (butuh 8.4.1+). Workaround: paksa PATH ke 8.4.23.
-- Belum ada git remote (hanya lokal). Rekomendasi: tambah remote setelah fase 1 selesai.
+- PHP CLI bawaan 8.3.30 tidak cocok komponen (butuh 8.4.1+). Workaround: paksa PATH ke 8.4.23 (catat di AGENTS.md).
+- Belum ada git remote (hanya lokal).
+- Laragon nginx belum di-restart, jadi `nextus.test` belum tersedia lewat nginx (hanya `php artisan serve`).
 
-### Next move Fase 1
-Mulai 1.1: install dependensi composer & npm, atur `.env`, atur virtual host nextus.test.
+### Commit Fase 1
+Belum dilakukan.
+
+### Next move
+Commit Fase 1 (fabf7cf adalah setup; tambahkan commit fase 1 kode), lalu mulai Fase 2 CMS Kursus.
 
 ---
 

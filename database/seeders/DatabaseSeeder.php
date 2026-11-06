@@ -3,23 +3,45 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Domain\Organization\Models\Organization;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Organisasi default untuk MVP
+        $org = Organization::create([
+            'name' => 'Yayasan Filantropi Islam',
+            'slug' => 'yayasan-filantropi-islam',
+            'default_locale' => 'id',
+            'status' => 'active',
         ]);
+
+        // Peran sistem
+        $roles = [
+            'Super Admin' => 'Pengaturan sistem dan semua organisasi',
+            'Admin' => 'Kelola user, kategori, harga, template sertifikat, transaksi, laporan',
+            'Instructor' => 'Kelola kursus, modul, materi, kuis; lihat progres peserta',
+            'Learner' => 'Daftar, belajar, kuis, unduh sertifikat, donasi/bayar, riwayat transaksi',
+            'Guest' => 'Lihat katalog, preview kursus, ganti bahasa, verifikasi sertifikat',
+        ];
+
+        foreach ($roles as $name => $description) {
+            Role::firstOrCreate(['name' => $name, 'guard_name' => 'web'])
+                ->description = $description;
+        }
+
+        // Super Admin awal
+        $admin = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+            'organization_id' => $org->id,
+            'locale' => 'id',
+        ]);
+        $admin->assignRole('Super Admin');
     }
 }
