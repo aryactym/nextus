@@ -12,7 +12,7 @@ use Spatie\Translatable\HasTranslations;
 
 class CourseModule extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid, HasTranslations;
+    use HasFactory, HasTranslations, HasUuid, SoftDeletes;
 
     public $translatable = ['title'];
 
@@ -31,6 +31,6 @@ class CourseModule extends Model
 
     public function lessons(): HasMany
     {
-        return $this->hasMany(Lesson::class)->orderBy('sort');
+        return $this->hasMany(Lesson::class, 'module_id')->orderBy('sort');
     }
 }

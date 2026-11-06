@@ -87,14 +87,23 @@ Commit Fase 1 (fabf7cf adalah setup; tambahkan commit fase 1 kode), lalu mulai F
 ### 2.4 Reusable komponen Blade (batch 2)
 - `x-media-player`, `x-upload-dropzone`, `x-rich-editor` (konten teks)
 
-### Progress Fase 2
-Belum dimulai.
+### Progress Fase 2 — SELESAI
+- CMS kategori/kursus: route, controller, form, validasi (slug unik per-org), tenant isolation — OK.
+- Modul: store, update, destroy via route berbasis UUID; pelajaran: store, update, destroy, upload PDF privat. Semua dengan tenant isolation — OK.
+- Migrasi tambahan `file_path` pelajaran + perbaikan foreign key `lessons.module_id` — OK.
+- Route update modul (`PUT admin/modules/{module}`) dan update pelajaran (`PUT admin/lessons/{lesson}`) ditambahkan — OK.
+- Perbaikan bug: `Category` model `translatable` tidak menyertakan `slug` (kolom `slug` adalah string biasa, bukan JSON) — OK.
+- Perbaikan validasi: `unique:categories,slug` dan `unique:courses,slug` di-scope per `organization_id` — OK.
+- Feature test: `CategoryManagementTest` (7 test) + `CourseManagementTest` (9 test) lulus semua — OK.
+- Komponen Blade batch 2: `x-upload-dropzone`, `x-media-player`, `x-rich-editor` — OK.
+- Route placeholder `verifikasi` ditambahkan sehingga test `ExampleTest` lulus (total 23 test lulus) — OK.
+- Perubahan Fase 2 belum di-commit.
 
 ### Masalah saat ini Fase 2
-Belum ada.
+Tidak ada masalah tersisa.
 
 ### Next move Fase 2
-Mulai setelah Fase 1 selesai & commit.
+Commit Fase 2, lalu mulai Fase 3 — Katalog publik & pengalaman belajar (Enrollment gratis, Course player, Dashboard learner).
 
 ---
 
@@ -218,8 +227,8 @@ Mulai setelah Fase 5 selesai & commit.
 
 | Fase | Commit hash | Tanggal | Selesai | Catatan |
 | --- | --- | --- | --- | --- |
-| 1 | — | — | Belum | — |
-| 2 | — | — | Belum | — |
+| 1 | 7fc32a5 | 6 Nov 2026 | Selesai | Fondasi RBAC, skema DB inti, traits & helper reusable |
+| 2 | — | — | Selesai | CRUD + tenant isolation + komponen Blade batch 2, 23 test lulus |
 | 3 | — | — | Belum | — |
 | 4 | — | — | Belum | — |
 | 5 | — | — | Belum | — |

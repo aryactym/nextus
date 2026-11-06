@@ -11,13 +11,13 @@ use Spatie\Translatable\HasTranslations;
 
 class Lesson extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid, HasTranslations;
+    use HasFactory, HasTranslations, HasUuid, SoftDeletes;
 
     public $translatable = ['title', 'content'];
 
     protected $fillable = [
         'uuid', 'module_id', 'title', 'type', 'content', 'video_url',
-        'duration', 'is_preview', 'sort',
+        'file_path', 'duration', 'is_preview', 'sort',
     ];
 
     protected $casts = [
@@ -28,6 +28,6 @@ class Lesson extends Model
 
     public function module(): BelongsTo
     {
-        return $this->belongsTo(CourseModule::class);
+        return $this->belongsTo(CourseModule::class, 'module_id');
     }
 }

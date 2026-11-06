@@ -11,9 +11,9 @@ use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid, BelongsToOrganization, HasTranslations;
+    use BelongsToOrganization, HasFactory, HasTranslations, HasUuid, SoftDeletes;
 
-    public $translatable = ['name', 'slug'];
+    public $translatable = ['name'];
 
     protected $fillable = [
         'uuid', 'name', 'slug', 'sort', 'organization_id',

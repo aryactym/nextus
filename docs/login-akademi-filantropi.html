@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masuk | Akademi Filantropi</title>
+<meta name="theme-color" content="#333333">
+<meta name="description" content="Masuk ke akun Akademi Filantropi untuk melanjutkan kursus dan melihat sertifikat Anda.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler.min.css">
+<style>
+  /* ====== TOKEN (samakan dengan nilai asli Kaya bila sudah dicek di DevTools) ====== */
+  :root{
+    --kaya-font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --kaya-ink:#333333;
+    --kaya-primary:#d6312b;
+    --kaya-primary-dark:#b02520;
+    --kaya-soft:#f6f4f1;
+    --kaya-line:#e4e0da;
+    --kaya-muted:#5f5a55;
+    --radius:.75rem;
+    --radius-sm:.5rem;
+    --shadow-sm:0 1px 2px rgba(51,51,51,.06),0 2px 8px rgba(51,51,51,.05);
+    --shadow-md:0 8px 24px rgba(51,51,51,.12);
+    --section-y:clamp(3rem,6vw,5rem);
+
+    --tblr-font-sans-serif:var(--kaya-font);
+    --tblr-body-font-family:var(--kaya-font);
+    --tblr-body-color:var(--kaya-ink);
+    --tblr-secondary:var(--kaya-muted);
+    --tblr-secondary-rgb:95,90,85;
+    --tblr-primary:var(--kaya-primary);
+    --tblr-primary-rgb:214,49,43;
+    --tblr-link-color:var(--kaya-primary);
+    --tblr-link-hover-color:var(--kaya-primary-dark);
+    --tblr-border-radius:var(--radius-sm);
+  }
+  body{font-family:var(--kaya-font);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.h1,.h2,.h3{font-family:var(--kaya-font);font-weight:700;letter-spacing:-.01em;line-height:1.25;}
+  .btn{font-weight:600;border-radius:var(--radius-sm);}
+  .btn-primary{--tblr-btn-bg:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary-dark);--tblr-btn-hover-border-color:var(--kaya-primary-dark);--tblr-btn-active-bg:var(--kaya-primary-dark);--tblr-btn-active-border-color:var(--kaya-primary-dark);}
+  .btn-outline-primary{--tblr-btn-color:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary);--tblr-btn-hover-border-color:var(--kaya-primary);}
+  .form-control{border-radius:var(--radius-sm);}
+  a:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--kaya-ink);outline-offset:2px;}
+  .site-footer a:focus-visible,.verify .btn:focus-visible,.hero .btn:focus-visible{outline-color:#fff;}
+
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--kaya-ink);color:#fff;padding:.5rem 1rem;z-index:2000;}
+  .skip-link:focus{left:0;}
+
+  /* ====== ritme section ====== */
+  .section{padding:var(--section-y) 0;}
+  .section-alt{background:var(--kaya-soft);}
+  .section-head{max-width:60ch;margin-bottom:2rem;}
+  .section-head h2{margin:0 0 .5rem;font-size:clamp(1.5rem,2.6vw,1.875rem);}
+  .section-head p{margin:0;color:var(--kaya-muted);font-size:1.05rem;}
+  .lead-text{font-size:1.125rem;color:var(--kaya-muted);max-width:52ch;margin-bottom:1.5rem;}
+
+  /* ====== header ====== */
+  .site-header{background:#fff;border-bottom:1px solid var(--kaya-line);position:sticky;top:0;z-index:1030;}
+  .brand-mark{display:inline-flex;align-items:center;text-decoration:none;}
+  .brand-logo{height:44px;width:auto;display:block;}
+  .site-header .nav{gap:.25rem;}
+  .site-header .nav-link{color:var(--kaya-ink);font-weight:500;padding:.5rem .85rem;border-radius:var(--radius-sm);}
+  .site-header .nav-link:hover{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  /* ====== hero ====== */
+  .hero{position:relative;color:#fff;background:var(--kaya-ink);overflow:hidden;}
+  .hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+  .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(30,30,30,.92) 0%,rgba(30,30,30,.78) 45%,rgba(30,30,30,.3) 100%);}
+  .hero .container-xl{position:relative;z-index:2;padding-top:clamp(3.5rem,8vw,6rem);padding-bottom:clamp(3.5rem,8vw,6rem);}
+  .hero h1{font-size:clamp(2rem,4.2vw,3.25rem);line-height:1.15;max-width:20ch;color:#fff;margin:0;}
+  .hero p.lead{font-size:1.15rem;max-width:54ch;color:rgba(255,255,255,.92);}
+  .hero-search{max-width:640px;}
+  .hero-search .form-control{height:3.4rem;border:0;box-shadow:var(--shadow-md);}
+  .hero-search .btn{height:3.4rem;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem;padding:0;}
+  .hero .meta span{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;font-size:.875rem;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;}
+  .hero .meta svg{width:18px;height:18px;flex:none;}
+
+  /* ====== topik ====== */
+  .topic{display:flex;align-items:center;gap:1rem;height:100%;padding:1.1rem 1.25rem;background:#fff;color:var(--kaya-ink);border:1px solid var(--kaya-line);border-radius:var(--radius);box-shadow:var(--shadow-sm);text-decoration:none;font-weight:600;transition:border-color .15s,box-shadow .15s;}
+  .topic:hover{border-color:var(--kaya-primary);box-shadow:var(--shadow-md);color:var(--kaya-ink);}
+  .topic .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;transition:background .15s,color .15s;}
+  .topic:hover .ico{background:var(--kaya-primary);color:#fff;}
+  .topic .txt{flex:1;line-height:1.35;}
+  .topic small{display:block;font-weight:400;color:var(--kaya-muted);margin-top:.2rem;}
+  .topic::after{content:"";flex:none;width:.5rem;height:.5rem;border-top:2px solid var(--kaya-muted);border-right:2px solid var(--kaya-muted);transform:rotate(45deg);}
+
+  /* ====== tentang & organisasi ====== */
+  .media-img{width:100%;height:100%;max-height:420px;object-fit:cover;display:block;border-radius:var(--radius);}
+  .feature{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding:1.1rem 1.25rem;background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);}
+  .feature.mb-0{margin-bottom:0!important;}
+  .feature .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;}
+  .feature h3{font-size:1.05rem;margin:0 0 .2rem;}
+  .feature p{margin:0;color:var(--kaya-muted);}
+
+  /* ====== kursus ====== */
+  .course-card{border:1px solid var(--kaya-line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .15s,border-color .15s;}
+  .course-card:hover{box-shadow:var(--shadow-md);border-color:#d2ccc4;}
+  .course-img{aspect-ratio:16/9;width:100%;object-fit:cover;object-position:var(--pos,center);display:block;}
+  .course-card .card-body{padding:1.25rem 1.25rem 1.5rem;}
+  .course-card h3{font-size:1.1rem;margin:0 0 .5rem;}
+  .course-card .card-body p{margin-bottom:1rem;}
+  .course-meta{font-size:.85rem;color:var(--kaya-muted);display:flex;gap:.5rem 1rem;flex-wrap:wrap;}
+  .course-meta span+span{padding-left:1rem;border-left:1px solid var(--kaya-line);}
+  .course-card .card-footer{background:var(--kaya-soft);border-top:1px solid var(--kaya-line);padding:.75rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--kaya-muted);}
+  .badge-access{font-weight:600;}
+
+  /* ====== verifikasi ====== */
+  .verify{background:var(--kaya-ink);color:#fff;padding:clamp(2.5rem,5vw,3.5rem) 0;}
+  .verify p{color:rgba(255,255,255,.85);}
+  .verify .form-control{height:3rem;border:0;}
+  .verify .btn{height:3rem;}
+
+  /* ====== footer ====== */
+  .site-footer{background:var(--kaya-ink);color:#e9e6e1;padding:3.5rem 0 2rem;}
+  .site-footer a{color:#fff;text-decoration:none;}
+  .site-footer a:hover{text-decoration:underline;text-underline-offset:3px;}
+  .footer-logo{height:44px;width:auto;background:#fff;padding:.35rem .6rem;border-radius:var(--radius-sm);display:block;}
+  .footer-title{color:#fff;font-size:1rem;margin:0 0 1rem;}
+  .site-footer ul{list-style:none;padding:0;margin:0;}
+  .site-footer li{margin-bottom:.6rem;}
+  .site-footer .legal{border-top:1px solid rgba(255,255,255,.2);margin-top:2.5rem;padding-top:1.5rem;font-size:.85rem;color:rgba(233,230,225,.85);}
+
+  @media (max-width:767.98px){
+    .hero::before{background:linear-gradient(180deg,rgba(30,30,30,.85) 0%,rgba(30,30,30,.8) 100%);}
+    .course-meta span+span{padding-left:.75rem;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+  /* ====== halaman dalam ====== */
+  .page-hero{background:var(--kaya-soft);border-bottom:1px solid var(--kaya-line);padding:clamp(2rem,4vw,3rem) 0;}
+  .page-hero h1{font-size:clamp(1.75rem,3.4vw,2.5rem);margin:.5rem 0 .5rem;}
+  .page-hero p{color:var(--kaya-muted);font-size:1.1rem;max-width:60ch;margin:0;}
+  .crumbs{font-size:.875rem;color:var(--kaya-muted);display:flex;gap:.5rem;list-style:none;padding:0;margin:0;}
+  .crumbs li+li::before{content:"/";margin-right:.5rem;}
+  .crumbs a{color:var(--kaya-muted);}
+  .site-header .nav-link[aria-current="page"]{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  .auth{padding:var(--section-y) 0;background:var(--kaya-soft);}
+  .auth-grid{max-width:1000px;margin:0 auto;background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;}
+  .auth-aside{position:relative;color:#fff;background:var(--kaya-ink);padding:2.5rem;display:flex;flex-direction:column;justify-content:flex-end;min-height:100%;}
+  .auth-aside>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,center);}
+  .auth-aside::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(30,30,30,.35) 0%,rgba(30,30,30,.9) 100%);}
+  .auth-aside>div{position:relative;z-index:2;}
+  .auth-aside h2{color:#fff;font-size:1.5rem;margin-bottom:1rem;}
+  .auth-aside ul{list-style:none;padding:0;margin:0;display:grid;gap:.6rem;}
+  .auth-aside li{display:flex;gap:.6rem;align-items:flex-start;}
+  .auth-aside li::before{content:"";flex:none;width:.55rem;height:.55rem;margin-top:.5rem;border-radius:50%;background:var(--kaya-primary);box-shadow:0 0 0 2px #fff;}
+  .auth-form{padding:clamp(1.5rem,4vw,2.75rem);}
+  .auth-form h1{font-size:1.75rem;margin-bottom:.35rem;}
+  .auth-form .sub{color:var(--kaya-muted);margin-bottom:1.75rem;}
+  .auth-form .form-label{font-weight:600;}
+  .auth-form .form-control,.auth-form .form-select{height:3rem;}
+  .auth-form .btn-submit{height:3rem;width:100%;}
+  .auth-form .form-check-input:checked{background-color:var(--kaya-primary);border-color:var(--kaya-primary);}
+  .auth-form .toggle-pw{min-width:5.5rem;}
+  .field-error{display:none;color:#b3261e;font-size:.875rem;margin-top:.35rem;}
+  .is-invalid~.field-error,.input-group.is-invalid~.field-error{display:block;}
+  .form-control.is-invalid,.form-select.is-invalid{border-color:#b3261e;}
+  .form-alert{display:none;border:1px solid #b3261e;border-left-width:6px;border-radius:var(--radius-sm);background:#fdf2f1;padding:.75rem 1rem;margin-bottom:1.25rem;color:#7a1a14;}
+  .form-alert.show{display:block;}
+  .pw-meter{display:flex;gap:.25rem;margin-top:.5rem;}
+  .pw-meter span{flex:1;height:.3rem;border-radius:99px;background:var(--kaya-line);}
+  .pw-meter[data-s="1"] span:nth-child(-n+1){background:#d6312b;}
+  .pw-meter[data-s="2"] span:nth-child(-n+2){background:#f59f00;}
+  .pw-meter[data-s="3"] span:nth-child(-n+3){background:#2fb344;}
+  .pw-text{font-size:.85rem;color:var(--kaya-muted);margin-top:.35rem;}
+  .auth-switch{margin-top:1.5rem;text-align:center;color:var(--kaya-muted);}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#konten">Lewati ke konten utama</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container-xl">
+    <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
+      <a class="brand-mark" href="/id" aria-label="Akademi Filantropi, ke beranda">
+        <img class="brand-logo" src="https://kayaconnect.org/theme/kaya/pix/logo.png" alt="Akademi Filantropi" height="44">
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link" href="/id/kursus">Katalog</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/jadwal">Jadwal</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/verifikasi">Verifikasi sertifikat</a></li>
+        </ul>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <div class="dropdown">
+          <button class="btn btn-ghost-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="visually-hidden">Bahasa: </span>Indonesia</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item active" href="/id" hreflang="id">Indonesia</a>
+            <a class="dropdown-item" href="/en" hreflang="en">English</a>
+          </div>
+        </div>
+        <a class="btn btn-outline-primary" href="/id/masuk" aria-current="page">Masuk</a>
+        <a class="btn btn-primary" href="/id/daftar">Daftar gratis</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="konten">
+  <section class="auth">
+    <div class="container-xl">
+      <div class="auth-grid row g-0">
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="auth-aside" style="--pos:25% 40%">
+          <img src="https://kayaconnect.org/pluginfile.php/1040715/block_html/content/hero_one.jpg" alt="" width="600" height="800" loading="lazy">
+          <div><h2>Belajar filantropi Islam, lengkap dengan sertifikat</h2>
+            <ul><li>Kursus mandiri, bisa diakses dari HP</li><li>Sertifikat dengan kode dan QR yang bisa diverifikasi</li><li>Tersedia dalam bahasa Indonesia dan Inggris</li></ul></div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="auth-form">
+          <h1>Masuk</h1>
+          <p class="sub">Lanjutkan belajar dan akses sertifikat Anda.</p>
+          <div class="form-alert" id="alert" role="alert" tabindex="-1"></div>
+          <form id="f" action="/id/masuk" method="post" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="email">Email atau nama pengguna</label>
+            <input class="form-control" id="email" name="email" type="text" autocomplete="username" placeholder="nama@lembaga.org" required>
+            <div class="field-error" id="email-err"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="password">Kata sandi</label>
+            <div class="input-group">
+              <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required >
+              <button class="btn btn-outline-secondary toggle-pw" type="button" data-for="password" aria-pressed="false">Tampilkan</button>
+            </div>
+            <div class="field-error" id="password-err"></div>
+          </div>
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+            <label class="form-check mb-0"><input class="form-check-input" type="checkbox" name="ingat" value="1"><span class="form-check-label">Ingat saya</span></label>
+            <a href="/id/lupa-sandi">Lupa kata sandi?</a>
+          </div>
+          <button class="btn btn-primary btn-submit" type="submit">Masuk</button>
+          </form>
+          <p class="auth-switch mb-0">Belum punya akun? <a href="/id/daftar">Daftar gratis</a></p>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container-xl">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <a href="/id"><img class="footer-logo" src="https://kayaconnect.org/theme/kaya/pix/logo_en.png" alt="Akademi Filantropi" height="44"></a>
+        <p class="mt-3">Pelatihan dan sertifikasi online untuk filantropi Islam.</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Tentang</h2>
+        <ul>
+          <li><a href="/id/tentang">Apa itu Akademi Filantropi?</a></li>
+          <li><a href="/id/organisasi">Solusi organisasi</a></li>
+          <li><a href="/id/syarat">Syarat dan ketentuan</a></li>
+          <li><a href="/id/privasi">Kebijakan privasi</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Bantuan</h2>
+        <ul>
+          <li><a href="/id/bantuan">Butuh bantuan?</a></li>
+          <li><a href="/id/panduan">Panduan memulai</a></li>
+          <li><a href="/en">English</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <h2 class="footer-title">Ikuti kami</h2>
+        <ul>
+          <li><a href="#" rel="noopener">Instagram</a></li>
+          <li><a href="#" rel="noopener">YouTube</a></li>
+          <li><a href="#" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">&copy; 2026 Akademi Filantropi. Seluruh hak dilindungi.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/js/tabler.min.js"></script>
+<script>
+function $(s){return document.querySelector(s)}
+function setErr(el,msg){var box=el.closest(".input-group")||el;var err=document.getElementById(el.id+"-err");
+  if(msg){box.classList.add("is-invalid");el.classList.add("is-invalid");el.setAttribute("aria-invalid","true");err.textContent=msg}
+  else{box.classList.remove("is-invalid");el.classList.remove("is-invalid");el.removeAttribute("aria-invalid");err.textContent=""}
+  return !msg}
+document.querySelectorAll(".toggle-pw").forEach(function(b){b.addEventListener("click",function(){
+  var i=document.getElementById(b.dataset.for),show=i.type==="password";i.type=show?"text":"password";
+  b.textContent=show?"Sembunyikan":"Tampilkan";b.setAttribute("aria-pressed",show)})});
+function summary(bad){var a=$("#alert");if(bad){a.textContent=bad.msg;a.classList.add("show");bad.el.focus()}else a.classList.remove("show")}
+
+$("#f").addEventListener("submit",function(e){
+  var u=$("#email"),p=$("#password"),bad=null;
+  var ok1=setErr(u,u.value.trim()?"":"Masukkan email atau nama pengguna.");
+  var ok2=setErr(p,p.value?"":"Masukkan kata sandi.");
+  if(!ok1)bad={el:u,msg:"Periksa kembali isian yang ditandai."};else if(!ok2)bad={el:p,msg:"Periksa kembali isian yang ditandai."};
+  summary(bad);if(bad)e.preventDefault()});
+["email","password"].forEach(function(id){document.getElementById(id).addEventListener("input",function(){setErr(this,"")})});
+</script>
+</body>
+</html>

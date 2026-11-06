@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Katalog kursus | Akademi Filantropi</title>
+<meta name="theme-color" content="#333333">
+<meta name="description" content="Telusuri katalog kursus filantropi Islam. Filter berdasarkan topik, tingkat, akses, dan durasi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler.min.css">
+<style>
+  /* ====== TOKEN (samakan dengan nilai asli Kaya bila sudah dicek di DevTools) ====== */
+  :root{
+    --kaya-font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --kaya-ink:#333333;
+    --kaya-primary:#d6312b;
+    --kaya-primary-dark:#b02520;
+    --kaya-soft:#f6f4f1;
+    --kaya-line:#e4e0da;
+    --kaya-muted:#5f5a55;
+    --radius:.75rem;
+    --radius-sm:.5rem;
+    --shadow-sm:0 1px 2px rgba(51,51,51,.06),0 2px 8px rgba(51,51,51,.05);
+    --shadow-md:0 8px 24px rgba(51,51,51,.12);
+    --section-y:clamp(3rem,6vw,5rem);
+
+    --tblr-font-sans-serif:var(--kaya-font);
+    --tblr-body-font-family:var(--kaya-font);
+    --tblr-body-color:var(--kaya-ink);
+    --tblr-secondary:var(--kaya-muted);
+    --tblr-secondary-rgb:95,90,85;
+    --tblr-primary:var(--kaya-primary);
+    --tblr-primary-rgb:214,49,43;
+    --tblr-link-color:var(--kaya-primary);
+    --tblr-link-hover-color:var(--kaya-primary-dark);
+    --tblr-border-radius:var(--radius-sm);
+  }
+  body{font-family:var(--kaya-font);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.h1,.h2,.h3{font-family:var(--kaya-font);font-weight:700;letter-spacing:-.01em;line-height:1.25;}
+  .btn{font-weight:600;border-radius:var(--radius-sm);}
+  .btn-primary{--tblr-btn-bg:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary-dark);--tblr-btn-hover-border-color:var(--kaya-primary-dark);--tblr-btn-active-bg:var(--kaya-primary-dark);--tblr-btn-active-border-color:var(--kaya-primary-dark);}
+  .btn-outline-primary{--tblr-btn-color:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary);--tblr-btn-hover-border-color:var(--kaya-primary);}
+  .form-control{border-radius:var(--radius-sm);}
+  a:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--kaya-ink);outline-offset:2px;}
+  .site-footer a:focus-visible,.verify .btn:focus-visible,.hero .btn:focus-visible{outline-color:#fff;}
+
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--kaya-ink);color:#fff;padding:.5rem 1rem;z-index:2000;}
+  .skip-link:focus{left:0;}
+
+  /* ====== ritme section ====== */
+  .section{padding:var(--section-y) 0;}
+  .section-alt{background:var(--kaya-soft);}
+  .section-head{max-width:60ch;margin-bottom:2rem;}
+  .section-head h2{margin:0 0 .5rem;font-size:clamp(1.5rem,2.6vw,1.875rem);}
+  .section-head p{margin:0;color:var(--kaya-muted);font-size:1.05rem;}
+  .lead-text{font-size:1.125rem;color:var(--kaya-muted);max-width:52ch;margin-bottom:1.5rem;}
+
+  /* ====== header ====== */
+  .site-header{background:#fff;border-bottom:1px solid var(--kaya-line);position:sticky;top:0;z-index:1030;}
+  .brand-mark{display:inline-flex;align-items:center;text-decoration:none;}
+  .brand-logo{height:44px;width:auto;display:block;}
+  .site-header .nav{gap:.25rem;}
+  .site-header .nav-link{color:var(--kaya-ink);font-weight:500;padding:.5rem .85rem;border-radius:var(--radius-sm);}
+  .site-header .nav-link:hover{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  /* ====== hero ====== */
+  .hero{position:relative;color:#fff;background:var(--kaya-ink);overflow:hidden;}
+  .hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+  .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(30,30,30,.92) 0%,rgba(30,30,30,.78) 45%,rgba(30,30,30,.3) 100%);}
+  .hero .container-xl{position:relative;z-index:2;padding-top:clamp(3.5rem,8vw,6rem);padding-bottom:clamp(3.5rem,8vw,6rem);}
+  .hero h1{font-size:clamp(2rem,4.2vw,3.25rem);line-height:1.15;max-width:20ch;color:#fff;margin:0;}
+  .hero p.lead{font-size:1.15rem;max-width:54ch;color:rgba(255,255,255,.92);}
+  .hero-search{max-width:640px;}
+  .hero-search .form-control{height:3.4rem;border:0;box-shadow:var(--shadow-md);}
+  .hero-search .btn{height:3.4rem;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem;padding:0;}
+  .hero .meta span{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;font-size:.875rem;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;}
+  .hero .meta svg{width:18px;height:18px;flex:none;}
+
+  /* ====== topik ====== */
+  .topic{display:flex;align-items:center;gap:1rem;height:100%;padding:1.1rem 1.25rem;background:#fff;color:var(--kaya-ink);border:1px solid var(--kaya-line);border-radius:var(--radius);box-shadow:var(--shadow-sm);text-decoration:none;font-weight:600;transition:border-color .15s,box-shadow .15s;}
+  .topic:hover{border-color:var(--kaya-primary);box-shadow:var(--shadow-md);color:var(--kaya-ink);}
+  .topic .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;transition:background .15s,color .15s;}
+  .topic:hover .ico{background:var(--kaya-primary);color:#fff;}
+  .topic .txt{flex:1;line-height:1.35;}
+  .topic small{display:block;font-weight:400;color:var(--kaya-muted);margin-top:.2rem;}
+  .topic::after{content:"";flex:none;width:.5rem;height:.5rem;border-top:2px solid var(--kaya-muted);border-right:2px solid var(--kaya-muted);transform:rotate(45deg);}
+
+  /* ====== tentang & organisasi ====== */
+  .media-img{width:100%;height:100%;max-height:420px;object-fit:cover;display:block;border-radius:var(--radius);}
+  .feature{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding:1.1rem 1.25rem;background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);}
+  .feature.mb-0{margin-bottom:0!important;}
+  .feature .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;}
+  .feature h3{font-size:1.05rem;margin:0 0 .2rem;}
+  .feature p{margin:0;color:var(--kaya-muted);}
+
+  /* ====== kursus ====== */
+  .course-card{border:1px solid var(--kaya-line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .15s,border-color .15s;}
+  .course-card:hover{box-shadow:var(--shadow-md);border-color:#d2ccc4;}
+  .course-img{aspect-ratio:16/9;width:100%;object-fit:cover;object-position:var(--pos,center);display:block;}
+  .course-card .card-body{padding:1.25rem 1.25rem 1.5rem;}
+  .course-card h3{font-size:1.1rem;margin:0 0 .5rem;}
+  .course-card .card-body p{margin-bottom:1rem;}
+  .course-meta{font-size:.85rem;color:var(--kaya-muted);display:flex;gap:.5rem 1rem;flex-wrap:wrap;}
+  .course-meta span+span{padding-left:1rem;border-left:1px solid var(--kaya-line);}
+  .course-card .card-footer{background:var(--kaya-soft);border-top:1px solid var(--kaya-line);padding:.75rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--kaya-muted);}
+  .badge-access{font-weight:600;}
+
+  /* ====== verifikasi ====== */
+  .verify{background:var(--kaya-ink);color:#fff;padding:clamp(2.5rem,5vw,3.5rem) 0;}
+  .verify p{color:rgba(255,255,255,.85);}
+  .verify .form-control{height:3rem;border:0;}
+  .verify .btn{height:3rem;}
+
+  /* ====== footer ====== */
+  .site-footer{background:var(--kaya-ink);color:#e9e6e1;padding:3.5rem 0 2rem;}
+  .site-footer a{color:#fff;text-decoration:none;}
+  .site-footer a:hover{text-decoration:underline;text-underline-offset:3px;}
+  .footer-logo{height:44px;width:auto;background:#fff;padding:.35rem .6rem;border-radius:var(--radius-sm);display:block;}
+  .footer-title{color:#fff;font-size:1rem;margin:0 0 1rem;}
+  .site-footer ul{list-style:none;padding:0;margin:0;}
+  .site-footer li{margin-bottom:.6rem;}
+  .site-footer .legal{border-top:1px solid rgba(255,255,255,.2);margin-top:2.5rem;padding-top:1.5rem;font-size:.85rem;color:rgba(233,230,225,.85);}
+
+  @media (max-width:767.98px){
+    .hero::before{background:linear-gradient(180deg,rgba(30,30,30,.85) 0%,rgba(30,30,30,.8) 100%);}
+    .course-meta span+span{padding-left:.75rem;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+  /* ====== halaman dalam ====== */
+  .page-hero{background:var(--kaya-soft);border-bottom:1px solid var(--kaya-line);padding:clamp(2rem,4vw,3rem) 0;}
+  .page-hero h1{font-size:clamp(1.75rem,3.4vw,2.5rem);margin:.5rem 0 .5rem;}
+  .page-hero p{color:var(--kaya-muted);font-size:1.1rem;max-width:60ch;margin:0;}
+  .crumbs{font-size:.875rem;color:var(--kaya-muted);display:flex;gap:.5rem;list-style:none;padding:0;margin:0;}
+  .crumbs li+li::before{content:"/";margin-right:.5rem;}
+  .crumbs a{color:var(--kaya-muted);}
+  .site-header .nav-link[aria-current="page"]{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  .filters{background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);padding:1.25rem;}
+  .filters fieldset{border:0;padding:0;margin:0 0 1.25rem;}
+  .filters legend{font-size:.95rem;font-weight:700;margin-bottom:.5rem;float:none;width:auto;padding:0;}
+  .filters .form-check{margin-bottom:.35rem;}
+  .filters .form-check-input:checked{background-color:var(--kaya-primary);border-color:var(--kaya-primary);}
+  .filters .count{margin-left:auto;color:var(--kaya-muted);font-size:.85rem;}
+  .filters .form-check-label{display:flex;width:100%;gap:.5rem;}
+  .toolbar{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+  .toolbar .result-count{margin:0;color:var(--kaya-muted);}
+  .toolbar .form-select{width:auto;min-width:12rem;}
+  .empty{border:1px dashed var(--kaya-line);border-radius:var(--radius);padding:3rem 1.5rem;text-align:center;background:var(--kaya-soft);}
+  .empty h2{font-size:1.25rem;}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.25rem;padding:0;list-style:none;}
+  .chips button{border:1px solid var(--kaya-line);background:#fff;border-radius:999px;padding:.25rem .75rem;font-size:.85rem;font-weight:500;}
+  .chips button::after{content:" \00d7";}
+  .course-card .topic-label{font-size:.8rem;font-weight:600;color:var(--kaya-primary);margin-bottom:.35rem;display:block;}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#konten">Lewati ke konten utama</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container-xl">
+    <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
+      <a class="brand-mark" href="/id" aria-label="Akademi Filantropi, ke beranda">
+        <img class="brand-logo" src="https://kayaconnect.org/theme/kaya/pix/logo.png" alt="Akademi Filantropi" height="44">
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link" href="/id/kursus" aria-current="page">Katalog</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/jadwal">Jadwal</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/verifikasi">Verifikasi sertifikat</a></li>
+        </ul>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <div class="dropdown">
+          <button class="btn btn-ghost-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="visually-hidden">Bahasa: </span>Indonesia</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item active" href="/id" hreflang="id">Indonesia</a>
+            <a class="dropdown-item" href="/en" hreflang="en">English</a>
+          </div>
+        </div>
+        <a class="btn btn-outline-primary" href="/id/masuk">Masuk</a>
+        <a class="btn btn-primary" href="/id/daftar">Daftar gratis</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="konten">
+  <section class="page-hero">
+    <div class="container-xl">
+      <ol class="crumbs"><li><a href="/id">Beranda</a></li><li aria-current="page">Katalog</li></ol>
+      <h1>Katalog kursus</h1>
+      <p>Temukan kursus filantropi Islam sesuai topik, tingkat, dan kebutuhan Anda.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-xl">
+      <div class="row g-4">
+        <aside class="col-lg-3" aria-label="Filter kursus">
+          <button class="btn btn-outline-secondary w-100 d-lg-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">Tampilkan filter</button>
+          <form class="filters collapse d-lg-block" id="filters" role="search" onsubmit="return false">
+            <div class="mb-3">
+              <label class="form-label fw-bold" for="q">Cari kursus</label>
+              <input class="form-control" id="q" type="search" placeholder="Misalnya: zakat">
+            </div>
+            <fieldset><legend>Topik</legend><div id="f-topic"></div></fieldset>
+            <fieldset><legend>Tingkat</legend><div id="f-lvl"></div></fieldset>
+            <fieldset><legend>Akses</legend><div id="f-acc"></div></fieldset>
+            <fieldset><legend>Durasi</legend><div id="f-dur"></div></fieldset>
+            <button class="btn btn-outline-primary w-100" type="reset" id="reset">Atur ulang filter</button>
+          </form>
+        </aside>
+
+        <div class="col-lg-9">
+          <div class="toolbar">
+            <p class="result-count" id="count" role="status" aria-live="polite"></p>
+            <div class="d-flex align-items-center gap-2">
+              <label class="form-label mb-0" for="sort">Urutkan</label>
+              <select class="form-select" id="sort">
+                <option value="az">Nama A–Z</option>
+                <option value="short">Durasi tersingkat</option>
+                <option value="long">Durasi terpanjang</option>
+              </select>
+            </div>
+          </div>
+          <ul class="chips" id="chips" aria-label="Filter aktif"></ul>
+          <div class="row g-4" id="list"></div>
+          <div class="empty" id="empty" hidden>
+            <h2>Tidak ada kursus yang cocok</h2>
+            <p class="text-secondary">Coba kurangi filter atau gunakan kata kunci lain.</p>
+            <button class="btn btn-primary" type="button" id="reset2">Hapus semua filter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container-xl">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <a href="/id"><img class="footer-logo" src="https://kayaconnect.org/theme/kaya/pix/logo_en.png" alt="Akademi Filantropi" height="44"></a>
+        <p class="mt-3">Pelatihan dan sertifikasi online untuk filantropi Islam.</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Tentang</h2>
+        <ul>
+          <li><a href="/id/tentang">Apa itu Akademi Filantropi?</a></li>
+          <li><a href="/id/organisasi">Solusi organisasi</a></li>
+          <li><a href="/id/syarat">Syarat dan ketentuan</a></li>
+          <li><a href="/id/privasi">Kebijakan privasi</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Bantuan</h2>
+        <ul>
+          <li><a href="/id/bantuan">Butuh bantuan?</a></li>
+          <li><a href="/id/panduan">Panduan memulai</a></li>
+          <li><a href="/en">English</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <h2 class="footer-title">Ikuti kami</h2>
+        <ul>
+          <li><a href="#" rel="noopener">Instagram</a></li>
+          <li><a href="#" rel="noopener">YouTube</a></li>
+          <li><a href="#" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">&copy; 2026 Akademi Filantropi. Seluruh hak dilindungi.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/js/tabler.min.js"></script>
+<script>
+/* Data contoh: ganti dengan data dari server/API. */
+var IMG1="https://kayaconnect.org/pluginfile.php/1040715/block_html/content/hero_one.jpg",IMG2="https://kayaconnect.org/pluginfile.php/1040720/block_html/content/hero_two.jpg";
+var TOPICS={"dasar-ziswaf":"Dasar Ziswaf","pengelolaan-zakat":"Pengelolaan Zakat","pemberdayaan":"Pemberdayaan Masyarakat","tata-kelola":"Tata Kelola & Kepatuhan","manajemen-lembaga":"Manajemen Lembaga","relawan-kebencanaan":"Relawan & Kebencanaan"};
+var LVL=["Pemula","Menengah","Lanjutan"],ACC={"gratis":"Gratis","donasi":"Donasi untuk masuk"};
+var DUR={"s":["Kurang dari 3 jam",function(d){return d<3}],"m":["3–5 jam",function(d){return d>=3&&d<=5}],"l":["Lebih dari 5 jam",function(d){return d>5}]};
+var C=[
+{n:"Pengantar Zakat untuk Relawan",s:"pengantar-zakat",t:"dasar-ziswaf",l:"Pemula",d:2,a:"gratis",c:"Sertifikat gratis",x:"Dasar zakat dan peran relawan dalam penghimpunan.",i:IMG1,p:"20% 40%"},
+{n:"Dasar Pelaporan Program",s:"dasar-pelaporan-program",t:"tata-kelola",l:"Menengah",d:4,a:"donasi",c:"Sertifikat gratis",x:"Menyusun laporan program yang akuntabel.",i:IMG2,p:"50% 30%"},
+{n:"Dasar Fasilitasi (ToT)",s:"dasar-fasilitasi-tot",t:"manajemen-lembaga",l:"Menengah",d:6,a:"gratis",c:"Sertifikat via donasi",x:"Prasyarat untuk mengelola pelatihan sebagai penyelenggara.",i:IMG1,p:"85% 60%"},
+{n:"Wakaf dan Sedekah untuk Pemula",s:"wakaf-sedekah-pemula",t:"dasar-ziswaf",l:"Pemula",d:2,a:"gratis",c:"Sertifikat gratis",x:"Perbedaan zakat, infak, sedekah, dan wakaf.",i:IMG2,p:"20% 50%"},
+{n:"Penyaluran Zakat Tepat Sasaran",s:"penyaluran-zakat",t:"pengelolaan-zakat",l:"Menengah",d:5,a:"donasi",c:"Sertifikat gratis",x:"Menyeleksi dan menyalurkan zakat kepada penerima manfaat.",i:IMG1,p:"50% 20%"},
+{n:"Pendampingan UMKM Binaan",s:"pendampingan-umkm",t:"pemberdayaan",l:"Lanjutan",d:8,a:"donasi",c:"Sertifikat via donasi",x:"Merancang program pemberdayaan ekonomi yang berkelanjutan.",i:IMG2,p:"80% 40%"},
+{n:"Safeguarding bagi Relawan",s:"safeguarding-relawan",t:"relawan-kebencanaan",l:"Pemula",d:3,a:"gratis",c:"Sertifikat gratis",x:"Melindungi penerima manfaat dan relawan di lapangan.",i:IMG1,p:"60% 70%"},
+{n:"Respon Kebencanaan Dasar",s:"respon-kebencanaan",t:"relawan-kebencanaan",l:"Menengah",d:4,a:"gratis",c:"Sertifikat gratis",x:"Tahapan respon awal dan koordinasi dengan pihak terkait.",i:IMG2,p:"30% 60%"},
+{n:"Digitalisasi Lembaga Filantropi",s:"digitalisasi-lembaga",t:"manajemen-lembaga",l:"Lanjutan",d:6,a:"donasi",c:"Sertifikat via donasi",x:"Memanfaatkan teknologi untuk layanan dan pelaporan.",i:IMG1,p:"10% 30%"}];
+var $=function(s){return document.querySelector(s)};
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function group(el,name,items){
+  $(el).innerHTML=items.map(function(it,k){var id=name+k;
+    return '<div class="form-check"><input class="form-check-input" type="checkbox" name="'+name+'" value="'+it[0]+'" id="'+id+'"><label class="form-check-label" for="'+id+'"><span>'+esc(it[1])+'</span><span class="count" data-c="'+name+':'+it[0]+'"></span></label></div>'}).join("")}
+group("#f-topic","t",Object.keys(TOPICS).map(function(k){return [k,TOPICS[k]]}));
+group("#f-lvl","l",LVL.map(function(v){return [v,v]}));
+group("#f-acc","a",Object.keys(ACC).map(function(k){return [k,ACC[k]]}));
+group("#f-dur","d",Object.keys(DUR).map(function(k){return [k,DUR[k][0]]}));
+function checked(n){return Array.prototype.map.call(document.querySelectorAll('input[name="'+n+'"]:checked'),function(e){return e.value})}
+function match(c,f,skip){
+  if(f.q&&(c.n+" "+c.x+" "+TOPICS[c.t]).toLowerCase().indexOf(f.q)<0)return false;
+  if(skip!="t"&&f.t.length&&f.t.indexOf(c.t)<0)return false;
+  if(skip!="l"&&f.l.length&&f.l.indexOf(c.l)<0)return false;
+  if(skip!="a"&&f.a.length&&f.a.indexOf(c.a)<0)return false;
+  if(skip!="d"&&f.d.length&&!f.d.some(function(k){return DUR[k][1](c.d)}))return false;
+  return true}
+function card(c){
+  var badge=c.a=="gratis"?'<span class="badge bg-green-lt badge-access mb-2">Gratis</span>':'<span class="badge bg-azure-lt badge-access mb-2">Donasi untuk masuk</span>';
+  return '<article class="col-md-6 col-xl-4"><div class="card course-card h-100"><img class="course-img" src="'+c.i+'" alt="" style="--pos:'+c.p+'" width="640" height="360" loading="lazy"><div class="card-body"><span class="topic-label">'+esc(TOPICS[c.t])+'</span>'+badge+'<h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="/id/kursus/'+c.s+'">'+esc(c.n)+'</a></h3><p class="text-secondary">'+esc(c.x)+'</p><div class="course-meta"><span>'+c.l+'</span><span>'+c.d+' jam</span></div></div><div class="card-footer">'+c.c+'</div></div></article>'}
+function render(){
+  var f={q:$("#q").value.trim().toLowerCase(),t:checked("t"),l:checked("l"),a:checked("a"),d:checked("d")};
+  var r=C.filter(function(c){return match(c,f)}),s=$("#sort").value;
+  r.sort(function(a,b){return s=="short"?a.d-b.d:s=="long"?b.d-a.d:a.n.localeCompare(b.n,"id")});
+  $("#list").innerHTML=r.map(card).join("");
+  $("#empty").hidden=r.length>0;
+  $("#count").textContent="Menampilkan "+r.length+" dari "+C.length+" kursus";
+  document.querySelectorAll("[data-c]").forEach(function(e){var p=e.dataset.c.split(":"),k=p[0],v=p[1];
+    e.textContent=C.filter(function(c){if(!match(c,f,k))return false;return k=="t"?c.t==v:k=="l"?c.l==v:k=="a"?c.a==v:DUR[v][1](c.d)}).length});
+  var ch=[];document.querySelectorAll(".filters input:checked").forEach(function(e){ch.push('<li><button type="button" data-u="'+e.id+'" aria-label="Hapus filter '+esc(e.nextElementSibling.firstChild.textContent)+'">'+esc(e.nextElementSibling.firstChild.textContent)+'</button></li>')});
+  $("#chips").innerHTML=ch.join("");
+  var u=new URLSearchParams();if(f.q)u.set("q",f.q);if(f.t.length)u.set("kategori",f.t.join(","));
+  try{history.replaceState(null,"",u.toString()?"?"+u:location.pathname)}catch(e){}}
+function reset(){$("#filters").reset();render()}
+$("#filters").addEventListener("input",render);$("#filters").addEventListener("reset",function(){setTimeout(render)});
+$("#sort").addEventListener("change",render);$("#reset2").addEventListener("click",reset);
+$("#chips").addEventListener("click",function(e){var b=e.target.closest("button");if(b){$("#"+b.dataset.u).checked=false;render()}});
+(function(){var u=new URLSearchParams(location.search);if(u.get("q"))$("#q").value=u.get("q");
+  (u.get("kategori")||"").split(",").forEach(function(k){var e=document.querySelector('input[name="t"][value="'+k+'"]');if(e)e.checked=true});render()})();
+</script>
+</body>
+</html>

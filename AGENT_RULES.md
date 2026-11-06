@@ -5,8 +5,8 @@ Baca file ini SEBELUM mulai bekerja. Aturan ini berlaku untuk semua agent AI yan
 ## 1. Baca dulu, baru kerja
 
 - Baca `AGENTS.md`, `AGENT_RULES.md`, `WORK_PLAN.md`, dan `docs/System Design Platform Pelatihan & Sertifikasi Online Filantropi Islam.md` sebelum menambah/mengubah kode.
-- Cek `WORK_PLAN.md` untuk fase aktif, progress, masalah saat ini, dan next move. Update file itu setelah setiap sesi kerja.
-- Jangan menebak fitur. Lihat dokumen desain dan work plan sebagai referensi tunggal (single source of truth).
+- Cek `WORK_PLAN.md` untuk fase aktif, progress, masalah saat ini, dan next move. Update file itu setelah sesi implementasi yang mengubah progress atau next move; jangan ubah status untuk pekerjaan dokumentasi saja.
+- Jangan menebak fitur. Gunakan dokumen desain dan work plan untuk ruang lingkup/target; periksa kode untuk memastikan perilaku dan implementasi yang sudah ada.
 
 ## 2. Versi PHP (Windows 11 + Laragon)
 
@@ -19,9 +19,9 @@ php artisan ...
 composer ...
 ```
 
-## 3. Reusable komponen (wajib)
+## 3. Komponen reusable
 
-Buat sekali, pakai berkali-kali. Jangan duplikasi kode.
+Gunakan kembali komponen yang sudah ada. Jika pola UI dipakai di beberapa halaman, buat komponen bersama daripada menduplikasi kode. Daftar berikut adalah pola/target desain, bukan jaminan semua komponen sudah tersedia; periksa `resources/views/components` dan kode terkait sebelum menggunakannya.
 
 | Area | Komponen reusable |
 | --- | --- |
@@ -34,7 +34,7 @@ Buat sekali, pakai berkali-kali. Jangan duplikasi kode.
 | Breadcrumb | `x-breadcrumb` |
 | Tanggal/format | Helper atau ViewComposer untuk ID/EN |
 
-Traits reusable: `HasUuid`, `BelongsToOrganization`, `Translatable` (JSON fallback), `SoftDeletes`.
+Traits/pola reusable yang direncanakan: `HasUuid`, `BelongsToOrganization`, `Translatable` (JSON fallback), dan `SoftDeletes` bila relevan. Periksa implementasi aktual sebelum mengasumsikan trait atau helper tersedia.
 
 ## 4. Skema upload aman (Windows 11 + Linux Ubuntu)
 
@@ -65,14 +65,14 @@ Aturan wajib:
 
 ## 6. Bahasa & i18n
 
-- URL prefix locale (`/id`, `/en`).
+- Target: URL prefix locale (`/id`, `/en`). Periksa rute dan middleware aktual; jangan menganggap semua halaman sudah memakai prefix locale.
 - UI string di `lang/id`, `lang/en`.
 - Konten kursus kolom JSON translatable dengan fallback.
 - Sertifikat dan email bilingual; learner pilih bahasa sertifikat.
 
 ## 7. Database
 
-- Semua tabel: `id` BIGINT internal + `uuid` publik, timestamps, soft delete bila relevan.
+- Untuk tabel entitas bisnis baru: `id` BIGINT internal + `uuid` publik, timestamps, soft delete bila relevan. Tabel pivot, tabel framework, dan tabel log dapat mengikuti kebutuhan masing-masing.
 - Kolom teks diterjemahkan disimpan JSON `{id: ..., en: ...}`.
 - Migrasi di `database/migrations`, seeder di `database/seeders`.
 - Jangan ubah migrasi yang sudah di-produksi tanpa buat migrasi baru.
@@ -94,3 +94,25 @@ Aturan wajib:
 - Tes lintas-tenant: user organisasi A tidak bisa baca/ubah data organisasi B.
 - Tes idempotensi webhook Midtrans.
 - Tes upload di Windows dan simulasi path Linux.
+
+## 11. Template halaman website utama
+
+Referensi template HTML website utama ada di folder `docs/`:
+
+| File | Halaman |
+| --- | --- |
+| `docs/home-akademi-filantropi.html` | Beranda |
+| `docs/katalog-akademi-filantropi.html` | Katalog kursus |
+| `docs/login-akademi-filantropi.html` | Masuk |
+| `docs/registrasi-akademi-filantropi.html` | Registrasi |
+| `docs/tentang-akademi-filantropi.html` | Tentang kami |
+| `docs/verifikasi-sertifikat-akademi-filantropi.html` | Verifikasi sertifikat |
+
+Gunakan file-file tersebut sebagai referensi desain saat mengerjakan halaman terkait. Implementasi dan rute aktif tetap harus diperiksa di kode aplikasi.
+
+Implementasi saat ini:
+- File Blade: `resources/views/home.blade.php` (halaman depan bahasa Indonesia).
+- CSS khusus halaman depan diekstrak ke `resources/views/home-style.css`, dikompile lewat Vite bersama `resources/css/app.css`.
+- File `resources/views/welcome.blade.php` sengaja tidak dihapus; hanya digunakan untuk boilerplate Laravel, bukan untuk halaman depan publik.
+- Rute `/id` mengembalikan `view('home')`; `/` memilih `home-en` bila bahasa pilihan browser adalah Inggris, selain itu `home`. Rute `/en` juga mengarah ke `home-en`, tetapi `resources/views/home-en.blade.php` belum tersedia saat aturan ini ditinjau. Verifikasi view dan rute sebelum menyatakan halaman bahasa Inggris sudah berfungsi.
+- Rute masuk dan registrasi aktif di `/login` dan `/register`; template HTML terkait di `docs/` adalah referensi desain, bukan implementasi Blade.
