@@ -1,0 +1,217 @@
+# Work Plan — Akademi Filantropi (Platform Pelatihan & Sertifikasi Online Filantropi Islam)
+
+Referensi: `docs/System Design Platform Pelatihan & Sertifikasi Online Filantropi Islam.md`  
+Stack: Laravel 13, PHP 8.4, MySQL/SQLite, Blade + Tabler UI, Alpine.js, Vite, Midtrans, Redis, Object storage.
+
+## Status keseluruhan
+- Repo: diinisialisasi git, commit awal Laravel skeleton (SQLite).
+- PHP CLI terpaksa dipaksa ke 8.4.23 via PATH (Laragon bawaan 8.3.30, komponen butuh >= 8.4.1).
+- Database: SQLite (dev lokal), siap dipindah ke MySQL untuk production.
+- Access: `nextus.test` / `D:\laragon\www\nextus\` / `localhost/nextus`.
+
+---
+
+## Fase 1 — Fondasi (MVP S1)
+
+### 1.1 Setup environment & dependensi inti
+- [ ] Composer packages: spatie/laravel-permission, spatie/laravel-medialibrary, spatie/laravel-translatable, mcamara/laravel-localization, laravel/socialite, midtrans/midtrans-php, barryvdh/laravel-dompdf, simplesoftwareio/simple-qrcode, spatie/laravel-activitylog, intervention/image, laravel/pint, pestphp/pest, nunomaduro/larastan
+- [ ] npm packages: tabler, alpinejs, vite plugins
+- [ ] `.env`: APP_URL=http://nextus.test, DB konfig, Midtrans sandbox keys, mail log
+- [ ] Laragon virtual host `nextus.test` pointing ke `D:\laragon\www\nextus\public`
+- [ ] Verifikasi `http://nextus.test` dan `localhost/nextus` terbuka
+
+### 1.2 Tata direktori modular monolith
+- `app/Domain/{Auth,Catalog,Learning,Assessment,Certificate,Payment,Organization,Admin,Report}`
+- Tiap domain: `Models`, `Services`, `Http/Controllers`, `Http/Requests`, `Policies`, `Providers`
+- `app/Support` untuk reusable traits/helpers
+
+### 1.3 Auth, RBAC, i18n kerangka
+- Laravel Breeze/Fortify: register, login, verifikasi email, reset password
+- `spatie/laravel-permission`: peran Guest, Learner, Instructor, Admin, Super Admin
+- `mcamara/laravel-localization`: prefix `/id`, `/en`
+- `spatie/laravel-translatable` siap untuk kolom JSON
+- Middleware peran, deny by default
+
+### 1.4 Skema DB inti (migrasi)
+- `users`, `categories`, `courses`, `course_modules`, `lessons`, `enrollments`, `lesson_progress`
+- `organizations` (satu default untuk MVP), `organization_user`
+- Kolom `uuid` publik, timestamps, soft delete
+
+### 1.5 Reusable komponen Blade (batch 1)
+- `x-layout`, `x-seo`, `x-card`, `x-button`, `x-form-input`, `x-flash`, `x-breadcrumb`, `x-pagination`
+- View composer / helper untuk format tanggal ID/EN
+
+### 1.6 Baseline keamanan OWASP
+- CSRF semua form, security headers (CSP, X-Content-Type-Options, frame-ancestors, Referrer-Policy)
+- Rate limit login, cookie Secure/HttpOnly/SameSite
+- `APP_DEBUG=false` di production, security headers Nginx
+
+### Progress Fase 1
+Belum dimulai.
+
+### Masalah saat ini Fase 1
+- PHP CLI bawaan 8.3.30 tidak cocok komponen (butuh 8.4.1+). Workaround: paksa PATH ke 8.4.23.
+- Belum ada git remote (hanya lokal). Rekomendasi: tambah remote setelah fase 1 selesai.
+
+### Next move Fase 1
+Mulai 1.1: install dependensi composer & npm, atur `.env`, atur virtual host nextus.test.
+
+---
+
+## Fase 2 — CMS Kursus (MVP S2)
+
+### 2.1 CRUD Kategori & Kursus
+- Kategori: name (JSON), slug, sort
+- Kursus: title, summary, description (JSON), slug, category, level, duration, thumbnail, access_type, certificate_type, min_amount, suggested_amounts, passing_grade, status, organization_id
+- Upload thumbnail via `UploadService` (skema aman)
+
+### 2.2 CRUD Modul & Pelajaran
+- Modul: course_id, title (JSON), sort
+- Pelajaran: module_id, title, type (video/text/pdf/quiz), content (JSON), video_url, duration, is_preview, sort
+- Upload materi file via `UploadService`
+
+### 2.3 Konten ID/EN + draft-publish
+- Terjemahan JSON dengan fallback
+- Status draft/published/archived, published_at
+- Admin publish tanpa developer
+
+### 2.4 Reusable komponen Blade (batch 2)
+- `x-media-player`, `x-upload-dropzone`, `x-rich-editor` (konten teks)
+
+### Progress Fase 2
+Belum dimulai.
+
+### Masalah saat ini Fase 2
+Belum ada.
+
+### Next move Fase 2
+Mulai setelah Fase 1 selesai & commit.
+
+---
+
+## Fase 3 — Pengalaman Belajar (MVP S3)
+
+### 3.1 Katalog & detail kursus (SSR)
+- Daftar kursus, pencarian, filter, detail halaman kursus
+- JSON-LD Course, breadcrumb, sitemap, OG meta
+
+### 3.2 Enrollment gratis
+- Enrollment dibuat langsung untuk `free`, order + Midtrans untuk `donation`/`paid` (pindah ke Fase 5)
+
+### 3.3 Course player
+- Modul > pelajaran, progres tersimpan otomatis (`lesson_progress`)
+- "Lanjutkan terakhir" dashboard learner
+
+### 3.4 Dashboard learner
+- Riwayat kursus, progres, sertifikat
+
+### 3.5 Reusable komponen Blade (batch 3)
+- `x-progress-bar`, `x-course-card`, `x-lesson-list`
+
+### Progress Fase 3
+Belum dimulai.
+
+### Masalah saat ini Fase 3
+Belum ada.
+
+### Next move Fase 3
+Mulai setelah Fase 2 selesai & commit.
+
+---
+
+## Fase 4 — Kuis & Sertifikat (MVP S4)
+
+### 4.1 Engine kuis
+- Kuis pilihan ganda & benar/salah, passing grade, batas percobaan, acak soal, timer
+- Soal diacak, timer server-side, jawaban benar tidak ke klien
+
+### 4.2 Kelulusan & enrollment completed
+- Skor > passing grade + semua pelajaran selesai => enrollment completed
+
+### 4.3 Template sertifikat bilingual
+- Template Blade/HTML, signatories JSON, background, aktif
+- Nomor unik, QR, kode sertifikat acak + checksum, status revoke
+
+### 4.4 PDF sertifikat via queue (dompdf)
+- Job buat PDF, simpan storage, kirim email
+
+### 4.5 Halaman verifikasi & LinkedIn
+- `/verify/{code}`: nama, kursus, tanggal, status, OG meta, JSON-LD credential
+- Tombol Add to LinkedIn, bagikan
+
+### Progress Fase 4
+Belum dimulai.
+
+### Masalah saat ini Fase 4
+Belum ada.
+
+### Next move Fase 4
+Mulai setelah Fase 3 selesai & commit.
+
+---
+
+## Fase 5 — Pembayaran Midtrans (MVP S5)
+
+### 5.1 Orders & Midtrans Snap
+- Tabel `orders`, `payment_events` (idempotensi)
+- Snap token, popup QRIS/VA/e-wallet/kartu
+- Order ID `AF-{type}-{uuid pendek}`
+
+### 5.2 Webhook Midtrans
+- `POST /webhooks/midtrans`, dikecualikan CSRF, throttle
+- Cek signature SHA512, konfirmasi via Status API
+- Idempotensi: simpan payload, cek status order sebelum ubah
+
+### 5.3 Gerbang akses & sertifikat
+- Enrollment aktif setelah settlement
+- Sertifikat `pending_payment` => terbit setelah settlement
+
+### 5.4 Receipt/invoice email + laporan transaksi admin
+- Email pembukuan, laporan dasar admin
+
+### Progress Fase 5
+Belum dimulai.
+
+### Masalah saat ini Fase 5
+Belum ada.
+
+### Next move Fase 5
+Mulai setelah Fase 4 selesai & commit.
+
+---
+
+## Fase 6 — Stabilisasi & Rilis (MVP S6)
+
+### 6.1 Notifikasi email, laporan dasar
+- Welcome, enroll, sertifikat, receipt, reminder
+
+### 6.2 Hardening keamanan OWASP ASVS L2
+- Dependency scan, pentest dasar, audit log
+
+### 6.3 Audit SEO (Lighthouse, Rich Results Test)
+- Uji JSON-LD, OG, sitemap, hreflang
+
+### 6.4 UAT, optimasi, deploy production
+- Soft launch 2-3 kursus pilot
+
+### Progress Fase 6
+Belum dimulai.
+
+### Masalah saat ini Fase 6
+Belum ada.
+
+### Next move Fase 6
+Mulai setelah Fase 5 selesai & commit.
+
+---
+
+## Catatan Per Fase (diisi saat bekerja)
+
+| Fase | Commit hash | Tanggal | Selesai | Catatan |
+| --- | --- | --- | --- | --- |
+| 1 | — | — | Belum | — |
+| 2 | — | — | Belum | — |
+| 3 | — | — | Belum | — |
+| 4 | — | — | Belum | — |
+| 5 | — | — | Belum | — |
+| 6 | — | — | Belum | — |
