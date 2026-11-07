@@ -76,10 +76,30 @@ class UploadService
             throw new \InvalidArgumentException("MIME type {$mime} tidak cocok dengan ekstensi {$originalExtension}.");
         }
 
+        $realPath = $file->getRealPath();
+
+        if (! $file->isValid()) {
+            throw ValidationException::withMessages([
+                'thumbnail' => 'Upload thumbnail gagal: '.$this->uploadErrorMessage($file->getError()),
+            ]);
+        }
+
+        if (! $realPath || ! is_file($realPath) || filesize($realPath) === 0) {
+            throw ValidationException::withMessages([
+                'thumbnail' => 'File gambar kosong atau tidak dapat dibaca.',
+            ]);
+        }
+
         // Re-encode gambar untuk membersihkan metadata / polyglot
-        $content = $file->getRealPath();
+        $content = $realPath;
         if ($category === 'image') {
-            $content = $this->reencodeImage($file->getRealPath(), $originalExtension);
+            try {
+                $content = $this->reencodeImage($realPath, $originalExtension);
+            } catch (\Throwable $e) {
+                throw ValidationException::withMessages([
+                    'thumbnail' => 'File gambar tidak valid atau rusak.',
+                ]);
+            }
         }
 
         // Nama file acak (UUID) + folder per tanggal/organisasi
@@ -122,8 +142,21 @@ class UploadService
     }
 
     /**
-     * Re-encode gambar dengan Intervention Image agar aman & ringan.
+     * Pesan ramah untuk kode error upload PHP.
      */
+    protected function uploadErrorMessage(int $code): string
+    {
+        return match ($code) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas server.',
+            UPLOAD_ERR_PARTIAL => 'File hanya terunggah sebagian.',
+            UPLOAD_ERR_NO_FILE => 'Tidak ada file yang diunggah.',
+            UPLOAD_ERR_NO_TMP_DIR => 'Folder temporary tidak tersedia.',
+            UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk.',
+            UPLOAD_ERR_EXTENSION => 'Upload dihentikan oleh ekstensi PHP.',
+            default => 'Kode error '.$code.'.',
+        };
+    }
+
     protected function reencodeImage(string $realPath, string $extension): string
     {
         $manager = new ImageManager(new Driver);
