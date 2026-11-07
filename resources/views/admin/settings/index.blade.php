@@ -217,9 +217,14 @@
                         </label>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <form method="POST" action="{{ route('admin.settings.test-midtrans') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary">Uji koneksi Midtrans</button>
+                        <span class="text-secondary small ms-2">Membuat Snap token uji dengan server key tersimpan.</span>
+                    </form>
+                </div>
             </div>
-
-            <div class="d-flex gap-2 mb-3">
                 <button type="submit" class="btn btn-primary">Simpan pengaturan</button>
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-link">Batal</a>
             </div>

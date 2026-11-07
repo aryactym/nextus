@@ -11,7 +11,9 @@ use App\Domain\Settings\Models\Setting;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Midtrans\Snap;
 use Throwable;
 
 class SettingController extends Controller
@@ -105,5 +107,41 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Email uji dikirim ke '.$email.'. Periksa kotak masuk atau Mailpit.');
+    }
+
+    public function testMidtrans(): RedirectResponse
+    {
+        abort_unless(auth()->user()->can('manage settings'), 403);
+
+        $serverKey = Setting::getSecret('midtrans_server_key');
+
+        if ($serverKey === null || $serverKey === '') {
+            return back()->with('error', 'Server key Midtrans belum diisi.');
+        }
+
+        try {
+            $token = Snap::getSnapToken([
+                'transaction_details' => [
+                    'order_id' => 'TEST-'.Str::uuid(),
+                    'gross_amount' => 10000,
+                ],
+                'customer_details' => [
+                    'first_name' => auth()->user()->name,
+                    'email' => auth()->user()->email,
+                ],
+                'item_details' => [[
+                    'id' => 'test',
+                    'price' => 10000,
+                    'quantity' => 1,
+                    'name' => 'Uji integrasi Midtrans',
+                ]],
+            ]);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return back()->with('error', 'Uji Midtrans gagal: '.$exception->getMessage());
+        }
+
+        return back()->with('success', 'Uji Midtrans berhasil. Snap token dibuat: '.substr($token, 0, 12).'…');
     }
 }

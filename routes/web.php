@@ -145,6 +145,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('settings/test-email', [SettingController::class, 'sendTestEmail'])
         ->name('settings.test-email');
+    Route::post('settings/test-midtrans', [SettingController::class, 'testMidtrans'])
+        ->name('settings.test-midtrans');
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
         ->middleware(['auth', 'signed', 'throttle:uploads'])
