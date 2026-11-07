@@ -46,6 +46,12 @@
     <link rel="canonical" href="{{ $canonical }}">
   @endif
 
+  {{-- Favicon (dari Pengaturan admin) --}}
+  @if (! empty($favicon))
+    <link rel="icon" type="image/{{ Storage::disk('public')->mimeType($favicon) }}" href="{{ Storage::disk('public')->url($favicon) }}">
+    <link rel="apple-touch-icon" href="{{ Storage::disk('public')->url($favicon) }}">
+  @endif
+
   {{-- Fonts: Plus Jakarta Sans --}}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

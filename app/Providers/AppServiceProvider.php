@@ -54,12 +54,14 @@ class AppServiceProvider extends ServiceProvider
                     'googleAnalyticsId' => Setting::get('google_analytics_id'),
                     'googleSearchConsole' => Setting::get('google_search_console'),
                     'facebookPixelId' => Setting::get('facebook_pixel_id'),
+                    'favicon' => Setting::get('favicon'),
                 ]);
             } catch (Throwable) {
                 $view->with([
                     'googleAnalyticsId' => null,
                     'googleSearchConsole' => null,
                     'facebookPixelId' => null,
+                    'favicon' => null,
                 ]);
             }
         });

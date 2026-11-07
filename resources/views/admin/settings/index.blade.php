@@ -223,6 +223,46 @@
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-link">Batal</a>
             </div>
         </form>
+
+        <form method="POST" action="{{ route('admin.settings.update-favicon') }}" class="card mb-3">
+            @csrf
+            <div class="card-header">
+                <h3 class="card-title">Favicon situs</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label" for="favicon">Unggah favicon</label>
+                    <input type="file" id="favicon" name="favicon" class="form-control @error('favicon') is-invalid @enderror"
+                           accept="image/png,image/jpeg,image/svg+xml,image/x-icon">
+                    @error('favicon')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <div class="form-hint">Format PNG, JPG, SVG, atau ICO. Maksimal 1 MB. Digunakan di tab browser dan layar awal ponsel.</div>
+                </div>
+
+                @if (! empty($settings['favicon']))
+                    <div class="mb-3">
+                        <label class="form-label">Favicon saat ini</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="{{ $settings['favicon_url'] }}" alt="Favicon" width="32" height="32"
+                                 style="border:1px solid var(--nu-kabut);border-radius:.25rem;">
+                            <span class="text-secondary small">{{ $settings['favicon'] }}</span>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" id="clear_favicon" name="clear_favicon" value="1" class="form-check-input">
+                        <label class="form-check-label" for="clear_favicon">
+                            Hapus favicon yang tersimpan
+                        </label>
+                    </div>
+                @endif
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Simpan favicon</button>
+                    <a href="{{ route('admin.settings.edit') }}" class="btn btn-link">Batal</a>
+                </div>
+            </div>
+        </form>
     </div>
     <div class="col-lg-4">
         <div class="card mb-3">

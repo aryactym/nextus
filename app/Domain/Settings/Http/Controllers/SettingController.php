@@ -10,8 +10,11 @@ use App\Domain\Settings\Http\Requests\UpdateSettingsRequest;
 use App\Domain\Settings\Mail\TestEmail;
 use App\Domain\Settings\Models\Setting;
 use App\Http\Controllers\Controller;
+use App\Services\UploadService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Midtrans\Config;
@@ -38,6 +41,8 @@ class SettingController extends Controller
 
         'midtrans_client_key',
         'midtrans_is_production',
+
+        'favicon',
     ];
 
     public function edit(): View
@@ -61,6 +66,9 @@ class SettingController extends Controller
             'midtrans_client_key' => Setting::get('midtrans_client_key', ''),
             'midtrans_is_production' => Setting::get('midtrans_is_production', '0'),
             'midtrans_server_key_set' => Setting::get('midtrans_server_key') !== null,
+
+            'favicon' => Setting::get('favicon', ''),
+            'favicon_url' => Setting::get('favicon') ? Storage::disk('public')->url(Setting::get('favicon')) : null,
         ];
 
         return view('admin.settings.index', compact('settings'));
@@ -170,5 +178,42 @@ class SettingController extends Controller
         return redirect()
             ->route('payments.show', $order)
             ->with('success', 'Snap token berhasil dibuat. Klik "Bayar sekarang" untuk membuka modal Midtrans.');
+    }
+
+    public function updateFavicon(Request $request): RedirectResponse
+    {
+        abort_unless(auth()->user()->can('manage settings'), 403);
+
+        $request->validate([
+            'favicon' => ['required', 'file', 'image', 'max:1024'],
+            'clear_favicon' => ['sometimes', 'boolean'],
+        ]);
+
+        if ($request->boolean('clear_favicon')) {
+            $old = Setting::get('favicon');
+            if ($old) {
+                Storage::disk('public')->delete($old);
+            }
+            Setting::put('favicon', null);
+
+            return back()->with('success', 'Favicon berhasil dihapus.');
+        }
+
+        $old = Setting::get('favicon');
+
+        try {
+            $upload = new UploadService(disk: 'public', folder: 'favicons');
+            $result = $upload->upload($request->file('favicon'), 'image');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal mengunggah favicon: '.$e->getMessage());
+        }
+
+        if ($old) {
+            Storage::disk('public')->delete($old);
+        }
+
+        Setting::put('favicon', $result['path']);
+
+        return back()->with('success', 'Favicon berhasil diperbarui.');
     }
 }
