@@ -35,10 +35,10 @@ Route::get('/panduan', fn () => view('pages.panduan'))->name('panduan');
 Route::get('/syarat', [PublicPageController::class, 'terms'])->name('syarat');
 Route::get('/privasi', [PublicPageController::class, 'privacy'])->name('privasi');
 
-// Verifikasi sertifikat (pencarian penuh dikerjakan di Fase 4)
-Route::get('/verifikasi', function () {
-    return view('pages.verifikasi');
-})->name('verifikasi');
+Route::get('/verifikasi', [CertificateController::class, 'verify'])
+    ->name('verifikasi');
+Route::get('/verifikasi/{code}', [CertificateController::class, 'verify'])
+    ->name('certificates.verify');
 
 Route::get('/en', function () {
     return redirect()->route('home-id');
@@ -71,6 +71,8 @@ Route::post('/belajar/{course}/{lesson}/kuis', [PlayerController::class, 'submit
     ->middleware('auth')->name('player.quiz.submit');
 Route::get('/sertifikat/{code}', [CertificateController::class, 'show'])
     ->middleware('auth')->name('certificates.show');
+Route::get('/sertifikat/{code}/pdf', [CertificateController::class, 'download'])
+    ->middleware('auth')->name('certificates.pdf');
 
 // ---- Admin (RBAC) ----
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {

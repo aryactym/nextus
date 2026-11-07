@@ -64,6 +64,7 @@
 
           <div class="d-flex flex-wrap gap-2 justify-content-center mt-4 no-print">
             <button type="button" class="btn btn-primary" onclick="window.print()">Cetak / simpan PDF</button>
+            <a class="btn btn-outline-primary" href="{{ route('certificates.pdf', $certificate->code) }}">Unduh PDF</a>
             <a class="btn btn-outline-primary" href="{{ route('learning.dashboard') }}">Kembali ke Belajar saya</a>
           </div>
         </div>
