@@ -10,7 +10,7 @@
 
       {{-- Kolom 1: Brand --}}
       <div class="col-md-4">
-        <a href="{{ route('home-id') }}">
+        <a href="{{ route('home') }}">
           <img
             class="footer-logo"
             src="{{ asset('images/logo-nextus-putih.svg') }}"
@@ -27,7 +27,7 @@
         <h2 class="footer-title">Tentang</h2>
         <ul>
           <li><a href="{{ route('tentang') }}">Tentang NextUs</a></li>
-          <li><a href="{{ route('home-id') }}#org">Solusi organisasi</a></li>
+          <li><a href="{{ route('home') }}#org">Solusi organisasi</a></li>
           <li><a href="{{ route('syarat') }}">Syarat dan ketentuan</a></li>
           <li><a href="{{ route('privasi') }}">Kebijakan privasi</a></li>
         </ul>
@@ -42,7 +42,7 @@
             <li><a href="{{ route('jadwal') }}">Jadwal kursus</a></li>
           @endif
           <li><a href="{{ route('verifikasi') }}">Verifikasi sertifikat</a></li>
-          <li><a href="{{ route('home-en') }}" hreflang="en">English</a></li>
+          <li><a href="{{ route('home') }}" hreflang="en">English</a></li>
         </ul>
       </div>
 
@@ -76,3 +76,4 @@
     <div class="legal">&copy; {{ date('Y') }} {{ config('app.name') }}. Seluruh hak dilindungi.</div>
   </div>
 </footer>
+

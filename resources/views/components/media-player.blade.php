@@ -86,3 +86,4 @@
         <div class="alert alert-secondary">Tipe konten tidak dikenal: {{ $type }}</div>
     @endif
 </div>
+

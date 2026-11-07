@@ -7,7 +7,7 @@
   <section class="page-hero">
     <div class="container-xl">
       <ol class="crumbs">
-        <li><a href="{{ route('home-id') }}">Beranda</a></li>
+        <li><a href="{{ route('home') }}">Beranda</a></li>
         <li aria-current="page">Jadwal</li>
       </ol>
       <h1>Jadwal</h1>
@@ -53,9 +53,10 @@
       </div>
 
       <div class="note-box mt-4">
-        <p>Jadwal bisa berubah. Perubahan diinformasikan melalui email kepada peserta terdaftar. Butuh bantuan? <a href="{{ route('home-id') }}">Hubungi kami</a>.</p>
+        <p>Jadwal bisa berubah. Perubahan diinformasikan melalui email kepada peserta terdaftar. Butuh bantuan? <a href="{{ route('home') }}">Hubungi kami</a>.</p>
       </div>
     </div>
   </section>
 
 </x-layouts.public>
+

@@ -7,7 +7,7 @@
   <section class="page-hero">
     <div class="container-xl">
       <ol class="crumbs">
-        <li><a href="{{ route('home-id') }}">Beranda</a></li>
+        <li><a href="{{ route('home') }}">Beranda</a></li>
         <li aria-current="page">Panduan memulai</li>
       </ol>
       <h1>Panduan memulai</h1>
@@ -83,3 +83,4 @@
   </section>
 
 </x-layouts.public>
+

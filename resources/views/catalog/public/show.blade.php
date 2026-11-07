@@ -56,7 +56,7 @@
     <div class="container-xl">
       <nav class="crumb" aria-label="Breadcrumb">
         <ol>
-          <li><a href="{{ route('home-id') }}">Beranda</a></li>
+          <li><a href="{{ route('home') }}">Beranda</a></li>
           <li><a href="{{ route('catalog.index') }}">Katalog</a></li>
           <li aria-current="page">{{ $title }}</li>
         </ol>
@@ -377,3 +377,4 @@
   @endpush
 
 </x-layouts.public>
+

@@ -13,7 +13,7 @@
   <section class="page-hero">
     <div class="container-xl">
       <ol class="crumbs">
-        <li><a href="{{ route('home-id') }}">Beranda</a></li>
+        <li><a href="{{ route('home') }}">Beranda</a></li>
         <li aria-current="page">Katalog</li>
       </ol>
       <h1>Katalog kursus</h1>
@@ -255,3 +255,4 @@ function removeFilter(key, value) {
 })();
 </script>
 @endpush
+

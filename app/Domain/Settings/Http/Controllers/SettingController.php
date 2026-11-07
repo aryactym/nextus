@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Settings\Http\Controllers;
 
+use App\Domain\Payment\Models\Order;
 use App\Domain\Settings\Http\Requests\SendTestEmailRequest;
 use App\Domain\Settings\Http\Requests\UpdateSettingsRequest;
 use App\Domain\Settings\Mail\TestEmail;
@@ -13,8 +14,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Midtrans\Config;
 use Midtrans\Snap;
-use Throwable;
 
 class SettingController extends Controller
 {
@@ -27,6 +28,7 @@ class SettingController extends Controller
         'google_analytics_id',
         'google_search_console',
         'facebook_pixel_id',
+
         'mail_host',
         'mail_port',
         'mail_username',
@@ -100,7 +102,7 @@ class SettingController extends Controller
 
         try {
             Mail::to($email)->send(new TestEmail);
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
             report($exception);
 
             return back()->with('error', 'Email uji gagal dikirim: '.$exception->getMessage());
@@ -119,29 +121,54 @@ class SettingController extends Controller
             return back()->with('error', 'Server key Midtrans belum diisi.');
         }
 
+        $user = auth()->user();
+        $amount = 10000.0;
+
+        $order = Order::create([
+            'midtrans_order_id' => 'TEST-'.Str::uuid(),
+            'user_id' => $user->id,
+            'course_id' => null,
+            'order_type' => 'integration_test',
+            'nature' => 'test',
+            'amount' => $amount,
+            'currency' => 'IDR',
+            'status' => 'pending',
+            'expired_at' => now()->addHours(1),
+        ]);
+
+        Config::$serverKey = $serverKey;
+        Config::$isProduction = Setting::get('midtrans_is_production') === '1';
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
         try {
-            $token = Snap::getSnapToken([
+            $snapToken = Snap::getSnapToken([
                 'transaction_details' => [
-                    'order_id' => 'TEST-'.Str::uuid(),
-                    'gross_amount' => 10000,
+                    'order_id' => $order->midtrans_order_id,
+                    'gross_amount' => $amount,
                 ],
                 'customer_details' => [
-                    'first_name' => auth()->user()->name,
-                    'email' => auth()->user()->email,
+                    'first_name' => $user->name,
+                    'email' => $user->email,
                 ],
                 'item_details' => [[
                     'id' => 'test',
-                    'price' => 10000,
+                    'price' => $amount,
                     'quantity' => 1,
                     'name' => 'Uji integrasi Midtrans',
                 ]],
             ]);
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
+            $order->delete();
             report($exception);
 
             return back()->with('error', 'Uji Midtrans gagal: '.$exception->getMessage());
         }
 
-        return back()->with('success', 'Uji Midtrans berhasil. Snap token dibuat: '.substr($token, 0, 12).'…');
+        $order->update(['snap_token' => $snapToken]);
+
+        return redirect()
+            ->route('payments.show', $order)
+            ->with('success', 'Snap token berhasil dibuat. Klik "Bayar sekarang" untuk membuka modal Midtrans.');
     }
 }

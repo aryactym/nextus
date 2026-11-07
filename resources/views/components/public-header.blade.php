@@ -23,7 +23,7 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
 
       {{-- Brand --}}
-      <a class="brand-mark" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('id') }}" aria-label="{{ config('app.name') }}, ke beranda">
+      <a class="brand-mark" href="{{ route('home') }}" aria-label="{{ config('app.name') }}, ke beranda">
         <img
           class="brand-logo"
           src="{{ asset('images/logo-nextus.svg') }}"
@@ -88,3 +88,4 @@
     </div>
   </div>
 </header>
+
