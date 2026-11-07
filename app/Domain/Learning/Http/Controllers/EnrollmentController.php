@@ -9,6 +9,7 @@ use App\Domain\Learning\Mail\EnrollmentConfirmation;
 use App\Domain\Learning\Models\Enrollment;
 use App\Domain\Payment\Models\Order;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -22,7 +23,15 @@ class EnrollmentController extends Controller
         $course = Course::withoutGlobalScope('organization')
             ->where('slug', $slug)
             ->where('status', 'published')
+            ->with('requirement.prerequisiteCourse', 'requirement.pendidikan')
             ->firstOrFail();
+
+        $requirementError = $this->checkRequirements($request->user(), $course);
+        if ($requirementError !== null) {
+            return redirect()
+                ->route('catalog.show', $course->slug)
+                ->with('enroll_error', $requirementError);
+        }
 
         if ($course->access_type !== 'free') {
             $user = $request->user();
@@ -83,5 +92,50 @@ class EnrollmentController extends Controller
         return redirect()
             ->route('catalog.show', $course->slug)
             ->with('enroll_success', 'Berhasil mendaftar! Selamat belajar.');
+    }
+
+    /**
+     * Cek apakah user memenuhi requirement kursus.
+     * Kembalikan pesan error jika tidak memenuhi, null jika memenuhi atau tidak ada requirement.
+     */
+    private function checkRequirements(?User $user, Course $course): ?string
+    {
+        $requirement = $course->requirement;
+        if ($requirement === null) {
+            return null;
+        }
+
+        // Cek pendidikan minimal peserta
+        if ($requirement->pendidikan_id !== null && $requirement->pendidikan !== null) {
+            $userPendidikan = $user?->pendidikan;
+            if ($userPendidikan === null || $userPendidikan->level < $requirement->pendidikan->level) {
+                return 'Anda harus memiliki pendidikan minimal '.$requirement->pendidikan->name.' untuk mengikuti kursus ini.';
+            }
+        }
+
+        // Cek kursus prasyarat dengan nilai minimal
+        if ($requirement->prerequisite_course_id !== null && $requirement->prerequisiteCourse !== null) {
+            $prereqEnrollment = Enrollment::where('user_id', $user->id)
+                ->where('course_id', $requirement->prerequisite_course_id)
+                ->where('status', 'completed')
+                ->first();
+
+            if ($prereqEnrollment === null) {
+                return 'Anda harus telah menyelesaikan kursus '.$requirement->prerequisiteCourse->getTranslation('title', 'id').' terlebih dahulu.';
+            }
+
+            if ($requirement->min_grade !== null) {
+                $bestAttempt = $prereqEnrollment->quizAttempts()
+                    ->where('passed', true)
+                    ->orderByDesc('score')
+                    ->first();
+
+                if ($bestAttempt === null || (int) $bestAttempt->score < (int) $requirement->min_grade) {
+                    return 'Anda harus mencapai nilai minimal '.$requirement->min_grade.' pada kursus '.$requirement->prerequisiteCourse->getTranslation('title', 'id').'.';
+                }
+            }
+        }
+
+        return null;
     }
 }

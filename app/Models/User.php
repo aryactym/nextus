@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Domain\Catalog\Models\Pendidikan;
 use App\Domain\Learning\Models\Certificate;
 use App\Domain\Learning\Models\Enrollment;
 use App\Support\Traits\BelongsToOrganization;
@@ -50,5 +51,10 @@ class User extends Authenticatable
     public function certificates()
     {
         return $this->hasMany(Certificate::class);
+    }
+
+    public function pendidikan()
+    {
+        return $this->belongsTo(Pendidikan::class, 'pendidikan_id');
     }
 }
