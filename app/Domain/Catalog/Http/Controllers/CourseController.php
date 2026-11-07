@@ -6,6 +6,7 @@ use App\Domain\Catalog\Http\Requests\StoreCourseRequest;
 use App\Domain\Catalog\Http\Requests\UpdateCourseRequest;
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
+use App\Domain\Catalog\Models\Pendidikan;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
@@ -86,12 +87,14 @@ class CourseController extends Controller
     {
         abort_unless(auth()->user()->can('manage courses'), 403);
         $categories = Category::forOrganization()->orderBy('sort')->get();
+        $pendidikans = Pendidikan::orderBy('level')->get();
         $course->load([
             'modules.lessons' => fn ($query) => $query->orderBy('sort'),
             'modules.lessons.quiz.questions',
+            'requirement' => fn ($q) => $q->with(['prerequisiteCourse', 'pendidikan']),
         ]);
 
-        return view('catalog.courses.edit', compact('course', 'categories'));
+        return view('catalog.courses.edit', compact('course', 'categories', 'pendidikans'));
     }
 
     public function update(UpdateCourseRequest $request, Course $course, UploadService $upload)
@@ -121,8 +124,39 @@ class CourseController extends Controller
 
         $course->update($data);
 
+        // Syarat kelulusan (requirement)
+        $this->saveRequirement($course, $request);
+
         return redirect()->route('admin.courses.index')
             ->with('success', 'Kursus berhasil diperbarui.');
+    }
+
+    /**
+     * Simpan atau hapus syarat kelulusan kursus.
+     */
+    private function saveRequirement(Course $course, Request $request): void
+    {
+        $clear = $request->boolean('clear_requirement');
+
+        if ($clear) {
+            $course->requirement?->delete();
+
+            return;
+        }
+
+        $data = $request->only([
+            'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'notes',
+        ]);
+
+        // Validasi sederhana: prerequisite tidak boleh sama dengan course itu sendiri
+        if ((int) ($data['prerequisite_course_id'] ?? 0) === $course->id) {
+            $data['prerequisite_course_id'] = null;
+        }
+
+        $course->requirement()->updateOrCreate(
+            ['course_id' => $course->id],
+            $data,
+        );
     }
 
     public function destroy(Course $course)

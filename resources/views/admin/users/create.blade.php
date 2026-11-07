@@ -48,6 +48,20 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label" for="pendidikan_id">Pendidikan terakhir</label>
+                        <select id="pendidikan_id" name="pendidikan_id"
+                                class="form-select @error('pendidikan_id') is-invalid @enderror">
+                            <option value="">Pilih pendidikan</option>
+                            @foreach ($pendidikans as $p)
+                                <option value="{{ $p->id }}" @selected(old('pendidikan_id') === (string) $p->id)>
+                                    {{ $p->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pendidikan_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label" for="password">Password</label>
                         <input type="password" id="password" name="password"
                                class="form-control @error('password') is-invalid @enderror" required>

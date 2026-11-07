@@ -10,8 +10,10 @@ use App\Domain\Learning\Models\Enrollment;
 use App\Domain\Learning\Models\QuizAttempt;
 use App\Domain\Learning\Services\CourseProgressService;
 use App\Http\Controllers\Controller;
+use App\Services\GamificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
@@ -81,6 +83,16 @@ class PlayerController extends Controller
 
         $progress->markLessonCompleted($enrollment, $lesson);
 
+        try {
+            app(GamificationService::class)->award(
+                $request->user(),
+                'lesson:'.$lesson->id,
+                (int) config('gamification.xp.lesson', 10),
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Gamifikasi lesson gagal.', ['user_id' => $request->user()->id, 'lesson_id' => $lesson->id, 'error' => $e->getMessage()]);
+        }
+
         $next = $this->nextIncompleteLesson($course, $lesson, $enrollment->refresh());
 
         return redirect()->route(
@@ -143,6 +155,25 @@ class PlayerController extends Controller
 
         if ($passed) {
             $progress->markLessonCompleted($enrollment, $lesson);
+
+            try {
+                $gamification = app(GamificationService::class);
+                $gamification->award(
+                    $request->user(),
+                    'quiz:'.$quiz->id,
+                    (int) config('gamification.xp.quiz', 25),
+                );
+
+                if ($gamification->isFinalQuiz($quiz, $course)) {
+                    $gamification->award(
+                        $request->user(),
+                        'final:'.$course->id,
+                        (int) config('gamification.xp.final_assessment', 100),
+                    );
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Gamifikasi kuis gagal.', ['user_id' => $request->user()->id, 'quiz_id' => $quiz->id, 'course_id' => $course->id, 'error' => $e->getMessage()]);
+            }
 
             return redirect()
                 ->route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])

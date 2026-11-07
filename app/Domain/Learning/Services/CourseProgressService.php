@@ -7,6 +7,8 @@ namespace App\Domain\Learning\Services;
 use App\Domain\Catalog\Models\Lesson;
 use App\Domain\Learning\Models\Enrollment;
 use App\Domain\Learning\Models\LessonProgress;
+use App\Services\GamificationService;
+use Illuminate\Support\Facades\Log;
 
 class CourseProgressService
 {
@@ -35,6 +37,16 @@ class CourseProgressService
 
         if ($isComplete) {
             $this->certificates->issueIfEligible($enrollment->refresh());
+
+            try {
+                app(GamificationService::class)->award(
+                    $enrollment->user,
+                    'course:'.$enrollment->course_id,
+                    (int) config('gamification.xp.course', 150),
+                );
+            } catch (\Throwable $e) {
+                Log::warning('Gamifikasi course gagal.', ['user_id' => $enrollment->user_id, 'course_id' => $enrollment->course_id, 'error' => $e->getMessage()]);
+            }
         }
 
         return $enrollment;

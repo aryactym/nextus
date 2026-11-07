@@ -15,6 +15,26 @@
     </div>
   </section>
 
+  <section class="section pt-0">
+    <div class="container-xl">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-2">
+            <p class="mb-0 fw-bold">
+              @if ($level['next_threshold'] !== null)
+                Level {{ $level['level'] }} {{ $level['name_id'] }}, {{ $totalXp }}/{{ $level['next_threshold'] }} XP
+              @else
+                Level {{ $level['level'] }} {{ $level['name_id'] }}, {{ $totalXp }} XP
+              @endif
+            </p>
+            <a class="btn btn-outline-primary btn-sm" href="{{ route('learning.achievements') }}">Lihat pencapaian</a>
+          </div>
+          <div class="progress progress-bar-nu"><div class="progress-bar" style="width: {{ $levelProgressPercent }}%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container-xl">
       @if ($enrollments->isEmpty())

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Admin\Http\Controllers;
 
+use App\Domain\Catalog\Models\Pendidikan;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -38,8 +39,9 @@ class UserController extends Controller
         abort_unless(auth()->user()->can('manage users'), 403);
 
         $roles = Role::query()->orderBy('name')->get();
+        $pendidikans = Pendidikan::orderBy('level')->get();
 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles', 'pendidikans'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -51,6 +53,7 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'string', 'exists:roles,name'],
+            'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
         ]);
 
         $user = User::create([
@@ -72,8 +75,9 @@ class UserController extends Controller
         abort_unless(auth()->user()->can('manage users'), 403);
 
         $roles = Role::query()->orderBy('name')->get();
+        $pendidikans = Pendidikan::orderBy('level')->get();
 
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles', 'pendidikans'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -85,11 +89,13 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'string', 'exists:roles,name'],
+            'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'pendidikan_id' => $validated['pendidikan_id'] ?? null,
         ]);
 
         if (! empty($validated['password'])) {

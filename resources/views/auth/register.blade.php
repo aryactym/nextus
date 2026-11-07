@@ -77,6 +77,24 @@
                   @enderror
                 </div>
                 <div class="col-md-6">
+                  <label class="form-label" for="pendidikan_id">Pendidikan terakhir</label>
+                  <select class="form-select @error('pendidikan_id') is-invalid @enderror" id="pendidikan_id" name="pendidikan_id">
+                    <option value="">Pilih pendidikan</option>
+                    @php $pendidikans = \App\Domain\Catalog\Models\Pendidikan::orderBy('level')->get(); @endphp
+                    @foreach ($pendidikans as $p)
+                      <option value="{{ $p->id }}" {{ old('pendidikan_id') === (string) $p->id ? 'selected' : '' }}>
+                        {{ $p->name }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('pendidikan_id')
+                    <div class="field-error" style="display:block">{{ $message }}</div>
+                  @enderror
+                </div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
                   <label class="form-label" for="organization">Lembaga <span class="text-secondary fw-normal">(opsional)</span></label>
                   <input
                     class="form-control"

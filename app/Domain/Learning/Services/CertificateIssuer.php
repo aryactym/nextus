@@ -7,6 +7,8 @@ namespace App\Domain\Learning\Services;
 use App\Domain\Learning\Mail\CertificateIssued;
 use App\Domain\Learning\Models\Certificate;
 use App\Domain\Learning\Models\Enrollment;
+use App\Services\GamificationService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -42,6 +44,12 @@ class CertificateIssuer
         ]);
 
         Mail::to($certificate->user)->send(new CertificateIssued($certificate));
+
+        try {
+            app(GamificationService::class)->evaluateBadges($certificate->user);
+        } catch (\Throwable $e) {
+            Log::warning('Gamifikasi sertifikat gagal.', ['user_id' => $certificate->user_id, 'certificate_id' => $certificate->id, 'error' => $e->getMessage()]);
+        }
 
         return $certificate;
     }

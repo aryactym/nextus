@@ -220,6 +220,97 @@
                 </div>
             </div>
         </div>
+
+        {{-- Syarat kelulusan (requirement) --}}
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Syarat kelulusan</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-secondary small mb-3">
+                        Biarkan kosong semua jika tidak ada syarat.
+                    </p>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="prerequisite_course_id">Kursus prasyarat</label>
+                        <select id="prerequisite_course_id" name="prerequisite_course_id"
+                                class="form-select @error('prerequisite_course_id') is-invalid @enderror">
+                            <option value="">Tidak ada prasyarat</option>
+                            @php
+                                $otherCourses = \App\Domain\Catalog\Models\Course::withoutGlobalScope('organization')
+                                    ->where('status', 'published')
+                                    ->where('id', '!=', $course->id)
+                                    ->orderBy('title')
+                                    ->get();
+                            @endphp
+                            @foreach ($otherCourses as $prereq)
+                                <option value="{{ $prereq->id }}"
+                                    @selected(old('prerequisite_course_id', optional($course->requirement)?->prerequisite_course_id) === (string) $prereq->id)>
+                                    {{ $prereq->getTranslation('title', 'id') }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('prerequisite_course_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="min_grade">Nilai minimal kuis prasyarat</label>
+                        <div class="input-group">
+                            <input type="number" id="min_grade" name="min_grade"
+                                   class="form-control @error('min_grade') is-invalid @enderror"
+                                   value="{{ old('min_grade', optional($course->requirement)->min_grade) }}"
+                                   min="0" max="100">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        @error('min_grade')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-hint">Diisi jika course prasyarat memiliki kuis yang harus lulus dengan nilai minimum.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="pendidikan_id">Pendidikan minimal peserta</label>
+                        <select id="pendidikan_id" name="pendidikan_id"
+                                class="form-select @error('pendidikan_id') is-invalid @enderror">
+                            <option value="">Tidak ada syarat pendidikan</option>
+                            @foreach ($pendidikans as $pendidikan)
+                                <option value="{{ $pendidikan->id }}"
+                                    @selected(old('pendidikan_id', optional($course->requirement)->pendidikan_id) === (string) $pendidikan->id)>
+                                    {{ $pendidikan->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pendidikan_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-hint">Peserta harus memiliki pendidikan setingkat ini atau lebih tinggi.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="notes">Catatan syarat</label>
+                        <textarea id="notes" name="notes" rows="2"
+                                  class="form-control @error('notes') is-invalid @enderror">{{ old('notes', optional($course->requirement)->notes) }}</textarea>
+                        @error('notes')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-hint">Catatan tambahan yang akan ditampilkan kepada peserta.</div>
+                    </div>
+
+                    @if ($course->requirement)
+                        <div class="form-check mb-3">
+                            <input type="checkbox" id="clear_requirement" name="clear_requirement" value="1"
+                                   class="form-check-input">
+                            <label class="form-check-label" for="clear_requirement">
+                                Hapus semua syarat kelulusan
+                            </label>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 

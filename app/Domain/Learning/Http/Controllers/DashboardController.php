@@ -6,6 +6,7 @@ namespace App\Domain\Learning\Http\Controllers;
 
 use App\Domain\Learning\Models\Enrollment;
 use App\Http\Controllers\Controller;
+use App\Services\GamificationService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -38,11 +39,35 @@ class DashboardController extends Controller
             ->latest('issued_at')
             ->get();
 
+        $gamification = app(GamificationService::class);
+        $totalXp = $gamification->totalXp($request->user());
+        $level = $gamification->levelForXp($totalXp);
+        $badges = $gamification->badgesForUser($request->user());
+
+        $nextThreshold = $level['next_threshold'];
+        $currentThreshold = (int) $level['threshold'];
+        $levelProgressPercent = $nextThreshold !== null && $nextThreshold > $currentThreshold
+            ? (int) round(($totalXp - $currentThreshold) / ($nextThreshold - $currentThreshold) * 100)
+            : 100;
+
         return view('learning.dashboard', compact(
             'enrollments',
             'completedByEnrollment',
             'nextLessonByEnrollment',
             'certificates',
+            'totalXp',
+            'level',
+            'badges',
+            'levelProgressPercent',
         ));
+    }
+
+    public function achievements(Request $request, GamificationService $gamification): View
+    {
+        $totalXp = $gamification->totalXp($request->user());
+        $level = $gamification->levelForXp($totalXp);
+        $badges = $gamification->badgesForUser($request->user());
+
+        return view('learning.achievements', compact('totalXp', 'level', 'badges'));
     }
 }

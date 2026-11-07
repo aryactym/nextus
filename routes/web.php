@@ -17,6 +17,7 @@ use App\Domain\Learning\Http\Controllers\CertificateController;
 use App\Domain\Learning\Http\Controllers\DashboardController;
 use App\Domain\Learning\Http\Controllers\EnrollmentController;
 use App\Domain\Learning\Http\Controllers\PlayerController;
+use App\Domain\Learning\Http\Controllers\ProfileController;
 use App\Domain\Payment\Http\Controllers\OrderController;
 use App\Domain\Payment\Http\Controllers\PaymentController;
 use App\Domain\Payment\Http\Controllers\WebhookController;
@@ -99,6 +100,12 @@ Route::post('/logout', [AuthController::class, 'logout'])
 // ---- Belajar (learner) ----
 Route::get('/belajar', [DashboardController::class, 'index'])
     ->middleware('auth')->name('learning.dashboard');
+Route::get('/belajar/pencapaian', [DashboardController::class, 'achievements'])
+    ->middleware('auth')->name('learning.achievements');
+Route::get('/belajar/profil', [ProfileController::class, 'edit'])
+    ->middleware('auth')->name('learning.profile.edit');
+Route::put('/belajar/profil', [ProfileController::class, 'update'])
+    ->middleware('auth')->name('learning.profile.update');
 Route::get('/belajar/{course}/{lesson}', [PlayerController::class, 'show'])
     ->name('player.show');
 Route::post('/belajar/{course}/{lesson}/selesai', [PlayerController::class, 'complete'])

@@ -1,0 +1,49 @@
+@props([
+    'badge' => null,
+    'tier' => null,
+    'size' => 64,
+    'earned' => false,
+    'progressCurrent' => null,
+    'progressTotal' => null,
+])
+
+@php
+    $badgeConfig = is_array($badge)
+        ? $badge
+        : collect(config('gamification.badges', []))->firstWhere('slug', $badge);
+
+    $slug = (string) ($badgeConfig['slug'] ?? $badge ?? '');
+    $badgeName = (string) ($badgeConfig['name_id'] ?? ucfirst($slug));
+    $tierKey = (string) ($tier ?? 'default');
+    $tierLabel = ucfirst($tierKey);
+    $imagePath = (string) ($badgeConfig['images'][$tierKey] ?? $badgeConfig['images']['default'] ?? '');
+    $alt = "Badge {$badgeName}, tingkat {$tierLabel}";
+    $isLocked = ! $earned;
+@endphp
+
+<div class="text-center badge-component">
+  <img
+    class="{{ $isLocked ? 'badge-locked' : '' }}"
+    src="{{ asset($imagePath) }}"
+    alt="{{ $alt }}"
+    width="{{ $size }}"
+    height="{{ $size }}"
+    loading="lazy"
+    @if ($isLocked) style="filter: grayscale(1); opacity: .35;" @endif
+  >
+  <div class="mt-2">
+    <span class="small fw-bold">{{ $tierLabel }}</span>
+    @if ($isLocked)
+      @if ($progressCurrent !== null && $progressTotal !== null)
+        <div class="small text-secondary">{{ $progressCurrent }}/{{ $progressTotal }}</div>
+      @endif
+    @endif
+  </div>
+</div>
+
+<style>
+  .badge-component .badge-locked { transition: opacity .2s; }
+  @media (prefers-reduced-motion: reduce) {
+    .badge-component .badge-locked { transition: none !important; }
+  }
+</style>

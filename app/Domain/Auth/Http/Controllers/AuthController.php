@@ -64,6 +64,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'role' => ['nullable', 'string', 'max:50'],
             'organization' => ['nullable', 'string', 'max:255'],
+            'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'terms' => ['accepted'],
         ]);
@@ -76,6 +77,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'pendidikan_id' => $request->pendidikan_id,
             'locale' => 'id',
         ]);
         $user->assignRole(Role::where('name', 'Learner')->first() ?? 'Learner');
