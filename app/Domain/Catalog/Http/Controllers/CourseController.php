@@ -9,6 +9,7 @@ use App\Domain\Catalog\Models\Course;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -62,7 +63,9 @@ class CourseController extends Controller
 
         if ($request->hasFile('thumbnail')) {
             $result = $upload->upload($request->file('thumbnail'), 'image', 'courses/thumbnails');
+            Log::info('upload result', ['path' => $result['path']]);
             $data['thumbnail'] = $result['path'];
+            Log::info('data thumbnail', ['thumbnail' => $data['thumbnail']]);
         }
 
         Course::create($data);

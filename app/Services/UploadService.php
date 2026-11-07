@@ -76,7 +76,7 @@ class UploadService
             throw new \InvalidArgumentException("MIME type {$mime} tidak cocok dengan ekstensi {$originalExtension}.");
         }
 
-        $realPath = $file->getRealPath();
+        $pathname = $file->getPathname();
 
         if (! $file->isValid()) {
             throw ValidationException::withMessages([
@@ -84,22 +84,16 @@ class UploadService
             ]);
         }
 
-        if (! $realPath || ! is_file($realPath) || filesize($realPath) === 0) {
+        if (! $pathname || ! is_file($pathname) || filesize($pathname) === 0) {
             throw ValidationException::withMessages([
                 'thumbnail' => 'File gambar kosong atau tidak dapat dibaca.',
             ]);
         }
 
         // Re-encode gambar untuk membersihkan metadata / polyglot
-        $content = $realPath;
+        $content = $pathname;
         if ($category === 'image') {
-            try {
-                $content = $this->reencodeImage($realPath, $originalExtension);
-            } catch (\Throwable $e) {
-                throw ValidationException::withMessages([
-                    'thumbnail' => 'File gambar tidak valid atau rusak.',
-                ]);
-            }
+            $content = $this->reencodeImage($pathname, $originalExtension);
         }
 
         // Nama file acak (UUID) + folder per tanggal/organisasi
@@ -110,7 +104,7 @@ class UploadService
         Storage::disk($this->disk)->put($path, file_get_contents($content), 'private');
 
         // Bersihkan file temp re-encode kalau ada
-        if ($category === 'image' && $content !== $file->getRealPath()) {
+        if ($category === 'image' && $content !== $file->getPathname()) {
             @unlink($content);
         }
 
@@ -157,13 +151,17 @@ class UploadService
         };
     }
 
-    protected function reencodeImage(string $realPath, string $extension): string
+    protected function reencodeImage(string $pathname, string $extension): string
     {
         $manager = new ImageManager(new Driver);
-        $image = $manager->decodePath($realPath);
+        $image = $manager->decode(file_get_contents($pathname));
 
         // Normalisasi orientasi & hilangkan metadata berlebih lewat re-encode
-        $outputPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.(string) Str::uuid().'.'.$extension;
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0775, true);
+        }
+        $outputPath = $tempDir.DIRECTORY_SEPARATOR.(string) Str::uuid().'.'.$extension;
 
         $image->save($outputPath);
 
