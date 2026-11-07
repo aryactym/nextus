@@ -58,6 +58,24 @@
                 </div>
               </div>
 
+              @if ($certificate->skills)
+                <div class="mt-4">
+                  <div class="text-secondary small">Keterampilan</div>
+                  <div class="d-flex flex-wrap gap-2 mt-2">
+                    @foreach ($certificate->skills as $skill)
+                      <span class="badge bg-secondary-lt text-dark">{{ $skill }}</span>
+                    @endforeach
+                  </div>
+                </div>
+              @endif
+
+              @if ($certificate->media)
+                <div class="mt-4">
+                  <div class="text-secondary small">Portofolio / Media</div>
+                  <a href="{{ $certificate->media }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">Buka media</a>
+                </div>
+              @endif
+
               <hr class="my-4">
 
               <p class="text-secondary small mb-0">
@@ -71,7 +89,7 @@
             <button type="button" class="btn btn-primary" onclick="window.print()">Cetak / simpan PDF</button>
             <a class="btn btn-outline-primary" href="{{ route('certificates.pdf', $certificate->code) }}">Unduh PDF</a>
             <a class="btn btn-outline-primary"
-               href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name={{ urlencode($certificate->course->getTranslation('title', 'id')) }}&organizationName={{ urlencode($certificate->course->organization?->name ?? config('app.name')) }}&issueYear={{ $certificate->issued_at->format('Y') }}&issueMonth={{ $certificate->issued_at->format('n') }}&certUrl={{ urlencode(route('certificates.verify', $certificate->code)) }}&certId={{ urlencode($certificate->code) }}"
+               href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name={{ urlencode($certificate->course->getTranslation('title', 'id')) }}&organizationName={{ urlencode($certificate->course->organization?->name ?? config('app.name')) }}&issueYear={{ $certificate->issued_at->format('Y') }}&issueMonth={{ $certificate->issued_at->format('n') }}&certUrl={{ urlencode(route('certificates.verify', $certificate->code)) }}&certId={{ urlencode($certificate->code) }}&media={{ urlencode($certificate->media ?? '') }}&skills={{ urlencode(implode(', ', $certificate->skills ?? [])) }}"
                target="_blank" rel="noopener">Tambahkan ke LinkedIn</a>
             <a class="btn btn-outline-primary" href="{{ route('learning.dashboard') }}">Kembali ke Belajar saya</a>
           </div>

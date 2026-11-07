@@ -18,6 +18,8 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property int $course_id
  * @property string $code
+ * @property string|null $media
+ * @property string|null $skills
  * @property Carbon $issued_at
  * @property Carbon|null $revoked_at
  */
@@ -31,6 +33,8 @@ class Certificate extends Model
         'user_id',
         'course_id',
         'code',
+        'media',
+        'skills',
         'issued_at',
         'revoked_at',
     ];
@@ -38,6 +42,7 @@ class Certificate extends Model
     protected $casts = [
         'issued_at' => 'datetime',
         'revoked_at' => 'datetime',
+        'skills' => 'array',
     ];
 
     public function enrollment(): BelongsTo

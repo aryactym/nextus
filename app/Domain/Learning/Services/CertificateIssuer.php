@@ -15,7 +15,7 @@ class CertificateIssuer
     /**
      * Terbitkan sertifikat bila enrollment selesai dan tipe sertifikat gratis.
      */
-    public function issueIfEligible(Enrollment $enrollment): ?Certificate
+    public function issueIfEligible(Enrollment $enrollment, array $meta = []): ?Certificate
     {
         $enrollment->loadMissing('course');
 
@@ -36,6 +36,8 @@ class CertificateIssuer
             'user_id' => $enrollment->user_id,
             'course_id' => $enrollment->course_id,
             'code' => $this->uniqueCode(),
+            'media' => $meta['media'] ?? null,
+            'skills' => $meta['skills'] ?? null,
             'issued_at' => now(),
         ]);
 
