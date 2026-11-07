@@ -7,7 +7,8 @@ namespace App\Domain\Learning\Http\Controllers;
 use App\Domain\Catalog\Models\Course;
 use App\Domain\Catalog\Models\Lesson;
 use App\Domain\Learning\Models\Enrollment;
-use App\Domain\Learning\Models\LessonProgress;
+use App\Domain\Learning\Models\QuizAttempt;
+use App\Domain\Learning\Services\CourseProgressService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,16 +19,8 @@ class PlayerController extends Controller
 {
     public function show(Request $request, string $courseSlug, Lesson $lesson): View|RedirectResponse
     {
-        $course = Course::withoutGlobalScope('organization')
-            ->where('slug', $courseSlug)
-            ->where('status', 'published')
-            ->with(['category', 'modules.lessons' => fn ($q) => $q->orderBy('sort')])
-            ->firstOrFail();
-
-        $lessonIds = $course->modules->flatMap->lessons->pluck('id');
-        if (! $lessonIds->contains($lesson->id)) {
-            abort(404);
-        }
+        $course = $this->resolveCourse($courseSlug);
+        $this->ensureLessonBelongsToCourse($course, $lesson);
 
         $enrollment = $request->user()?->enrollments()
             ->where('course_id', $course->id)->first();
@@ -53,42 +46,128 @@ class PlayerController extends Controller
 
         $totalLessons = $course->modules->flatMap->lessons->count();
 
+        $quiz = $lesson->type === 'quiz'
+            ? $lesson->quiz()->with('questions')->first()
+            : null;
+
+        $lastAttempt = ($enrollment && $quiz)
+            ? $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->latest()->first()
+            : null;
+
+        $passingScore = $quiz?->passing_score ?? $course->passing_grade ?? 75;
+
         return view('learning.player', compact(
             'course', 'lesson', 'enrollment', 'completedLessonIds',
-            'previousLesson', 'nextLesson', 'fileUrl', 'totalLessons'
+            'previousLesson', 'nextLesson', 'fileUrl', 'totalLessons',
+            'quiz', 'lastAttempt', 'passingScore'
         ));
     }
 
-    public function complete(Request $request, string $courseSlug, Lesson $lesson): RedirectResponse
-    {
-        $course = Course::withoutGlobalScope('organization')
-            ->where('slug', $courseSlug)
-            ->where('status', 'published')
-            ->with(['modules.lessons'])
-            ->firstOrFail();
+    public function complete(
+        Request $request,
+        string $courseSlug,
+        Lesson $lesson,
+        CourseProgressService $progress,
+    ): RedirectResponse {
+        $course = $this->resolveCourse($courseSlug);
+        $this->ensureLessonBelongsToCourse($course, $lesson);
 
         $enrollment = $request->user()->enrollments()
             ->where('course_id', $course->id)->firstOrFail();
 
-        LessonProgress::updateOrCreate(
-            ['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id],
-            ['completed_at' => now()],
-        );
+        if ($lesson->type === 'quiz' && $lesson->quiz()->whereHas('questions')->exists()) {
+            return back()->with('error', 'Pelajaran ini berisi kuis. Selesaikan kuis untuk menandainya selesai.');
+        }
 
-        $total = $course->modules->flatMap->lessons->count();
-        $done = $enrollment->lessonProgress()->whereNotNull('completed_at')->count();
-        $enrollment->update([
-            'progress_percent' => $total > 0 ? (int) round($done / $total * 100) : 0,
-            'status' => $total > 0 && $done >= $total ? 'completed' : 'active',
-            'completed_at' => $total > 0 && $done >= $total ? now() : null,
-        ]);
+        $progress->markLessonCompleted($enrollment, $lesson);
 
-        $next = $this->nextIncompleteLesson($course, $lesson, $enrollment);
+        $next = $this->nextIncompleteLesson($course, $lesson, $enrollment->refresh());
 
         return redirect()->route(
             'player.show',
             ['course' => $course->slug, 'lesson' => $next?->uuid ?? $lesson->uuid]
         );
+    }
+
+    public function submitQuiz(
+        Request $request,
+        string $courseSlug,
+        Lesson $lesson,
+        CourseProgressService $progress,
+    ): RedirectResponse {
+        $course = $this->resolveCourse($courseSlug);
+        $this->ensureLessonBelongsToCourse($course, $lesson);
+
+        if ($lesson->type !== 'quiz') {
+            abort(404);
+        }
+
+        $enrollment = $request->user()->enrollments()
+            ->where('course_id', $course->id)->firstOrFail();
+
+        $quiz = $lesson->quiz()->with('questions')->first();
+
+        if (! $quiz || $quiz->questions->isEmpty()) {
+            return back()->with('error', 'Asesmen belum tersedia. Hubungi pengelola kursus.');
+        }
+
+        $validated = $request->validate([
+            'answers' => ['required', 'array'],
+            'answers.*' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $answers = $validated['answers'];
+        $correct = 0;
+
+        foreach ($quiz->questions as $question) {
+            $selected = $answers[$question->id] ?? null;
+
+            if ($selected !== null && (int) $selected === $question->correct_index) {
+                $correct++;
+            }
+        }
+
+        $total = $quiz->questions->count();
+        $score = (int) round($correct / $total * 100);
+        $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
+        $passed = $score >= $passingScore;
+
+        QuizAttempt::create([
+            'enrollment_id' => $enrollment->id,
+            'quiz_id' => $quiz->id,
+            'score' => $score,
+            'passed' => $passed,
+            'answers' => $answers,
+            'finished_at' => now(),
+        ]);
+
+        if ($passed) {
+            $progress->markLessonCompleted($enrollment, $lesson);
+
+            return redirect()
+                ->route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])
+                ->with('quiz_passed', "Selamat, kamu lulus dengan skor {$score}. Nilai minimal {$passingScore}.");
+        }
+
+        return redirect()
+            ->route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])
+            ->with('quiz_failed', "Skor kamu {$score}. Nilai minimal untuk lulus adalah {$passingScore}. Silakan coba lagi.");
+    }
+
+    private function resolveCourse(string $courseSlug): Course
+    {
+        return Course::withoutGlobalScope('organization')
+            ->where('slug', $courseSlug)
+            ->where('status', 'published')
+            ->with(['category', 'modules.lessons' => fn ($q) => $q->orderBy('sort')])
+            ->firstOrFail();
+    }
+
+    private function ensureLessonBelongsToCourse(Course $course, Lesson $lesson): void
+    {
+        if (! $course->modules->flatMap->lessons->contains('id', $lesson->id)) {
+            abort(404);
+        }
     }
 
     private function neighborLesson(Course $course, Lesson $current, int $offset): ?Lesson

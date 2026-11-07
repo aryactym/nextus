@@ -16,6 +16,7 @@ class DashboardController extends Controller
         $enrollments = $request->user()->enrollments()
             ->with([
                 'course' => fn ($q) => $q->withoutGlobalScope('organization')->with(['category', 'modules.lessons']),
+                'certificate',
             ])
             ->orderByDesc('enrolled_at')
             ->get();
@@ -31,6 +32,17 @@ class DashboardController extends Controller
             return [$e->id => $first];
         });
 
-        return view('learning.dashboard', compact('enrollments', 'completedByEnrollment', 'nextLessonByEnrollment'));
+        $certificates = $request->user()->certificates()
+            ->with('course')
+            ->whereNull('revoked_at')
+            ->latest('issued_at')
+            ->get();
+
+        return view('learning.dashboard', compact(
+            'enrollments',
+            'completedByEnrollment',
+            'nextLessonByEnrollment',
+            'certificates',
+        ));
     }
 }

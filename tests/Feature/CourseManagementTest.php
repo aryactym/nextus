@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
+use App\Domain\Catalog\Models\CourseModule;
+use App\Domain\Catalog\Models\Lesson;
+use App\Domain\Learning\Models\Quiz;
 use App\Domain\Organization\Models\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -110,6 +113,158 @@ it('filters the course index by keyword and attributes', function () {
         ->assertOk()
         ->assertSee('Pemetaan Sosial Ekonomi')
         ->assertDontSee('Manajemen Risiko Program');
+});
+
+it('lets an admin manage questions for a quiz lesson', function () {
+    ['user' => $user, 'organization' => $organization] = courseUserWithOrganization();
+    $course = Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Kursus Kuis'],
+        'slug' => 'kursus-kuis',
+    ]);
+    $module = CourseModule::create([
+        'course_id' => $course->id,
+        'title' => ['id' => 'Modul Kuis'],
+        'sort' => 1,
+    ]);
+    $lesson = Lesson::create([
+        'module_id' => $module->id,
+        'title' => ['id' => 'Asesmen'],
+        'type' => 'quiz',
+        'sort' => 1,
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('admin.lessons.quiz.questions.store', $lesson), [
+            'question' => 'Apa fokus utama kursus ini?',
+            'options' => ['Filantropi Islam', 'Pemasaran', 'Desain', 'Administrasi'],
+            'correct_index' => 0,
+        ])
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    $question = $lesson->quiz()->firstOrFail()->questions()->firstOrFail();
+    expect($question->options)->toHaveCount(4)
+        ->and($question->correct_index)->toBe(0);
+
+    $this->actingAs($user)
+        ->delete(route('admin.quiz-questions.destroy', $question))
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    expect($lesson->quiz()->firstOrFail()->questions()->count())->toBe(0);
+});
+
+it('lets an admin update and delete a module', function () {
+    ['user' => $user, 'organization' => $organization] = courseUserWithOrganization();
+    $course = Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Kursus Modul'],
+        'slug' => 'kursus-modul',
+    ]);
+    $module = CourseModule::create([
+        'course_id' => $course->id,
+        'title' => ['id' => 'Modul Awal'],
+        'sort' => 1,
+    ]);
+
+    $this->actingAs($user)
+        ->put(route('admin.modules.update', $module), [
+            'title' => ['id' => 'Modul Diperbarui', 'en' => 'Updated Module'],
+            'sort' => 2,
+        ])
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    $module->refresh();
+    expect($module->getTranslation('title', 'id'))->toBe('Modul Diperbarui')
+        ->and($module->sort)->toBe(2);
+
+    $this->actingAs($user)
+        ->delete(route('admin.modules.destroy', $module))
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    $this->assertSoftDeleted('course_modules', ['id' => $module->id]);
+});
+
+it('lets an admin update and delete a lesson', function () {
+    ['user' => $user, 'organization' => $organization] = courseUserWithOrganization();
+    $course = Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Kursus Pelajaran'],
+        'slug' => 'kursus-pelajaran',
+    ]);
+    $module = CourseModule::create([
+        'course_id' => $course->id,
+        'title' => ['id' => 'Modul 1'],
+        'sort' => 1,
+    ]);
+    $lesson = Lesson::create([
+        'module_id' => $module->id,
+        'title' => ['id' => 'Pelajaran Awal'],
+        'type' => 'text',
+        'sort' => 1,
+    ]);
+
+    $this->actingAs($user)
+        ->put(route('admin.lessons.update', $lesson), [
+            'title' => ['id' => 'Pelajaran Diperbarui'],
+            'type' => 'text',
+            'content' => ['id' => 'Konten baru'],
+            'duration' => 15,
+            'sort' => 3,
+            'is_preview' => '1',
+        ])
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    $lesson->refresh();
+    expect($lesson->getTranslation('title', 'id'))->toBe('Pelajaran Diperbarui')
+        ->and($lesson->duration)->toBe(15)
+        ->and($lesson->sort)->toBe(3)
+        ->and($lesson->is_preview)->toBeTrue();
+
+    $this->actingAs($user)
+        ->delete(route('admin.lessons.destroy', $lesson))
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    $this->assertSoftDeleted('lessons', ['id' => $lesson->id]);
+});
+
+it('lets an admin update a quiz question', function () {
+    ['user' => $user, 'organization' => $organization] = courseUserWithOrganization();
+    $course = Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Kursus Kuis Ubah'],
+        'slug' => 'kursus-kuis-ubah',
+    ]);
+    $module = CourseModule::create([
+        'course_id' => $course->id,
+        'title' => ['id' => 'Modul Kuis'],
+        'sort' => 1,
+    ]);
+    $lesson = Lesson::create([
+        'module_id' => $module->id,
+        'title' => ['id' => 'Asesmen'],
+        'type' => 'quiz',
+        'sort' => 1,
+    ]);
+    $quiz = Quiz::create(['lesson_id' => $lesson->id]);
+    $question = $quiz->questions()->create([
+        'question' => 'Pertanyaan lama',
+        'options' => ['A', 'B', 'C', 'D'],
+        'correct_index' => 2,
+        'sort' => 1,
+    ]);
+
+    $this->actingAs($user)
+        ->put(route('admin.quiz-questions.update', $question), [
+            'question' => 'Pertanyaan baru',
+            'options' => ['Satu', 'Dua', 'Tiga', '', ''],
+            'correct_index' => 1,
+        ])
+        ->assertRedirect(route('admin.courses.edit', $course->uuid));
+
+    $question->refresh();
+    expect($question->question)->toBe('Pertanyaan baru')
+        ->and($question->options)->toBe(['Satu', 'Dua', 'Tiga'])
+        ->and($question->correct_index)->toBe(1);
 });
 
 it('rejects storing a course with duplicate slug in the same organization', function () {

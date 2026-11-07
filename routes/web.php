@@ -9,7 +9,9 @@ use App\Domain\Catalog\Http\Controllers\LessonController;
 use App\Domain\Catalog\Http\Controllers\MediaController;
 use App\Domain\Catalog\Http\Controllers\ModuleController;
 use App\Domain\Catalog\Http\Controllers\PublicCourseController;
+use App\Domain\Catalog\Http\Controllers\QuizController;
 use App\Domain\Catalog\Http\Controllers\UploadController;
+use App\Domain\Learning\Http\Controllers\CertificateController;
 use App\Domain\Learning\Http\Controllers\DashboardController;
 use App\Domain\Learning\Http\Controllers\EnrollmentController;
 use App\Domain\Learning\Http\Controllers\PlayerController;
@@ -65,6 +67,10 @@ Route::get('/belajar/{course}/{lesson}', [PlayerController::class, 'show'])
     ->name('player.show');
 Route::post('/belajar/{course}/{lesson}/selesai', [PlayerController::class, 'complete'])
     ->middleware('auth')->name('player.complete');
+Route::post('/belajar/{course}/{lesson}/kuis', [PlayerController::class, 'submitQuiz'])
+    ->middleware('auth')->name('player.quiz.submit');
+Route::get('/sertifikat/{code}', [CertificateController::class, 'show'])
+    ->middleware('auth')->name('certificates.show');
 
 // ---- Admin (RBAC) ----
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
@@ -90,6 +96,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('lessons.update');
     Route::delete('lessons/{lesson}', [LessonController::class, 'destroy'])
         ->name('lessons.destroy');
+    Route::post('lessons/{lesson}/quiz/questions', [QuizController::class, 'storeQuestion'])
+        ->name('lessons.quiz.questions.store');
+    Route::delete('quiz-questions/{question}', [QuizController::class, 'destroyQuestion'])
+        ->name('quiz-questions.destroy');
+    Route::put('quiz-questions/{question}', [QuizController::class, 'updateQuestion'])
+        ->name('quiz-questions.update');
 
     Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');

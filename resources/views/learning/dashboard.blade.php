@@ -57,7 +57,13 @@
                 <div class="card-footer d-flex justify-content-between align-items-center">
                   <span>{{ $enrollment->progress_percent }}%</span>
                   @if ($enrollment->status === 'completed')
-                    <span class="badge bg-green-lt">Selesai</span>
+                    @if ($enrollment->certificate)
+                      <a class="btn btn-primary btn-sm" href="{{ route('certificates.show', $enrollment->certificate->code) }}">Lihat sertifikat</a>
+                    @elseif ($enrollment->course->certificate_type !== 'free')
+                      <a class="btn btn-outline-primary btn-sm" href="{{ route('catalog.show', $course->slug) }}">Buka sertifikat</a>
+                    @else
+                      <span class="badge bg-green-lt">Selesai</span>
+                    @endif
                   @elseif ($nextLesson)
                     <a class="btn btn-primary btn-sm" href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $nextLesson->uuid]) }}">Lanjutkan</a>
                   @else
@@ -71,5 +77,32 @@
       @endif
     </div>
   </section>
+
+  @if ($certificates->isNotEmpty())
+    <section class="section pt-0">
+      <div class="container-xl">
+        <h2 class="h2 mb-3">Sertifikat saya</h2>
+        <div class="row g-3">
+          @foreach ($certificates as $certificate)
+            <div class="col-md-6">
+              <div class="card h-100">
+                <div class="card-body d-flex justify-content-between align-items-start gap-3">
+                  <div>
+                    <span class="topic-label">Sertifikat penyelesaian</span>
+                    <h3 class="h3 mb-1">{{ $certificate->course->getTranslation('title', app()->getLocale()) }}</h3>
+                    <p class="text-secondary mb-0">
+                      Kode {{ $certificate->code }} &middot;
+                      {{ $certificate->issued_at->translatedFormat('d F Y') }}
+                    </p>
+                  </div>
+                  <a class="btn btn-primary btn-sm" href="{{ route('certificates.show', $certificate->code) }}">Lihat</a>
+                </div>
+              </div>
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </section>
+  @endif
 
 </x-layouts.public>

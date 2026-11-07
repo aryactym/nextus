@@ -223,29 +223,256 @@
                                 <h4 class="mb-1">{{ $module->getTranslation('title', 'id') }}</h4>
                                 <div class="text-secondary small">{{ $module->lessons->count() }} pelajaran</div>
                             </div>
-                            <form action="{{ route('admin.modules.destroy', $module) }}" method="POST"
-                                  onsubmit="return confirm('Hapus modul ini beserta pelajarannya?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Hapus modul</button>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#module-edit-{{ $module->uuid }}"
+                                        aria-expanded="false" aria-controls="module-edit-{{ $module->uuid }}">
+                                    Ubah modul
+                                </button>
+                                <form action="{{ route('admin.modules.destroy', $module) }}" method="POST"
+                                      onsubmit="return confirm('Hapus modul ini beserta pelajarannya?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Hapus modul</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="collapse mt-3" id="module-edit-{{ $module->uuid }}">
+                            <form action="{{ route('admin.modules.update', $module) }}" method="POST" class="row g-2 align-items-end">
+                                @csrf @method('PUT')
+                                <div class="col-md-5">
+                                    <label class="form-label" for="module-title-{{ $module->uuid }}">Judul (Indonesia)</label>
+                                    <input type="text" id="module-title-{{ $module->uuid }}" name="title[id]"
+                                           class="form-control" value="{{ $module->getTranslation('title', 'id') }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="module-title-en-{{ $module->uuid }}">Judul (Inggris)</label>
+                                    <input type="text" id="module-title-en-{{ $module->uuid }}" name="title[en]"
+                                           class="form-control" value="{{ $module->getTranslation('title', 'en') }}">
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label" for="module-sort-{{ $module->uuid }}">Urutan</label>
+                                    <input type="number" id="module-sort-{{ $module->uuid }}" name="sort"
+                                           class="form-control" value="{{ $module->sort }}" min="0">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary w-100">Simpan modul</button>
+                                </div>
                             </form>
                         </div>
 
                         @if ($module->lessons->isNotEmpty())
                             <div class="list-group list-group-flush my-3">
                                 @foreach ($module->lessons as $lesson)
-                                    <div class="list-group-item d-flex justify-content-between align-items-center gap-2 px-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="badge {{ $lessonBadges[$lesson->type] ?? 'bg-secondary-lt' }}">
-                                                {{ ucfirst($lesson->type) }}
-                                            </span>
-                                            <span>{{ $lesson->getTranslation('title', 'id') }}</span>
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center gap-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge {{ $lessonBadges[$lesson->type] ?? 'bg-secondary-lt' }}">
+                                                    {{ ucfirst($lesson->type) }}
+                                                </span>
+                                                <span>{{ $lesson->getTranslation('title', 'id') }}</span>
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#lesson-edit-{{ $lesson->uuid }}"
+                                                        aria-expanded="false" aria-controls="lesson-edit-{{ $lesson->uuid }}">
+                                                    Ubah
+                                                </button>
+                                                <form action="{{ route('admin.lessons.destroy', $lesson) }}" method="POST"
+                                                      onsubmit="return confirm('Hapus pelajaran ini?')">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <form action="{{ route('admin.lessons.destroy', $lesson) }}" method="POST"
-                                              onsubmit="return confirm('Hapus pelajaran ini?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
-                                        </form>
+
+                                        <div class="collapse mt-3" id="lesson-edit-{{ $lesson->uuid }}">
+                                            <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST"
+                                                  enctype="multipart/form-data" class="row g-2">
+                                                @csrf @method('PUT')
+                                                <div class="col-md-5">
+                                                    <label class="form-label" for="lesson-title-{{ $lesson->uuid }}">Judul (Indonesia)</label>
+                                                    <input type="text" id="lesson-title-{{ $lesson->uuid }}" name="title[id]"
+                                                           class="form-control" value="{{ $lesson->getTranslation('title', 'id') }}" required>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label" for="lesson-title-en-{{ $lesson->uuid }}">Judul (Inggris)</label>
+                                                    <input type="text" id="lesson-title-en-{{ $lesson->uuid }}" name="title[en]"
+                                                           class="form-control" value="{{ $lesson->getTranslation('title', 'en') }}">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label" for="lesson-type-{{ $lesson->uuid }}">Tipe</label>
+                                                    <select id="lesson-type-{{ $lesson->uuid }}" name="type" class="form-select" required>
+                                                        @foreach (['text' => 'Teks', 'video' => 'Video', 'pdf' => 'PDF', 'quiz' => 'Kuis'] as $typeValue => $typeLabel)
+                                                            <option value="{{ $typeValue }}" @selected($lesson->type === $typeValue)>{{ $typeLabel }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label" for="lesson-content-{{ $lesson->uuid }}">Konten (Indonesia)</label>
+                                                    <textarea id="lesson-content-{{ $lesson->uuid }}" name="content[id]" rows="3"
+                                                              class="form-control">{{ $lesson->getTranslation('content', 'id') }}</textarea>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label" for="lesson-content-en-{{ $lesson->uuid }}">Konten (Inggris)</label>
+                                                    <textarea id="lesson-content-en-{{ $lesson->uuid }}" name="content[en]" rows="3"
+                                                              class="form-control">{{ $lesson->getTranslation('content', 'en') }}</textarea>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label" for="lesson-video-{{ $lesson->uuid }}">URL video</label>
+                                                    <input type="url" id="lesson-video-{{ $lesson->uuid }}" name="video_url"
+                                                           class="form-control" value="{{ $lesson->video_url }}" placeholder="https://...">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label" for="lesson-file-{{ $lesson->uuid }}">File PDF</label>
+                                                    <input type="file" id="lesson-file-{{ $lesson->uuid }}" name="file"
+                                                           class="form-control" accept="application/pdf">
+                                                    @if ($lesson->file_path)
+                                                        <div class="form-hint">File saat ini: {{ basename($lesson->file_path) }}. Kosongkan jika tidak diubah.</div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label" for="lesson-duration-{{ $lesson->uuid }}">Durasi</label>
+                                                    <div class="input-group">
+                                                        <input type="number" id="lesson-duration-{{ $lesson->uuid }}" name="duration"
+                                                               class="form-control" value="{{ $lesson->duration }}" min="0">
+                                                        <span class="input-group-text">mnt</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label" for="lesson-sort-{{ $lesson->uuid }}">Urutan</label>
+                                                    <input type="number" id="lesson-sort-{{ $lesson->uuid }}" name="sort"
+                                                           class="form-control" value="{{ $lesson->sort }}" min="0">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-check">
+                                                        <input type="checkbox" name="is_preview" value="1" class="form-check-input"
+                                                               @checked($lesson->is_preview)>
+                                                        <span class="form-check-label">Jadikan preview gratis</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary btn-sm">Simpan pelajaran</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
+
+                                    @if ($lesson->type === 'quiz')
+                                        @php
+                                            $quiz = $lesson->quiz;
+                                            $questions = $quiz?->questions ?? collect();
+                                        @endphp
+                                        <div class="list-group-item px-0">
+                                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#quiz-{{ $lesson->uuid }}"
+                                                    aria-expanded="false" aria-controls="quiz-{{ $lesson->uuid }}">
+                                                Kelola soal kuis ({{ $questions->count() }})
+                                            </button>
+
+                                            <div class="collapse mt-2" id="quiz-{{ $lesson->uuid }}">
+                                                @forelse ($questions as $question)
+                                                    <div class="border rounded p-2 mb-2">
+                                                        <div class="d-flex justify-content-between align-items-start gap-2">
+                                                            <div>
+                                                                <strong>{{ $question->question }}</strong>
+                                                                <ol class="mb-0 small mt-1">
+                                                                    @foreach ($question->options as $optionIndex => $option)
+                                                                        <li class="{{ $optionIndex === $question->correct_index ? 'text-success fw-bold' : '' }}">
+                                                                            {{ $option }}
+                                                                            @if ($optionIndex === $question->correct_index)
+                                                                                (benar)
+                                                                            @endif
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ol>
+                                                            </div>
+                                                            <div class="d-flex gap-2">
+                                                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                                        data-bs-toggle="collapse" data-bs-target="#question-edit-{{ $question->uuid }}"
+                                                                        aria-expanded="false" aria-controls="question-edit-{{ $question->uuid }}">
+                                                                    Ubah
+                                                                </button>
+                                                                <form action="{{ route('admin.quiz-questions.destroy', $question) }}" method="POST"
+                                                                      onsubmit="return confirm('Hapus soal ini?')">
+                                                                    @csrf @method('DELETE')
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+
+                                                        @php
+                                                            $editOptionCount = max(4, count($question->options));
+                                                            $editOptions = array_pad(array_values($question->options), $editOptionCount, '');
+                                                        @endphp
+                                                        <div class="collapse mt-2" id="question-edit-{{ $question->uuid }}">
+                                                            <form action="{{ route('admin.quiz-questions.update', $question) }}" method="POST">
+                                                                @csrf @method('PUT')
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="question-text-{{ $question->uuid }}">Pertanyaan</label>
+                                                                    <textarea id="question-text-{{ $question->uuid }}" name="question"
+                                                                              class="form-control" rows="2" required>{{ $question->question }}</textarea>
+                                                                </div>
+                                                                <div class="row g-2 mb-2">
+                                                                    @for ($optionIndex = 0; $optionIndex < $editOptionCount; $optionIndex++)
+                                                                        <div class="col-md-6">
+                                                                            <label class="form-label" for="question-option-{{ $question->uuid }}-{{ $optionIndex }}">
+                                                                                Pilihan {{ $optionIndex + 1 }}
+                                                                            </label>
+                                                                            <input type="text" id="question-option-{{ $question->uuid }}-{{ $optionIndex }}"
+                                                                                   name="options[{{ $optionIndex }}]" class="form-control"
+                                                                                   value="{{ $editOptions[$optionIndex] ?? '' }}">
+                                                                        </div>
+                                                                    @endfor
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="form-label" for="question-correct-{{ $question->uuid }}">Jawaban benar</label>
+                                                                    <select id="question-correct-{{ $question->uuid }}" name="correct_index" class="form-select">
+                                                                        @for ($optionIndex = 0; $optionIndex < $editOptionCount; $optionIndex++)
+                                                                            <option value="{{ $optionIndex }}" @selected($question->correct_index === $optionIndex)>
+                                                                                Pilihan {{ $optionIndex + 1 }}
+                                                                            </option>
+                                                                        @endfor
+                                                                    </select>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary btn-sm">Simpan soal</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                @empty
+                                                    <p class="text-secondary small">Belum ada soal. Tambahkan soal agar asesmen bisa dikerjakan.</p>
+                                                @endforelse
+
+                                                <form action="{{ route('admin.lessons.quiz.questions.store', $lesson) }}" method="POST">
+                                                    @csrf
+                                                    <div class="mb-2">
+                                                        <label class="form-label" for="question-{{ $lesson->uuid }}">Pertanyaan</label>
+                                                        <textarea id="question-{{ $lesson->uuid }}" name="question" class="form-control" rows="2" required></textarea>
+                                                    </div>
+                                                    <div class="row g-2 mb-2">
+                                                        @for ($optionIndex = 0; $optionIndex < 4; $optionIndex++)
+                                                            <div class="col-md-6">
+                                                                <label class="form-label" for="option-{{ $lesson->uuid }}-{{ $optionIndex }}">
+                                                                    Pilihan {{ $optionIndex + 1 }}
+                                                                </label>
+                                                                <input type="text" id="option-{{ $lesson->uuid }}-{{ $optionIndex }}"
+                                                                       name="options[{{ $optionIndex }}]" class="form-control" required>
+                                                            </div>
+                                                        @endfor
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label class="form-label" for="correct-{{ $lesson->uuid }}">Jawaban benar</label>
+                                                        <select id="correct-{{ $lesson->uuid }}" name="correct_index" class="form-select">
+                                                            @for ($optionIndex = 0; $optionIndex < 4; $optionIndex++)
+                                                                <option value="{{ $optionIndex }}">Pilihan {{ $optionIndex + 1 }}</option>
+                                                            @endfor
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary btn-sm">Tambah soal</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </div>
                         @endif

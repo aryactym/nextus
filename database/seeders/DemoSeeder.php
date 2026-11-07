@@ -6,6 +6,8 @@ namespace Database\Seeders;
 
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
+use App\Domain\Catalog\Models\Lesson;
+use App\Domain\Learning\Models\Quiz;
 use App\Domain\Organization\Models\Organization;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
@@ -111,7 +113,7 @@ class DemoSeeder extends Seeder
                 );
 
                 foreach ($moduleData['lessons'] as $lessonIndex => $lessonData) {
-                    $module->lessons()->updateOrCreate(
+                    $lesson = $module->lessons()->updateOrCreate(
                         ['sort' => $lessonIndex + 1],
                         [
                             'title' => ['id' => $lessonData['title']],
@@ -121,8 +123,66 @@ class DemoSeeder extends Seeder
                             'is_preview' => $lessonData['is_preview'],
                         ],
                     );
+
+                    if ($lesson->type === 'quiz') {
+                        $this->seedQuizQuestions($lesson, $title, $summary);
+                    }
                 }
             }
+        }
+    }
+
+    /**
+     * Isi soal bawaan untuk pelajaran bertipe kuis bila belum ada.
+     */
+    private function seedQuizQuestions(Lesson $lesson, string $courseTitle, string $summary): void
+    {
+        $quiz = Quiz::firstOrCreate(['lesson_id' => $lesson->id]);
+
+        if ($quiz->questions()->exists()) {
+            return;
+        }
+
+        $questions = [
+            [
+                'question' => 'Apa fokus utama kursus "'.$courseTitle.'"?',
+                'options' => [
+                    $summary,
+                    'Administrasi perkantoran',
+                    'Pemasaran media sosial',
+                    'Desain grafis',
+                ],
+                'correct_index' => 0,
+            ],
+            [
+                'question' => 'Apa langkah pertama sebelum menerapkan materi di lapangan?',
+                'options' => [
+                    'Langsung mengevaluasi tanpa data',
+                    'Menunggu instruksi tanpa mencoba',
+                    'Memahami konsep dasar dari modul',
+                    'Mengabaikan panduan yang ada',
+                ],
+                'correct_index' => 2,
+            ],
+            [
+                'question' => 'Mengapa pencatatan dan dokumentasi penting?',
+                'options' => [
+                    'Agar laporan terlihat panjang',
+                    'Agar kegiatan dapat dipertanggungjawabkan',
+                    'Agar tidak perlu evaluasi',
+                    'Agar proses lebih lambat',
+                ],
+                'correct_index' => 1,
+            ],
+        ];
+
+        foreach ($questions as $index => $question) {
+            $quiz->questions()->create([
+                'question' => $question['question'],
+                'options' => $question['options'],
+                'correct_index' => $question['correct_index'],
+                'sort' => $index + 1,
+            ]);
         }
     }
 }

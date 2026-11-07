@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Domain\Learning\Models\Certificate;
 use App\Domain\Learning\Models\Enrollment;
 use App\Support\Traits\BelongsToOrganization;
 use App\Support\Traits\HasUuid;
@@ -44,5 +45,10 @@ class User extends Authenticatable
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
     }
 }

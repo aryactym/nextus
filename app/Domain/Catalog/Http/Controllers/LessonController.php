@@ -39,6 +39,7 @@ class LessonController extends Controller
             ->whereHas('module.course', fn (Builder $query) => $query->forOrganization())
             ->findOrFail($lesson->getKey());
         $data = $request->validated();
+        $data['is_preview'] = $request->boolean('is_preview');
 
         if ($request->hasFile('file')) {
             if ($lesson->file_path) {
@@ -49,6 +50,10 @@ class LessonController extends Controller
         }
 
         $lesson->update($data);
+
+        if ($lesson->type !== 'quiz') {
+            $lesson->quiz()->delete();
+        }
 
         return redirect()->route('admin.courses.edit', $lesson->module->course)
             ->with('success', 'Pelajaran berhasil diperbarui.');

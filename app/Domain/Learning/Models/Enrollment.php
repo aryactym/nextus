@@ -2,15 +2,20 @@
 
 namespace App\Domain\Learning\Models;
 
+use App\Domain\Catalog\Models\Course;
+use App\Domain\Payment\Models\Order;
+use App\Models\User;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Enrollment extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid;
+    use HasFactory, HasUuid, SoftDeletes;
 
     protected $fillable = [
         'uuid', 'user_id', 'course_id', 'order_id', 'status',
@@ -25,21 +30,31 @@ class Enrollment extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function course(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Catalog\Models\Course::class);
+        return $this->belongsTo(Course::class);
     }
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Payment\Models\Order::class);
+        return $this->belongsTo(Order::class);
     }
 
-    public function lessonProgress(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function lessonProgress(): HasMany
     {
         return $this->hasMany(LessonProgress::class);
+    }
+
+    public function quizAttempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
+    public function certificate(): HasOne
+    {
+        return $this->hasOne(Certificate::class);
     }
 }

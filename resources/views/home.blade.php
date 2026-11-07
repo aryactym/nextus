@@ -94,7 +94,7 @@
             <img class="course-img" src="{{ asset('images/course-1.webp') }}" alt="Dua orang belajar dari laptop" style="--pos:20% 40%" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
             <div class="card-body">
               <span class="badge bg-green-lt badge-access mb-2">Gratis</span>
-              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.index') }}">Pengantar Zakat untuk Relawan</a></h3>
+              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.show', 'pengantar-zakat') }}">Pengantar Zakat untuk Relawan</a></h3>
               <p class="text-secondary">Dasar zakat dan peran relawan dalam penghimpunan.</p>
               <div class="course-meta"><span>Pemula</span><span>2 jam</span></div>
             </div>
@@ -106,7 +106,7 @@
             <img class="course-img" src="{{ asset('images/course-2.webp') }}" alt="Perempuan memimpin rapat perencanaan" style="--pos:50% 30%" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
             <div class="card-body">
               <span class="badge bg-azure-lt badge-access mb-2">Donasi untuk masuk</span>
-              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.index') }}">Dasar Pelaporan Program</a></h3>
+              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.show', 'dasar-pelaporan-program') }}">Dasar Pelaporan Program</a></h3>
               <p class="text-secondary">Menyusun laporan program yang akuntabel.</p>
               <div class="course-meta"><span>Menengah</span><span>4 jam</span></div>
             </div>
@@ -118,7 +118,7 @@
             <img class="course-img" src="{{ asset('images/course-3.webp') }}" alt="Peserta pelatihan di lingkungan desa" style="--pos:85% 60%" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
             <div class="card-body">
               <span class="badge bg-green-lt badge-access mb-2">Gratis</span>
-              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.index') }}">Dasar Fasilitasi (ToT)</a></h3>
+              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.show', 'dasar-fasilitasi-tot') }}">Dasar Fasilitasi (ToT)</a></h3>
               <p class="text-secondary">Prasyarat untuk mengelola pelatihan sebagai penyelenggara.</p>
               <div class="course-meta"><span>Menengah</span><span>6 jam</span></div>
             </div>

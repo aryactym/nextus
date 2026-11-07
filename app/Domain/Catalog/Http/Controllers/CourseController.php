@@ -75,7 +75,10 @@ class CourseController extends Controller
     {
         abort_unless(auth()->user()->can('manage courses'), 403);
         $categories = Category::forOrganization()->orderBy('sort')->get();
-        $course->load('modules.lessons');
+        $course->load([
+            'modules.lessons' => fn ($query) => $query->orderBy('sort'),
+            'modules.lessons.quiz.questions',
+        ]);
 
         return view('catalog.courses.edit', compact('course', 'categories'));
     }

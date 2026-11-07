@@ -38,18 +38,32 @@
 
   <section class="section">
     <div class="container-xl">
+      @if (session('quiz_passed'))
+        <div class="alert alert-success" role="status">{{ session('quiz_passed') }}</div>
+      @endif
+      @if (session('quiz_failed'))
+        <div class="alert alert-warning" role="status">{{ session('quiz_failed') }}</div>
+      @endif
+      @if (session('error'))
+        <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+      @endif
+
       <div class="row g-4">
 
         <div class="col-lg-8">
-          <x-media-player
-            :type="$lesson->type"
-            :video-url="$lesson->video_url"
-            :content="$textHtml"
-            :file-url="$fileUrl"
-            :title="$lessonTitle"
-          />
+          @if ($lesson->type === 'quiz')
+            @include('learning.partials.quiz', ['textHtml' => $textHtml])
+          @else
+            <x-media-player
+              :type="$lesson->type"
+              :video-url="$lesson->video_url"
+              :content="$textHtml"
+              :file-url="$fileUrl"
+              :title="$lessonTitle"
+            />
+          @endif
 
-          @if ($enrollment)
+          @if ($enrollment && $lesson->type !== 'quiz')
             <div class="d-flex flex-wrap gap-2 mt-4 align-items-center">
               @if ($previousLesson)
                 <a class="btn btn-outline-primary" href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $previousLesson->uuid]) }}">Sebelumnya</a>

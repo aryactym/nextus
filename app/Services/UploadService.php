@@ -127,23 +127,12 @@ class UploadService
     protected function reencodeImage(string $realPath, string $extension): string
     {
         $manager = new ImageManager(new Driver);
-        $image = $manager->read($realPath);
+        $image = $manager->decodePath($realPath);
 
         // Normalisasi orientasi & hilangkan metadata berlebih lewat re-encode
         $outputPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.(string) Str::uuid().'.'.$extension;
 
-        $match = [
-            'jpg' => 'jpg', 'jpeg' => 'jpg', 'png' => 'png',
-            'webp' => 'webp', 'avif' => 'avif', 'gif' => 'png',
-        ];
-        $format = $match[$extension] ?? 'png';
-
-        match ($format) {
-            'jpg' => $image->toJpeg(quality: 85)->save($outputPath),
-            'png' => $image->toPng()->save($outputPath),
-            'webp' => $image->toWebp(quality: 85)->save($outputPath),
-            default => $image->toPng()->save($outputPath),
-        };
+        $image->save($outputPath);
 
         return $outputPath;
     }
