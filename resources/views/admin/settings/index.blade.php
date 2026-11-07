@@ -10,12 +10,11 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('admin.settings.update') }}">
-    @csrf
-    @method('PUT')
-
-    <div class="row">
-        <div class="col-lg-8">
+<div class="row">
+    <div class="col-lg-8">
+        <form method="POST" action="{{ route('admin.settings.update') }}">
+            @csrf
+            @method('PUT')
             <div class="card mb-3">
                 <div class="card-header">
                     <h3 class="card-title">Pelacakan &amp; verifikasi</h3>
@@ -217,37 +216,33 @@
                         </label>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <small class="text-secondary">Gunakan tombol "Uji koneksi Midtrans" di bawah formulir utama.</small>
-                </div>
             </div>
+
+            <div class="d-flex gap-2 mb-3">
                 <button type="submit" class="btn btn-primary">Simpan pengaturan</button>
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-link">Batal</a>
             </div>
         </div>
+        </form>
+    </div>
 
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Catatan</h3>
-                </div>
-                <div class="card-body text-secondary">
-                    <p>Pengaturan pelacakan langsung aktif di halaman publik setelah disimpan.</p>
-                    <p class="mb-3">Konfigurasi SMTP dipakai untuk seluruh email aplikasi (verifikasi, reset password, dan notifikasi).</p>
-                    <ul class="mb-0 ps-3">
-                        <li>GA4 memakai Measurement ID berawalan <code>G-</code>.</li>
-                        <li>Search Console cukup nilai <code>content</code>-nya.</li>
-                        <li>Facebook Pixel berupa deretan angka.</li>
-                        <li>Gunakan port 587 untuk TLS dan 465 untuk SSL.</li>
-                    </ul>
-                </div>
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Catatan</h3>
+            </div>
+            <div class="card-body text-secondary">
+                <p>Pengaturan pelacakan langsung aktif di halaman publik setelah disimpan.</p>
+                <p class="mb-3">Konfigurasi SMTP dipakai untuk seluruh email aplikasi (verifikasi, reset password, dan notifikasi).</p>
+                <ul class="mb-0 ps-3">
+                    <li>GA4 memakai Measurement ID berawalan <code>G-</code>.</li>
+                    <li>Search Console cukup nilai <code>content</code>-nya.</li>
+                    <li>Facebook Pixel berupa deretan angka.</li>
+                    <li>Gunakan port 587 untuk TLS dan 465 untuk SSL.</li>
+                </ul>
             </div>
         </div>
-    </div>
-</form>
 
-<div class="row">
-    <div class="col-lg-8">
         <div class="card mb-3">
             <div class="card-header">
                 <h3 class="card-title">Uji pengiriman email</h3>
@@ -260,7 +255,7 @@
                 </p>
                 <form method="POST" action="{{ route('admin.settings.test-email') }}" class="row g-2">
                     @csrf
-                    <div class="col-md-8">
+                    <div class="col-12">
                         <label class="form-label" for="test_email">Kirim ke alamat</label>
                         <input type="email" id="test_email" name="email"
                                class="form-control @error('email') is-invalid @enderror"
@@ -269,8 +264,8 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-outline-primary w-100">Kirim email uji</button>
+                    <div class="col-12 d-grid">
+                        <button type="submit" class="btn btn-outline-primary">Kirim email uji</button>
                     </div>
                 </form>
             </div>
@@ -286,7 +281,7 @@
                 </p>
                 <form method="POST" action="{{ route('admin.settings.test-midtrans') }}">
                     @csrf
-                    <button type="submit" class="btn btn-outline-primary">Uji koneksi Midtrans</button>
+                    <button type="submit" class="btn btn-outline-primary w-100">Uji koneksi Midtrans</button>
                 </form>
             </div>
         </div>
