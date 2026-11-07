@@ -147,3 +147,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Run `vendor/bin/pest` to call the test runner directly. It accepts the same file path and `--filter=testName` arguments.
 
 </laravel-boost-guidelines>
+
+## Environment (local)
+
+- PHP 8.4 binary: `D:\laragon\bin\php\php-8.4.23-nts-Win32-vs17-x64\php.exe` — use this for ALL artisan/composer/test commands. System PHP (8.3) is incompatible (project requires >= 8.4.1).

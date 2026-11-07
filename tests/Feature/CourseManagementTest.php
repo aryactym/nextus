@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
 use App\Domain\Organization\Models\Organization;
 use App\Models\User;
@@ -60,6 +61,55 @@ it('stores a new course', function () {
         ->and($course->getTranslation('title', 'id'))->toBe('Pengantar Zakat')
         ->and($course->getTranslation('title', 'en'))->toBe('Introduction to Zakat')
         ->and($course->status)->toBe('draft');
+});
+
+it('filters the course index by keyword and attributes', function () {
+    ['user' => $user, 'organization' => $organization] = courseUserWithOrganization();
+    $category = Category::create([
+        'organization_id' => $organization->id,
+        'name' => ['id' => 'Filantropi'],
+        'slug' => 'filantropi',
+    ]);
+
+    Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Pemetaan Sosial Ekonomi'],
+        'slug' => 'pemetaan-sosial',
+        'status' => 'published',
+        'access_type' => 'free',
+        'category_id' => $category->id,
+    ]);
+    Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Manajemen Risiko Program'],
+        'slug' => 'manajemen-risiko',
+        'status' => 'draft',
+        'access_type' => 'donation',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('admin.courses.index', ['q' => 'pemetaan']))
+        ->assertOk()
+        ->assertSee('Pemetaan Sosial Ekonomi')
+        ->assertDontSee('Manajemen Risiko Program');
+
+    $this->actingAs($user)
+        ->get(route('admin.courses.index', ['status' => 'draft']))
+        ->assertOk()
+        ->assertSee('Manajemen Risiko Program')
+        ->assertDontSee('Pemetaan Sosial Ekonomi');
+
+    $this->actingAs($user)
+        ->get(route('admin.courses.index', ['access_type' => 'free']))
+        ->assertOk()
+        ->assertSee('Pemetaan Sosial Ekonomi')
+        ->assertDontSee('Manajemen Risiko Program');
+
+    $this->actingAs($user)
+        ->get(route('admin.courses.index', ['category' => (string) $category->id]))
+        ->assertOk()
+        ->assertSee('Pemetaan Sosial Ekonomi')
+        ->assertDontSee('Manajemen Risiko Program');
 });
 
 it('rejects storing a course with duplicate slug in the same organization', function () {

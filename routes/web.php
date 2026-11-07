@@ -1,28 +1,45 @@
 <?php
 
+use App\Domain\Admin\Http\Controllers\PageController;
+use App\Domain\Admin\Http\Controllers\PublicPageController;
 use App\Domain\Auth\Http\Controllers\AuthController;
 use App\Domain\Catalog\Http\Controllers\CategoryController;
 use App\Domain\Catalog\Http\Controllers\CourseController;
 use App\Domain\Catalog\Http\Controllers\LessonController;
+use App\Domain\Catalog\Http\Controllers\MediaController;
 use App\Domain\Catalog\Http\Controllers\ModuleController;
+use App\Domain\Catalog\Http\Controllers\PublicCourseController;
 use App\Domain\Catalog\Http\Controllers\UploadController;
+use App\Domain\Learning\Http\Controllers\DashboardController;
+use App\Domain\Learning\Http\Controllers\EnrollmentController;
+use App\Domain\Learning\Http\Controllers\PlayerController;
+use App\Domain\Settings\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    if (request()->getPreferredLanguage() === 'en') {
-        return view('home-en');
-    }
-
     return view('home');
 })->name('home');
 
-// Placeholder verifikasi sertifikat (halaman penuh dikerjakan di Fase 4)
+// ---- Halaman publik ----
+Route::get('/kursus', [PublicCourseController::class, 'index'])->name('catalog.index');
+Route::get('/kursus/{slug}', [PublicCourseController::class, 'show'])->name('catalog.show');
+Route::post('/kursus/{slug}/daftar', [EnrollmentController::class, 'store'])
+    ->middleware('auth')->name('enroll.store');
+Route::get('/media/thumb/{path}', [MediaController::class, 'thumbnail'])
+    ->name('media.thumbnail')->where('path', '.*');
+Route::get('/tentang', fn () => view('pages.tentang'))->name('tentang');
+Route::get('/jadwal', fn () => view('pages.jadwal'))->name('jadwal');
+Route::get('/panduan', fn () => view('pages.panduan'))->name('panduan');
+Route::get('/syarat', [PublicPageController::class, 'terms'])->name('syarat');
+Route::get('/privasi', [PublicPageController::class, 'privacy'])->name('privasi');
+
+// Verifikasi sertifikat (pencarian penuh dikerjakan di Fase 4)
 Route::get('/verifikasi', function () {
-    return redirect()->route('home');
+    return view('pages.verifikasi');
 })->name('verifikasi');
 
 Route::get('/en', function () {
-    return view('home-en');
+    return redirect()->route('home-id');
 })->name('home-en');
 
 Route::get('/id', function () {
@@ -41,11 +58,23 @@ Route::post('/register', [AuthController::class, 'store'])
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
+// ---- Belajar (learner) ----
+Route::get('/belajar', [DashboardController::class, 'index'])
+    ->middleware('auth')->name('learning.dashboard');
+Route::get('/belajar/{course}/{lesson}', [PlayerController::class, 'show'])
+    ->name('player.show');
+Route::post('/belajar/{course}/{lesson}/selesai', [PlayerController::class, 'complete'])
+    ->middleware('auth')->name('player.complete');
+
 // ---- Admin (RBAC) ----
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+
+    Route::get('pages', [PageController::class, 'index'])->name('pages.index');
+    Route::get('pages/{page}/edit', [PageController::class, 'edit'])->name('pages.edit');
+    Route::put('pages/{page}', [PageController::class, 'update'])->name('pages.update');
 
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('courses', CourseController::class)->except(['show']);
@@ -61,6 +90,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('lessons.update');
     Route::delete('lessons/{lesson}', [LessonController::class, 'destroy'])
         ->name('lessons.destroy');
+
+    Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('settings/test-email', [SettingController::class, 'sendTestEmail'])
+        ->name('settings.test-email');
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
         ->name('uploads.show')

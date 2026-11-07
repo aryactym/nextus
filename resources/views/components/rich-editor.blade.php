@@ -1,12 +1,16 @@
 {{--
-    x-rich-editor — textarea rich text editor (Alpine.js + minimal toolbar)
+    x-rich-editor — WYSIWYG editor berbasis CKEditor 5 Classic (build gratis/GPL dari CDN).
 
     Props:
       $name     — nama input (mis: 'content[id]')
       $value    — nilai awal HTML
       $label    — label tampil di atas editor (opsional)
-      $rows     — tinggi textarea fallback (default: 8)
+      $rows     — tinggi minimum area editor (default: 8)
       $required — required attribute (default: false)
+
+    Catatan: CKEditor 5 build bawaan CDN membuang atribut/class HTML yang tidak
+    dikenalnya. Untuk halaman hukum, gunakan heading H2/H3 agar daftar isi
+    otomatis terbentuk.
 --}}
 @props([
     'name'     => 'content',
@@ -15,62 +19,87 @@
     'rows'     => 8,
     'required' => false,
 ])
-<div x-data="richEditor({{ Js::from($value) }})" class="rich-editor">
+
+@php
+    $editorId = 'rich-editor-'.str()->uuid();
+@endphp
+
+<div class="rich-editor" style="--rich-editor-min-height: {{ $rows * 1.5 }}rem">
     @if ($label)
-        <label class="form-label">{{ $label }}</label>
+        <label class="form-label" for="{{ $editorId }}">{{ $label }}</label>
     @endif
 
-    {{-- Toolbar --}}
-    <div class="rich-editor-toolbar btn-group btn-group-sm mb-1" role="toolbar" aria-label="Format teks">
-        <button type="button" class="btn btn-outline-secondary" x-on:click="exec('bold')" title="Tebal (Ctrl+B)"><strong>B</strong></button>
-        <button type="button" class="btn btn-outline-secondary" x-on:click="exec('italic')" title="Miring (Ctrl+I)"><em>I</em></button>
-        <button type="button" class="btn btn-outline-secondary" x-on:click="exec('underline')" title="Garis bawah (Ctrl+U)"><u>U</u></button>
-        <button type="button" class="btn btn-outline-secondary" x-on:click="exec('insertUnorderedList')" title="Daftar poin">&#8226;&#8212;</button>
-        <button type="button" class="btn btn-outline-secondary" x-on:click="exec('insertOrderedList')" title="Daftar angka">1.</button>
-        <button type="button" class="btn btn-outline-secondary" x-on:click="createLink()" title="Sisipkan tautan">&#128279;</button>
-    </div>
-
-    {{-- Editable area --}}
-    <div
-        x-ref="editor"
-        contenteditable="true"
-        x-html="content"
-        x-on:input="content = $event.target.innerHTML; $refs.hidden.value = content"
-        class="form-control rich-editor-area"
-        style="min-height: {{ $rows * 1.5 }}rem; overflow-y: auto;"
-        role="textbox"
-        aria-multiline="true"
-        @if($label) aria-label="{{ $label }}" @endif
-    ></div>
-
-    {{-- Hidden textarea untuk submit form --}}
+    {{-- Textarea tetap ada sebagai fallback & sumber nilai form. --}}
     <textarea
-        x-ref="hidden"
+        id="{{ $editorId }}"
         name="{{ $name }}"
-        class="d-none"
+        rows="{{ $rows }}"
+        class="form-control @error($name) is-invalid @enderror"
+        data-ckeditor
         @if ($required) required @endif
     >{{ $value }}</textarea>
+
+    @error($name)
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 @once
+@push('styles')
+<style>
+    .rich-editor .ck.ck-editor {
+        width: 100%;
+    }
+
+    .rich-editor .ck-editor__editable_inline {
+        min-height: var(--rich-editor-min-height, 12rem);
+    }
+</style>
+@endpush
+
 @push('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 <script>
-function richEditor(initial) {
-    return {
-        content: initial || '',
-        exec(command) {
-            document.execCommand(command, false, null);
-            this.$refs.hidden.value = this.$refs.editor.innerHTML;
-        },
-        createLink() {
-            const url = prompt('Masukkan URL tautan:');
-            if (url) {
-                document.execCommand('createLink', false, url);
-                this.$refs.hidden.value = this.$refs.editor.innerHTML;
-            }
-        },
-    };
-}
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-ckeditor]').forEach(function (textarea) {
+            ClassicEditor
+                .create(textarea, {
+                    language: 'id',
+                    initialData: textarea.value,
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'Paragraf', class: 'ck-heading_paragraph' },
+                            { model: 'heading2', view: 'h2', title: 'Judul bagian (H2)', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'Subjudul (H3)', class: 'ck-heading_heading3' },
+                        ],
+                    },
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'underline', 'strikethrough', '|',
+                        'bulletedList', 'numberedList', 'outdent', 'indent', '|',
+                        'link', 'blockQuote', 'insertTable', '|',
+                        'removeFormat', 'undo', 'redo',
+                    ],
+                })
+                .then(function (editor) {
+                    // Textarea disembunyikan CKEditor; pastikan nilai selalu sinkron.
+                    var form = textarea.closest('form');
+
+                    if (form) {
+                        form.addEventListener('submit', function () {
+                            editor.updateSourceElement();
+                        });
+                    }
+
+                    editor.model.document.on('change:data', function () {
+                        editor.updateSourceElement();
+                    });
+                })
+                .catch(function (error) {
+                    console.error('CKEditor gagal dimuat:', error);
+                });
+        });
+    });
 </script>
 @endpush
 @endonce

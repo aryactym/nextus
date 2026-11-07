@@ -40,6 +40,32 @@ it('shows the category index page', function () {
         ->assertOk();
 });
 
+it('filters categories by keyword', function () {
+    ['user' => $user, 'organization' => $organization] = categoryUserWithOrganization();
+    Category::create([
+        'organization_id' => $organization->id,
+        'name' => ['id' => 'Dasar Ziswaf', 'en' => 'Basic Ziswaf'],
+        'slug' => 'dasar-ziswaf',
+    ]);
+    Category::create([
+        'organization_id' => $organization->id,
+        'name' => ['id' => 'Pengelolaan Zakat', 'en' => 'Zakat Management'],
+        'slug' => 'pengelolaan-zakat',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('admin.categories.index', ['q' => 'zakat']))
+        ->assertOk()
+        ->assertSee('Pengelolaan Zakat')
+        ->assertDontSee('Dasar Ziswaf');
+
+    $this->actingAs($user)
+        ->get(route('admin.categories.index', ['q' => 'ziswaf']))
+        ->assertOk()
+        ->assertSee('Dasar Ziswaf')
+        ->assertDontSee('Pengelolaan Zakat');
+});
+
 it('stores a new category', function () {
     ['user' => $user, 'organization' => $organization] = categoryUserWithOrganization();
 

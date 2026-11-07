@@ -6,14 +6,29 @@ use App\Domain\Catalog\Http\Requests\StoreCategoryRequest;
 use App\Domain\Catalog\Http\Requests\UpdateCategoryRequest;
 use App\Domain\Catalog\Models\Category;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::forOrganization()->orderBy('sort')->get();
+        $filters = [
+            'q' => trim((string) $request->input('q', '')),
+        ];
 
-        return view('catalog.categories.index', compact('categories'));
+        $categories = Category::forOrganization()
+            ->when($filters['q'] !== '', function ($query) use ($filters): void {
+                $query->where(function ($query) use ($filters): void {
+                    $query->where('name->id', 'like', '%'.$filters['q'].'%')
+                        ->orWhere('name->en', 'like', '%'.$filters['q'].'%')
+                        ->orWhere('slug', 'like', '%'.$filters['q'].'%');
+                });
+            })
+            ->orderBy('sort')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('catalog.categories.index', compact('categories', 'filters'));
     }
 
     public function create()

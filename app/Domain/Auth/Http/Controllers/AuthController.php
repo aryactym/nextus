@@ -4,6 +4,7 @@ namespace App\Domain\Auth\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -41,12 +42,15 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'role' => ['nullable', 'string', 'max:50'],
+            'organization' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'terms' => ['accepted'],
         ]);
 
         if ($validator->fails()) {
@@ -59,7 +63,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'locale' => 'id',
         ]);
-        $user->assignRole(Role::where('name', 'Learner')->first()->id ?? 'Learner');
+        $user->assignRole(Role::where('name', 'Learner')->first() ?? 'Learner');
 
         Auth::login($user);
 

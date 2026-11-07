@@ -2,6 +2,8 @@
 
 namespace App\Domain\Catalog\Models;
 
+use App\Domain\Learning\Models\Enrollment;
+use App\Domain\Organization\Models\Organization;
 use App\Support\Traits\BelongsToOrganization;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Course extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid, BelongsToOrganization, HasTranslations;
+    use BelongsToOrganization, HasFactory, HasTranslations, HasUuid, SoftDeletes;
 
     public $translatable = ['title', 'summary', 'description'];
 
@@ -31,6 +33,11 @@ class Course extends Model
         'published_at' => 'datetime',
     ];
 
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -43,6 +50,6 @@ class Course extends Model
 
     public function enrollments(): HasMany
     {
-        return $this->hasMany(\App\Domain\Learning\Models\Enrollment::class);
+        return $this->hasMany(Enrollment::class);
     }
 }

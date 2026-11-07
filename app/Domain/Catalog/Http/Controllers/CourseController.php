@@ -8,15 +8,39 @@ use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::forOrganization()->with('category')->latest()->paginate(10);
+        $filters = [
+            'q' => trim((string) $request->input('q', '')),
+            'status' => (string) $request->input('status', ''),
+            'access_type' => (string) $request->input('access_type', ''),
+            'category' => (string) $request->input('category', ''),
+        ];
 
-        return view('catalog.courses.index', compact('courses'));
+        $categories = Category::forOrganization()->orderBy('sort')->get();
+
+        $courses = Course::forOrganization()
+            ->with('category')
+            ->when($filters['q'] !== '', function ($query) use ($filters): void {
+                $query->where(function ($query) use ($filters): void {
+                    $query->where('title->id', 'like', '%'.$filters['q'].'%')
+                        ->orWhere('title->en', 'like', '%'.$filters['q'].'%')
+                        ->orWhere('slug', 'like', '%'.$filters['q'].'%');
+                });
+            })
+            ->when($filters['status'] !== '', fn ($query) => $query->where('status', $filters['status']))
+            ->when($filters['access_type'] !== '', fn ($query) => $query->where('access_type', $filters['access_type']))
+            ->when($filters['category'] !== '', fn ($query) => $query->where('category_id', $filters['category']))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('catalog.courses.index', compact('courses', 'categories', 'filters'));
     }
 
     public function create()
