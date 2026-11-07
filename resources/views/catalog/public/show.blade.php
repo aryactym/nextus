@@ -2,6 +2,7 @@
     title="{{ $course->getTranslation('title', app()->getLocale()) }}"
     description="{{ $course->getTranslation('summary', app()->getLocale()) }}"
     active-page="catalog"
+    canonical="{{ route('catalog.show', $course->slug) }}"
 >
 
 @php
@@ -370,6 +371,9 @@
   @endphp
   {!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
   </script>
+  <link rel="alternate" hreflang="id" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('id', route('catalog.show', $course->slug)) }}">
+  <link rel="alternate" hreflang="en" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('en', route('catalog.show', $course->slug)) }}">
+  <link rel="alternate" hreflang="x-default" href="{{ route('catalog.show', $course->slug) }}">
   @endpush
 
 </x-layouts.public>

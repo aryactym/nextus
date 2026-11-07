@@ -23,7 +23,7 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
 
       {{-- Brand --}}
-      <a class="brand-mark" href="{{ route('home-id') }}" aria-label="{{ config('app.name') }}, ke beranda">
+      <a class="brand-mark" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('id') }}" aria-label="{{ config('app.name') }}, ke beranda">
         <img
           class="brand-logo"
           src="{{ asset('images/logo-nextus.svg') }}"
@@ -61,8 +61,8 @@
             aria-expanded="false"
           ><span class="visually-hidden">Bahasa: </span>{{ $locale === 'en' ? 'English' : 'Indonesia' }}</button>
           <div class="dropdown-menu">
-            <a class="dropdown-item{{ $locale === 'id' ? ' active' : '' }}" href="{{ route('home-id') }}" hreflang="id">Indonesia</a>
-            <a class="dropdown-item{{ $locale === 'en' ? ' active' : '' }}" href="{{ route('home-en') }}" hreflang="en">English</a>
+            <a class="dropdown-item{{ $locale === 'id' ? ' active' : '' }}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('id') }}" hreflang="id">Indonesia</a>
+            <a class="dropdown-item{{ $locale === 'en' ? ' active' : '' }}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('en') }}" hreflang="en">English</a>
           </div>
         </div>
 

@@ -10,6 +10,7 @@ use App\Domain\Catalog\Http\Controllers\LessonController;
 use App\Domain\Catalog\Http\Controllers\MediaController;
 use App\Domain\Catalog\Http\Controllers\ModuleController;
 use App\Domain\Catalog\Http\Controllers\PublicCourseController;
+use App\Domain\Catalog\Models\Course;
 use App\Domain\Catalog\Http\Controllers\QuizController;
 use App\Domain\Catalog\Http\Controllers\UploadController;
 use App\Domain\Learning\Http\Controllers\CertificateController;
@@ -18,28 +19,31 @@ use App\Domain\Learning\Http\Controllers\EnrollmentController;
 use App\Domain\Learning\Http\Controllers\PlayerController;
 use App\Domain\Settings\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
+], function () {
+    Route::get('/', function () {
+        return view('home');
+    })->name('home');
 
-// ---- Halaman publik ----
-Route::get('/kursus', [PublicCourseController::class, 'index'])->name('catalog.index');
-Route::get('/kursus/{slug}', [PublicCourseController::class, 'show'])->name('catalog.show');
-Route::post('/kursus/{slug}/daftar', [EnrollmentController::class, 'store'])
-    ->middleware('auth', 'throttle:enroll')->name('enroll.store');
-Route::get('/media/thumb/{path}', [MediaController::class, 'thumbnail'])
-    ->name('media.thumbnail')->where('path', '.*');
-Route::get('/tentang', fn () => view('pages.tentang'))->name('tentang');
-Route::get('/jadwal', fn () => view('pages.jadwal'))->name('jadwal');
-Route::get('/panduan', fn () => view('pages.panduan'))->name('panduan');
-Route::get('/syarat', [PublicPageController::class, 'terms'])->name('syarat');
-Route::get('/privasi', [PublicPageController::class, 'privacy'])->name('privasi');
-
-Route::get('/verifikasi', [CertificateController::class, 'verify'])
-    ->name('verifikasi');
-Route::get('/verifikasi/{code}', [CertificateController::class, 'verify'])
-    ->name('certificates.verify');
+    // ---- Halaman publik ----
+    Route::get('/kursus', [PublicCourseController::class, 'index'])->name('catalog.index');
+    Route::get('/kursus/{slug}', [PublicCourseController::class, 'show'])->name('catalog.show');
+    Route::post('/kursus/{slug}/daftar', [EnrollmentController::class, 'store'])
+        ->middleware('auth', 'throttle:enroll')->name('enroll.store');
+    Route::get('/media/thumb/{path}', [MediaController::class, 'thumbnail'])
+        ->name('media.thumbnail')->where('path', '.*');
+    Route::get('/tentang', fn () => view('pages.tentang'))->name('tentang');
+    Route::get('/jadwal', fn () => view('pages.jadwal'))->name('jadwal');
+    Route::get('/panduan', fn () => view('pages.panduan'))->name('panduan');
+    Route::get('/syarat', [PublicPageController::class, 'terms'])->name('syarat');
+    Route::get('/privasi', [PublicPageController::class, 'privacy'])->name('privasi');
+    Route::get('/verifikasi', [CertificateController::class, 'verify'])->name('verifikasi');
+    Route::get('/verifikasi/{code}', [CertificateController::class, 'verify'])->name('certificates.verify');
+});
 
 Route::get('/en', function () {
     return redirect()->route('home-id');
@@ -49,7 +53,30 @@ Route::get('/id', function () {
     return view('home');
 })->name('home-id');
 
-// ---- Auth (sederhana, fase 1) ----
+Route::get('/sitemap.xml', function () {
+    $courses = Course::withoutGlobalScope('organization')
+        ->where('status', 'published')
+        ->orderBy('updated_at', 'desc')
+        ->get(['slug', 'updated_at']);
+
+    return response()
+        ->view('seo.sitemap', compact('courses'))
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
+Route::get('/en', function () {
+    app()->setLocale('en');
+    session(['locale' => 'en']);
+
+    return view('home');
+})->name('home-en');
+
+Route::get('/id', function () {
+    app()->setLocale('id');
+    session(['locale' => 'id']);
+
+    return view('home');
+})->name('home-id');
+
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'authenticate'])
