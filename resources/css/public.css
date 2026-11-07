@@ -312,6 +312,74 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible {
 /* ====== Progress & player ====== */
 .progress-bar-nu { background: var(--nu-zamrud); }
 
+/* ====== Prose: konten teks pelajaran ====== */
+.lesson-content.prose {
+  max-width: 70ch;
+  line-height: 1.7;
+}
+.lesson-content.prose p { margin-bottom: 1rem; }
+.lesson-content.prose h2 { font-size: 1.35rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--nu-malam); }
+.lesson-content.prose h3 { font-size: 1.15rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--nu-malam); }
+.lesson-content.prose ul,
+.lesson-content.prose ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+.lesson-content.prose ul li, .lesson-content.prose ol li { margin-bottom: 0.35rem; }
+.lesson-content.prose blockquote {
+  border-left: 4px solid var(--nu-fajar);
+  padding: 0.75rem 1rem;
+  background: var(--nu-kertas);
+  margin-bottom: 1rem;
+}
+.lesson-content.prose blockquote p { margin-bottom: 0; }
+.lesson-content.prose img { max-width: 100%; height: auto; border-radius: var(--nu-radius-sm); display: block; margin-bottom: 1rem; }
+.lesson-content.prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.9rem; }
+.lesson-content.prose table th,
+.lesson-content.prose table td { border: 1px solid var(--nu-kabut); padding: 0.5rem 0.75rem; text-align: left; }
+
+/* ====== Kurikulum panel di halaman pelajaran ====== */
+aside[aria-label="Kurikulum"] .list-group-item {
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--nu-radius-sm);
+  min-height: 44px; /* target sentuh minimal 44px */
+}
+aside[aria-label="Kurikulum"] .list-group-item.lesson-active {
+  background: var(--nu-kabut);
+  border-left: 4px solid var(--nu-fajar);
+  font-weight: 600;
+}
+aside[aria-label="Kurikulum"] .list-group-item.lesson-active .lesson-title {
+  color: var(--nu-malam);
+}
+aside[aria-label="Kurikulum"] .list-group-item .badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  min-height: auto;
+}
+aside[aria-label="Kurikulum"] .accordion-item.module-active .accordion-button {
+  font-weight: 700;
+  color: var(--nu-zamrud);
+}
+
+/* ====== Hero & meta contrast ====== */
+.page-hero .meta span {
+  color: rgba(255,255,255,0.95);
+  border: 1px solid rgba(255,255,255,0.35);
+}
+.page-hero .crumbs li {
+  color: var(--nu-batu);
+}
+.page-hero .crumbs a {
+  color: var(--nu-zamrud);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 767.98px) {
+  aside[aria-label="Kurikulum"] {
+    position: static !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+}
+
 /* ====== Tentang / step cards ====== */
 .step { padding: 1.5rem; background: #fff; border: 1px solid var(--nu-kabut); border-radius: var(--nu-radius); }
 .step .num { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--nu-zamrud); color: #fff; font-weight: 700; font-size: 1.1rem; display: grid; place-items: center; margin-bottom: 1rem; flex: none; }

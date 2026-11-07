@@ -1,7 +1,7 @@
 <x-layouts.public
     :title="$lesson->getTranslation('title', app()->getLocale())"
     :description="$course->getTranslation('title', app()->getLocale())"
-    active-page="catalog"
+    active-page="belajar"
 >
 
 @php
@@ -64,26 +64,30 @@
           @endif
 
           @if ($enrollment && $lesson->type !== 'quiz')
-            <div class="d-flex flex-wrap gap-2 mt-4 align-items-center">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-4">
               @if ($previousLesson)
                 <a class="btn btn-outline-primary" href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $previousLesson->uuid]) }}">Sebelumnya</a>
               @endif
-              @if ($completedLessonIds->contains($lesson->id))
-                <span class="badge bg-green-lt">Sudah selesai</span>
-                @if ($nextLesson)
-                  <a class="btn btn-primary" href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $nextLesson->uuid]) }}">Materi berikutnya</a>
+
+              <div class="d-flex flex-wrap gap-2">
+                @if (!$completedLessonIds->contains($lesson->id))
+                  <form action="{{ route('player.complete', ['course' => $course->slug, 'lesson' => $lesson->uuid]) }}" method="POST">
+                    @csrf
+                    <button class="btn btn-primary" type="submit">Tandai selesai</button>
+                  </form>
+                @else
+                  <span class="badge bg-green-lt">Sudah selesai</span>
                 @endif
-              @else
-                <form action="{{ route('player.complete', ['course' => $course->slug, 'lesson' => $lesson->uuid]) }}" method="POST">
-                  @csrf
-                  <button class="btn btn-primary" type="submit">Tandai selesai</button>
-                </form>
-              @endif
+
+                @if ($nextLesson)
+                  <a class="btn btn-primary" href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $nextLesson->uuid]) }}">Berikutnya</a>
+                @endif
+              </div>
             </div>
           @endif
         </div>
 
-        <aside class="col-lg-4" aria-label="Kurikulum">
+        <aside class="col-lg-4" aria-label="Kurikulum" style="position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; display: block;">
           <div class="card">
             <div class="card-body">
               <h2 class="h3">Kurikulum</h2>
@@ -92,35 +96,36 @@
               @endif
               <div class="accordion" id="curriculum">
                 @foreach ($course->modules as $module)
-                  <div class="accordion-item">
+                  @php $moduleActive = $module->lessons->contains(fn ($l) => $l->id === $lesson->id); @endphp
+                  <div class="accordion-item{{ $moduleActive ? ' module-active' : '' }}">
                     <h3 class="accordion-header">
                       <button
-                        class="accordion-button{{ ! $module->lessons->contains(fn ($l) => $l->id === $lesson->id) ? ' collapsed' : '' }}"
+                        class="accordion-button{{ !$moduleActive ? ' collapsed' : '' }}"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#module-{{ $module->id }}"
-                        aria-expanded="{{ $module->lessons->contains(fn ($l) => $l->id === $lesson->id) ? 'true' : 'false' }}"
+                        aria-expanded="{{ $moduleActive ? 'true' : 'false' }}"
                         aria-controls="module-{{ $module->id }}"
                       >
                         {{ $module->getTranslation('title', $locale) }}
                       </button>
                     </h3>
-                    <div id="module-{{ $module->id }}" class="accordion-collapse collapse{{ $module->lessons->contains(fn ($l) => $l->id === $lesson->id) ? ' show' : '' }}" data-bs-parent="#curriculum">
+                    <div id="module-{{ $module->id }}" class="accordion-collapse collapse{{ $moduleActive ? ' show' : '' }}" data-bs-parent="#curriculum">
                       <ul class="list-group list-group-flush">
                         @foreach ($module->lessons as $item)
-                          @php $locked = ! $enrollment && ! $item->is_preview; @endphp
-                          <li class="list-group-item">
+                          @php $locked = ! $enrollment && ! $item->is_preview; $lessonActive = $item->id === $lesson->id; @endphp
+                          <li class="list-group-item d-flex align-items-start gap-2{{ $lessonActive ? ' lesson-active' : '' }}">
                             @if ($locked)
                               <span class="text-secondary">{{ $item->getTranslation('title', $locale) }} &middot; terkunci</span>
                             @else
                               <a
                                 href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $item->uuid]) }}"
-                                class="{{ $item->id === $lesson->id ? 'fw-bold text-reset text-decoration-none' : 'text-reset text-decoration-none' }}"
-                                @if ($item->id === $lesson->id) aria-current="step" @endif
+                                class="d-block w-100 text-reset text-decoration-none {{ $lessonActive ? 'fw-bold' : '' }}"
+                                @if ($lessonActive) aria-current="step" @endif
                               >
-                                {{ $item->getTranslation('title', $locale) }}
+                                <span class="lesson-title">{{ $item->getTranslation('title', $locale) }}</span>
                                 @if ($completedLessonIds->contains($item->id))
-                                  <span class="badge bg-green-lt ms-1">Selesai</span>
+                                  <span class="badge bg-green-lt ms-auto">Selesai</span>
                                 @endif
                                 @if ($item->is_preview)
                                   <span class="badge bg-azure-lt ms-1">Preview</span>
@@ -142,4 +147,3 @@
   </section>
 
 </x-layouts.public>
-

@@ -67,7 +67,9 @@
         </div>
 
         @auth
-          <a class="btn btn-outline-primary" href="{{ route('learning.dashboard') }}">Belajar saya</a>
+          <a class="btn btn-outline-primary" href="{{ route('learning.dashboard') }}"
+            @if ($activePage === 'belajar') aria-current="page" @endif
+          >Belajar saya</a>
           @can('manage courses')
             <a class="btn btn-ghost-secondary" href="{{ route('admin.dashboard') }}">Admin</a>
           @endcan
