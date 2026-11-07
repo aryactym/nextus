@@ -14,6 +14,8 @@ class ModuleController extends Controller
 {
     public function store(StoreModuleRequest $request, Course $course)
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $course = Course::forOrganization()->findOrFail($course->getKey());
         $data = $request->validated();
         $data['sort'] = $data['sort'] ?? $course->modules()->max('sort') + 1;
@@ -25,6 +27,8 @@ class ModuleController extends Controller
 
     public function update(UpdateModuleRequest $request, CourseModule $module): RedirectResponse
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $module = CourseModule::query()
             ->whereHas('course', fn (Builder $query) => $query->forOrganization())
             ->findOrFail($module->getKey());

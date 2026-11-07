@@ -17,6 +17,7 @@ use App\Domain\Learning\Http\Controllers\CertificateController;
 use App\Domain\Learning\Http\Controllers\DashboardController;
 use App\Domain\Learning\Http\Controllers\EnrollmentController;
 use App\Domain\Learning\Http\Controllers\PlayerController;
+use App\Domain\Payment\Http\Controllers\OrderController;
 use App\Domain\Payment\Http\Controllers\PaymentController;
 use App\Domain\Payment\Http\Controllers\WebhookController;
 use App\Domain\Settings\Http\Controllers\SettingController;
@@ -140,7 +141,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::put('quiz-questions/{question}', [QuizController::class, 'updateQuestion'])
         ->name('quiz-questions.update');
 
+    Route::get('payments', [OrderController::class, 'index'])->name('payments.index');
+    Route::get('payments/{order}', [OrderController::class, 'show'])->name('payments.show');
+
     Route::resource('users', UserController::class)->except(['show']);
+
     Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('settings/test-email', [SettingController::class, 'sendTestEmail'])

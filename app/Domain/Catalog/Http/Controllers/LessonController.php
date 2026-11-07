@@ -15,6 +15,8 @@ class LessonController extends Controller
 {
     public function store(StoreLessonRequest $request, CourseModule $module, UploadService $upload)
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $module = CourseModule::query()
             ->whereHas('course', fn (Builder $query) => $query->forOrganization())
             ->findOrFail($module->getKey());
@@ -35,6 +37,8 @@ class LessonController extends Controller
 
     public function update(UpdateLessonRequest $request, Lesson $lesson, UploadService $upload): RedirectResponse
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $lesson = Lesson::query()
             ->whereHas('module.course', fn (Builder $query) => $query->forOrganization())
             ->findOrFail($lesson->getKey());

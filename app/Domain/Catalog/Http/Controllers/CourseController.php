@@ -15,6 +15,8 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $filters = [
             'q' => trim((string) $request->input('q', '')),
             'status' => (string) $request->input('status', ''),
@@ -45,6 +47,8 @@ class CourseController extends Controller
 
     public function create()
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $categories = Category::forOrganization()->orderBy('sort')->get();
 
         return view('catalog.courses.create', compact('categories'));
@@ -52,6 +56,8 @@ class CourseController extends Controller
 
     public function store(StoreCourseRequest $request, UploadService $upload)
     {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
         $data = $request->validated();
         $data['organization_id'] = organization_id();
         $data['slug'] = $data['slug'] ?? Str::slug($data['title']['id'] ?? 'course');

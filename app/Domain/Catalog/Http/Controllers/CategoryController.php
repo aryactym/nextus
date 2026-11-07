@@ -12,6 +12,8 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
+        abort_unless(auth()->user()->can('manage categories'), 403);
+
         $filters = [
             'q' => trim((string) $request->input('q', '')),
         ];
@@ -33,11 +35,15 @@ class CategoryController extends Controller
 
     public function create()
     {
+        abort_unless(auth()->user()->can('manage categories'), 403);
+
         return view('catalog.categories.create');
     }
 
     public function store(StoreCategoryRequest $request)
     {
+        abort_unless(auth()->user()->can('manage categories'), 403);
+
         $data = $request->validated();
         $data['organization_id'] = organization_id();
         $data['sort'] = $data['sort'] ?? 0;

@@ -16,6 +16,7 @@ class PermissionSeeder extends Seeder
             'manage pages',
             'manage categories',
             'manage courses',
+            'manage payments',
             'manage settings',
             'manage users',
         ];

@@ -222,10 +222,8 @@
                 <button type="submit" class="btn btn-primary">Simpan pengaturan</button>
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-link">Batal</a>
             </div>
-        </div>
         </form>
     </div>
-
     <div class="col-lg-4">
         <div class="card mb-3">
             <div class="card-header">

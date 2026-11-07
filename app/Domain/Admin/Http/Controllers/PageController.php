@@ -47,6 +47,8 @@ class PageController extends Controller
 
     public function update(UpdatePageRequest $request, Page $page): RedirectResponse
     {
+        abort_unless(auth()->user()->can('manage pages'), 403);
+
         $page->update([
             ...$request->validated(),
             'is_published' => $request->boolean('is_published'),
