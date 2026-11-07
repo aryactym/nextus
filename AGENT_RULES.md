@@ -51,6 +51,42 @@ Aturan wajib:
 - Validasi ukuran maksimal baik di sisi client dan server.
 - Tidak pernah percayai `$_FILES['name']` atau path yang dikirim client.
 
+Pola implementasi yang terbukti jalan di Windows 11 + PHP 8.4 (Laravel 13):
+
+```php
+// UploadService::upload()
+$pathname = $file->getPathname(); // JANGAN getRealPath(): sering false di Windows temp
+
+if (! $file->isValid()) { /* throw ValidationException */ }
+if (! $pathname || ! is_file($pathname) || filesize($pathname) === 0) { /* throw */ }
+
+// Re-encode: decode dari isi file, bukan path (hindari cek is_readable pada direktori)
+$image = (new ImageManager(new Driver))->decode(file_get_contents($pathname));
+
+// Simpan ke storage/app/temp (BUKAN sys_get_temp_dir(): sering tidak readable/writable)
+$tempDir = storage_path('app/temp');
+if (! is_dir($tempDir)) { mkdir($tempDir, 0775, true); }
+$outputPath = $tempDir.DIRECTORY_SEPARATOR.(string) Str::uuid().'.'.$extension;
+$image->save($outputPath);
+
+// ... Storage::disk('uploads')->put($path, file_get_contents($outputPath))
+// bersihkan file temp setelah selesai
+```
+
+- `UploadController` (Laravel 13): jangan pakai `$this->middleware()` di constructor. Pasang middleware di route:
+  ```php
+  Route::get('uploads/{path}', [UploadController::class, 'show'])
+      ->middleware(['auth', 'signed'])
+      ->where('path', '.*');
+  ```
+- Import `Illuminate\Support\Facades\Storage` di controller (jangan andalkan facade tanpa use).
+- URL file privat di view wajib **signed**, bukan `route()` biasa:
+  ```blade
+  <img src="{{ \Illuminate\Support\Facades\URL::signedRoute('admin.uploads.show', ['path' => $course->thumbnail]) }}">
+  ```
+- File PDF/materi (kategori `document`) tidak perlu re-encode, tapi tetap validasi MIME + ukuran.
+- Pastikan `storage/app/temp` dan `storage/app/private/uploads` dapat ditulis proses web server.
+
 ## 5. Keamanan (OWASP Top 10 + ASVS L2)
 
 - CSRF token di semua form (webhook Midtrans dikecualikan, dilindungi signature).
