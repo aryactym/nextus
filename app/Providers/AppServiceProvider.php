@@ -65,6 +65,8 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
+
+        View::addLocation(base_path('docs'));
     }
 
     /**

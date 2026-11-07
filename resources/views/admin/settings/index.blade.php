@@ -224,7 +224,7 @@
             </div>
         </form>
 
-        <form method="POST" action="{{ route('admin.settings.update-favicon') }}" class="card mb-3">
+        <form method="POST" action="{{ route('admin.settings.update-favicon') }}" class="card mb-3" enctype="multipart/form-data">
             @csrf
             <div class="card-header">
                 <h3 class="card-title">Favicon situs</h3>
@@ -233,11 +233,11 @@
                 <div class="mb-3">
                     <label class="form-label" for="favicon">Unggah favicon</label>
                     <input type="file" id="favicon" name="favicon" class="form-control @error('favicon') is-invalid @enderror"
-                           accept="image/png,image/jpeg,image/svg+xml,image/x-icon">
+                           accept="image/png,image/jpeg,image/webp,image/gif,image/avif">
                     @error('favicon')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                    <div class="form-hint">Format PNG, JPG, SVG, atau ICO. Maksimal 1 MB. Digunakan di tab browser dan layar awal ponsel.</div>
+                    <div class="form-hint">Format PNG, JPG, WebP, GIF, atau AVIF. Maksimal 1 MB. Digunakan di tab browser dan layar awal ponsel.</div>
                 </div>
 
                 @if (! empty($settings['favicon']))
