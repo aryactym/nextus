@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Domain\Settings\Models\Setting;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Throwable;
@@ -27,6 +30,18 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::before(function ($user) {
             return $user->hasRole('Super Admin') ? true : null;
+        });
+
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        RateLimiter::for('uploads', function (Request $request) {
+            return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('enroll', function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
 
         $this->configureMailFromSettings();

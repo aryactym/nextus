@@ -2,6 +2,7 @@
 
 use App\Domain\Admin\Http\Controllers\PageController;
 use App\Domain\Admin\Http\Controllers\PublicPageController;
+use App\Domain\Admin\Http\Controllers\UserController;
 use App\Domain\Auth\Http\Controllers\AuthController;
 use App\Domain\Catalog\Http\Controllers\CategoryController;
 use App\Domain\Catalog\Http\Controllers\CourseController;
@@ -26,7 +27,7 @@ Route::get('/', function () {
 Route::get('/kursus', [PublicCourseController::class, 'index'])->name('catalog.index');
 Route::get('/kursus/{slug}', [PublicCourseController::class, 'show'])->name('catalog.show');
 Route::post('/kursus/{slug}/daftar', [EnrollmentController::class, 'store'])
-    ->middleware('auth')->name('enroll.store');
+    ->middleware('auth', 'throttle:enroll')->name('enroll.store');
 Route::get('/media/thumb/{path}', [MediaController::class, 'thumbnail'])
     ->name('media.thumbnail')->where('path', '.*');
 Route::get('/tentang', fn () => view('pages.tentang'))->name('tentang');
@@ -52,7 +53,7 @@ Route::get('/id', function () {
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'authenticate'])
-    ->name('login.post')->middleware('guest');
+    ->name('login.post')->middleware('guest', 'throttle:login');
 Route::get('/register', [AuthController::class, 'register'])
     ->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'store'])
@@ -105,13 +106,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::put('quiz-questions/{question}', [QuizController::class, 'updateQuestion'])
         ->name('quiz-questions.update');
 
+    Route::resource('users', UserController::class)->except(['show']);
     Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::post('settings/test-email', [SettingController::class, 'sendTestEmail'])
         ->name('settings.test-email');
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
-        ->middleware(['auth', 'signed'])
+        ->middleware(['auth', 'signed', 'throttle:uploads'])
         ->name('uploads.show')
         ->where('path', '.*');
 });
