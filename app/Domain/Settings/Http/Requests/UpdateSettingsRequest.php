@@ -31,6 +31,11 @@ class UpdateSettingsRequest extends FormRequest
             'mail_encryption' => ['nullable', 'string', 'in:tls,ssl,none'],
             'mail_from_address' => ['nullable', 'email', 'max:255'],
             'mail_from_name' => ['nullable', 'string', 'max:255'],
+
+            'midtrans_server_key' => ['nullable', 'string', 'max:255'],
+            'midtrans_client_key' => ['nullable', 'string', 'max:255'],
+            'midtrans_is_production' => ['sometimes', 'boolean'],
+            'clear_midtrans_server_key' => ['sometimes', 'boolean'],
         ];
     }
 

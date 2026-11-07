@@ -31,6 +31,9 @@ class SettingController extends Controller
         'mail_encryption',
         'mail_from_address',
         'mail_from_name',
+
+        'midtrans_client_key',
+        'midtrans_is_production',
     ];
 
     public function edit(): View
@@ -50,6 +53,10 @@ class SettingController extends Controller
             'mail_from_name' => Setting::get('mail_from_name', (string) config('mail.from.name')),
 
             'mail_password_set' => Setting::get('mail_password') !== null,
+
+            'midtrans_client_key' => Setting::get('midtrans_client_key', ''),
+            'midtrans_is_production' => Setting::get('midtrans_is_production', '0'),
+            'midtrans_server_key_set' => Setting::get('midtrans_server_key') !== null,
         ];
 
         return view('admin.settings.index', compact('settings'));
@@ -70,6 +77,14 @@ class SettingController extends Controller
 
         if ($request->boolean('clear_mail_password')) {
             Setting::put('mail_password', null);
+        }
+
+        if ($request->filled('midtrans_server_key')) {
+            Setting::putSecret('midtrans_server_key', (string) $data['midtrans_server_key']);
+        }
+
+        if ($request->boolean('clear_midtrans_server_key')) {
+            Setting::put('midtrans_server_key', null);
         }
 
         return redirect()

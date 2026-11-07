@@ -10,13 +10,15 @@ use App\Domain\Catalog\Http\Controllers\LessonController;
 use App\Domain\Catalog\Http\Controllers\MediaController;
 use App\Domain\Catalog\Http\Controllers\ModuleController;
 use App\Domain\Catalog\Http\Controllers\PublicCourseController;
-use App\Domain\Catalog\Models\Course;
 use App\Domain\Catalog\Http\Controllers\QuizController;
 use App\Domain\Catalog\Http\Controllers\UploadController;
+use App\Domain\Catalog\Models\Course;
 use App\Domain\Learning\Http\Controllers\CertificateController;
 use App\Domain\Learning\Http\Controllers\DashboardController;
 use App\Domain\Learning\Http\Controllers\EnrollmentController;
 use App\Domain\Learning\Http\Controllers\PlayerController;
+use App\Domain\Payment\Http\Controllers\PaymentController;
+use App\Domain\Payment\Http\Controllers\WebhookController;
 use App\Domain\Settings\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -76,6 +78,11 @@ Route::get('/id', function () {
 
     return view('home');
 })->name('home-id');
+
+Route::get('/bayar/{order}', [PaymentController::class, 'show'])
+    ->middleware('auth')->name('payments.show');
+Route::post('/webhooks/midtrans', [WebhookController::class, 'handle'])
+    ->name('webhooks.midtrans');
 
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login')->middleware('guest');

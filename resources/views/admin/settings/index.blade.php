@@ -166,6 +166,59 @@
                 </div>
             </div>
 
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Pembayaran Midtrans</h3>
+                    @if ($settings['midtrans_server_key_set'])
+                        <div class="card-actions">
+                            <span class="badge bg-green-lt">Server key tersimpan</span>
+                        </div>
+                    @endif
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="midtrans_server_key">Server key (rahasia)</label>
+                        <input type="password" id="midtrans_server_key" name="midtrans_server_key"
+                               class="form-control @error('midtrans_server_key') is-invalid @enderror"
+                               value="" autocomplete="new-password"
+                               placeholder="{{ $settings['midtrans_server_key_set'] ? '•••••••• (biarkan kosong jika tidak diubah)' : 'Masukkan server key Midtrans' }}">
+                        <div class="form-hint">Disimpan terenkripsi. Kosongkan jika tidak ingin mengubah.</div>
+                        @error('midtrans_server_key')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    @if ($settings['midtrans_server_key_set'])
+                        <div class="form-check mb-3">
+                            <input type="checkbox" id="clear_midtrans_server_key" name="clear_midtrans_server_key" value="1"
+                                   class="form-check-input">
+                            <label class="form-check-label" for="clear_midtrans_server_key">
+                                Hapus server key yang tersimpan
+                            </label>
+                        </div>
+                    @endif
+
+                    <div class="mb-3">
+                        <label class="form-label" for="midtrans_client_key">Client key</label>
+                        <input type="text" id="midtrans_client_key" name="midtrans_client_key"
+                               class="form-control @error('midtrans_client_key') is-invalid @enderror"
+                               value="{{ old('midtrans_client_key', $settings['midtrans_client_key']) }}">
+                        @error('midtrans_client_key')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" id="midtrans_is_production" name="midtrans_is_production" value="1"
+                               class="form-check-input"
+                               @checked(old('midtrans_is_production', $settings['midtrans_is_production']) == '1')>
+                        <label class="form-check-label" for="midtrans_is_production">
+                            Mode production (centang jika bukan sandbox)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="d-flex gap-2 mb-3">
                 <button type="submit" class="btn btn-primary">Simpan pengaturan</button>
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-link">Batal</a>

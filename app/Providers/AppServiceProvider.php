@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Midtrans\Config;
 use Throwable;
 
 class AppServiceProvider extends ServiceProvider
@@ -45,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->configureMailFromSettings();
+        $this->configureMidtransFromSettings();
 
         View::composer('components.layouts.public', function ($view): void {
             try {
@@ -89,6 +91,27 @@ class AppServiceProvider extends ServiceProvider
             ]);
         } catch (Throwable) {
             // Tabel settings belum tersedia (mis. saat migrasi awal).
+        }
+    }
+
+    /**
+     * Terapkan konfigurasi Midtrans dari tabel settings bila tersedia.
+     */
+    private function configureMidtransFromSettings(): void
+    {
+        try {
+            $serverKey = Setting::getSecret('midtrans_server_key');
+
+            if ($serverKey === null || $serverKey === '') {
+                return;
+            }
+
+            Config::$serverKey = $serverKey;
+            Config::$isProduction = Setting::get('midtrans_is_production') === '1';
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
+        } catch (Throwable) {
+            // Tabel settings belum tersedia.
         }
     }
 }
