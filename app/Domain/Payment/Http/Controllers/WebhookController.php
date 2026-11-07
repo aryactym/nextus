@@ -6,6 +6,7 @@ namespace App\Domain\Payment\Http\Controllers;
 
 use App\Domain\Learning\Models\Enrollment;
 use App\Domain\Learning\Services\CertificateIssuer;
+use App\Domain\Payment\Mail\PaymentReceipt;
 use App\Domain\Payment\Models\Order;
 use App\Domain\Payment\Models\PaymentEvent;
 use App\Domain\Settings\Models\Setting;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class WebhookController extends Controller
 {
@@ -65,9 +67,16 @@ class WebhookController extends Controller
 
                     $enrollment->update(['status' => 'active']);
 
-                    // Terbitkan sertifikat bila kursus memang gratis sertifikat atau pembayaran sudah lunas.
                     (new CertificateIssuer)->issueIfEligible($enrollment);
                 }
+
+                Mail::to($order->user)->send(new PaymentReceipt($order->fresh()));
+
+                activity()
+                    ->causedBy($order->user)
+                    ->performedOn($order)
+                    ->withProperties(['course' => $order->course?->slug])
+                    ->log('Pembayaran lunas: '.$order->midtrans_order_id);
             } elseif (in_array($transactionStatus, ['deny', 'cancel'], true)) {
                 $order->update(['status' => 'failed', 'payment_type' => $paymentType]);
             } elseif ($transactionStatus === 'expire') {
