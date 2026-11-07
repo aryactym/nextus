@@ -218,11 +218,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <form method="POST" action="{{ route('admin.settings.test-midtrans') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-primary">Uji koneksi Midtrans</button>
-                        <span class="text-secondary small ms-2">Membuat Snap token uji dengan server key tersimpan.</span>
-                    </form>
+                    <small class="text-secondary">Gunakan tombol "Uji koneksi Midtrans" di bawah formulir utama.</small>
                 </div>
             </div>
                 <button type="submit" class="btn btn-primary">Simpan pengaturan</button>
@@ -276,6 +272,21 @@
                     <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-outline-primary w-100">Kirim email uji</button>
                     </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Uji integrasi Midtrans</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-secondary">
+                    Buat Snap token uji dengan server key tersimpan.
+                </p>
+                <form method="POST" action="{{ route('admin.settings.test-midtrans') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary">Uji koneksi Midtrans</button>
                 </form>
             </div>
         </div>
