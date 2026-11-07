@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Sertifikat {{ $certificate->code }}</title>
     <style>
-        @page { margin: 40px; }
+        @page { margin: 40px; size: A4 landscape; }
         body { font-family: DejaVu Sans, sans-serif; color: #0A2A28; text-align: center; }
         .frame { border: 4px solid #0E6B5C; padding: 48px 32px; }
         .eyebrow { text-transform: uppercase; letter-spacing: 4px; font-size: 11px; color: #546663; margin-bottom: 8px; }
