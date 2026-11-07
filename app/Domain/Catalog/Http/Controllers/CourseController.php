@@ -9,7 +9,6 @@ use App\Domain\Catalog\Models\Course;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -63,9 +62,12 @@ class CourseController extends Controller
 
         if ($request->hasFile('thumbnail')) {
             $result = $upload->upload($request->file('thumbnail'), 'image', 'courses/thumbnails');
-            Log::info('upload result', ['path' => $result['path']]);
             $data['thumbnail'] = $result['path'];
-            Log::info('data thumbnail', ['thumbnail' => $data['thumbnail']]);
+        }
+
+        if ($request->hasFile('certificate_background')) {
+            $result = $upload->upload($request->file('certificate_background'), 'image', 'courses/certificates');
+            $data['certificate_background'] = $result['path'];
         }
 
         Course::create($data);
@@ -103,6 +105,14 @@ class CourseController extends Controller
             $data['thumbnail'] = $result['path'];
         }
 
+        if ($request->hasFile('certificate_background')) {
+            if ($course->certificate_background) {
+                (new UploadService)->delete($course->certificate_background);
+            }
+            $result = $upload->upload($request->file('certificate_background'), 'image', 'courses/certificates');
+            $data['certificate_background'] = $result['path'];
+        }
+
         $course->update($data);
 
         return redirect()->route('admin.courses.index')
@@ -114,6 +124,9 @@ class CourseController extends Controller
         abort_unless(auth()->user()->can('manage courses'), 403);
         if ($course->thumbnail) {
             (new UploadService)->delete($course->thumbnail);
+        }
+        if ($course->certificate_background) {
+            (new UploadService)->delete($course->certificate_background);
         }
         $course->delete();
 

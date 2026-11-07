@@ -17,7 +17,10 @@
     </style>
 </head>
 <body>
-    <div class="frame">
+    @if (! empty($backgroundDataUri))
+        <img src="{{ $backgroundDataUri }}" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.18;z-index:0;" alt="">
+    @endif
+    <div class="frame" style="position:relative;z-index:1;">
         <div class="eyebrow">Sertifikat penyelesaian</div>
         <div class="issuer">{{ config('app.name') }}</div>
 

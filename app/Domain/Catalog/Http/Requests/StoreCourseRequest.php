@@ -29,6 +29,7 @@ class StoreCourseRequest extends FormRequest
             'level' => ['required', 'string', 'max:50'],
             'duration_minutes' => ['nullable', 'integer', 'min:0'],
             'thumbnail' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'certificate_background' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
             'access_type' => ['required', 'in:free,donation,paid'],
             'certificate_type' => ['required', 'in:free,donation,paid'],
             'min_amount' => ['nullable', 'numeric', 'min:0'],

@@ -196,6 +196,23 @@
                         @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Latar belakang sertifikat</label>
+                        @if ($course->certificate_background)
+                            <img src="{{ \Illuminate\Support\Facades\URL::signedRoute('admin.uploads.show', ['path' => $course->certificate_background]) }}"
+                                 class="img-fluid rounded border mb-2" alt="Latar belakang sertifikat">
+                        @else
+                            <div class="text-secondary mb-2">Belum ada latar. Sertifikat memakai latar putih.</div>
+                        @endif
+                        <input type="file" name="certificate_background"
+                               class="form-control @error('certificate_background') is-invalid @enderror"
+                               accept="image/jpeg,image/png">
+                        <div class="form-hint">JPG atau PNG. Disarankan rasio 16:9 (mis. 1920×1080 px) atau A4 landscape (1123×794 px), maks 2 MB. Dipakai sebagai latar sertifikat.</div>
+                        @error('certificate_background')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Simpan perubahan</button>
                         <a href="{{ route('admin.courses.index') }}" class="btn btn-link">Batal</a>

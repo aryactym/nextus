@@ -22,7 +22,7 @@ class Course extends Model
     protected $fillable = [
         'uuid', 'organization_id', 'category_id', 'ownership', 'visibility',
         'title', 'summary', 'description', 'slug', 'level', 'duration_minutes',
-        'thumbnail', 'access_type', 'certificate_type', 'min_amount',
+        'thumbnail', 'certificate_background', 'access_type', 'certificate_type', 'min_amount',
         'suggested_amounts', 'allow_custom_amount', 'currency', 'passing_grade',
         'status', 'published_at', 'created_by',
     ];

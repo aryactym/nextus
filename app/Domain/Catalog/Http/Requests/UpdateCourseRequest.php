@@ -27,6 +27,7 @@ class UpdateCourseRequest extends FormRequest
             'level' => ['sometimes', 'required', 'string', 'max:50'],
             'duration_minutes' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'thumbnail' => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'certificate_background' => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
             'access_type' => ['sometimes', 'required', 'in:free,donation,paid'],
             'certificate_type' => ['sometimes', 'required', 'in:free,donation,paid'],
             'min_amount' => ['sometimes', 'nullable', 'numeric', 'min:0'],

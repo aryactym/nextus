@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,7 +38,19 @@ class CertificateController extends Controller
         abort_unless($request->user()?->id === $certificate->user_id, 403);
         abort_if($certificate->isRevoked(), 404);
 
-        $pdf = Pdf::loadView('learning.certificate-pdf', compact('certificate'));
+        $backgroundDataUri = null;
+
+        if ($certificate->course->certificate_background) {
+            $path = $certificate->course->certificate_background;
+
+            if (Storage::disk('uploads')->exists($path)) {
+                $contents = Storage::disk('uploads')->get($path);
+                $mime = Storage::disk('uploads')->mimeType($path) ?: 'image/jpeg';
+                $backgroundDataUri = 'data:'.$mime.';base64,'.base64_encode($contents);
+            }
+        }
+
+        $pdf = Pdf::loadView('learning.certificate-pdf', compact('certificate', 'backgroundDataUri'));
 
         return $pdf->download('sertifikat-'.$certificate->code.'.pdf');
     }

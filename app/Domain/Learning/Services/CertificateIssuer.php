@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Learning\Services;
 
+use App\Domain\Learning\Mail\CertificateIssued;
 use App\Domain\Learning\Models\Certificate;
 use App\Domain\Learning\Models\Enrollment;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CertificateIssuer
@@ -29,13 +31,17 @@ class CertificateIssuer
             return null;
         }
 
-        return Certificate::create([
+        $certificate = Certificate::create([
             'enrollment_id' => $enrollment->id,
             'user_id' => $enrollment->user_id,
             'course_id' => $enrollment->course_id,
             'code' => $this->uniqueCode(),
             'issued_at' => now(),
         ]);
+
+        Mail::to($certificate->user)->send(new CertificateIssued($certificate));
+
+        return $certificate;
     }
 
     private function uniqueCode(): string

@@ -2,12 +2,14 @@
 
 namespace App\Domain\Auth\Http\Controllers;
 
+use App\Domain\Auth\Mail\WelcomeEmail;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
@@ -64,6 +66,8 @@ class AuthController extends Controller
             'locale' => 'id',
         ]);
         $user->assignRole(Role::where('name', 'Learner')->first() ?? 'Learner');
+
+        Mail::to($user)->send(new WelcomeEmail($user));
 
         Auth::login($user);
 

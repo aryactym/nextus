@@ -63,9 +63,14 @@
                     <div>
                       {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(120)->generate(route('certificates.verify', $certificate->code)) !!}
                     </div>
-                    <p class="text-secondary small mb-0">
-                      Pindai kode QR untuk membuka halaman verifikasi ini.
-                    </p>
+                    <div>
+                      <p class="text-secondary small mb-2">
+                        Pindai kode QR untuk membuka halaman verifikasi ini.
+                      </p>
+                      <a class="btn btn-outline-primary btn-sm"
+                         href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name={{ urlencode($certificate->course->getTranslation('title', 'id')) }}&organizationName={{ urlencode($certificate->course->organization?->name ?? config('app.name')) }}&issueYear={{ $certificate->issued_at->format('Y') }}&issueMonth={{ $certificate->issued_at->format('n') }}&certUrl={{ urlencode(route('certificates.verify', $certificate->code)) }}&certId={{ urlencode($certificate->code) }}"
+                         target="_blank" rel="noopener">Tambahkan ke LinkedIn</a>
+                    </div>
                   </div>
                 </div>
               </div>
