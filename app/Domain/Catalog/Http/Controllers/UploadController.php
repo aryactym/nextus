@@ -5,17 +5,12 @@ namespace App\Domain\Catalog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class UploadController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('signed')->only('show');
-    }
-
     public function show(Request $request, UploadService $upload, string $path): BinaryFileResponse|Response
     {
         $disk = Storage::disk('uploads');

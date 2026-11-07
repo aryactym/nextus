@@ -184,7 +184,7 @@
                     <div class="mb-3">
                         <label class="form-label">Thumbnail</label>
                         @if ($course->thumbnail)
-                            <img src="{{ route('admin.uploads.show', ['path' => $course->thumbnail]) }}"
+                            <img src="{{ \Illuminate\Support\Facades\URL::signedRoute('admin.uploads.show', ['path' => $course->thumbnail]) }}"
                                  class="img-fluid rounded border mb-2" alt="Thumbnail kursus">
                         @else
                             <div class="text-secondary mb-2">Belum ada thumbnail.</div>

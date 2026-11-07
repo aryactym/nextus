@@ -109,6 +109,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('settings.test-email');
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
+        ->middleware(['auth', 'signed'])
         ->name('uploads.show')
         ->where('path', '.*');
 });
