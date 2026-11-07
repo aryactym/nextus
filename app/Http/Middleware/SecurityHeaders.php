@@ -26,11 +26,12 @@ class SecurityHeaders
         $response->headers->set(
             'Content-Security-Policy',
             "default-src 'self'; "
-            ."script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://connect.facebook.net; "
+            ."script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://connect.facebook.net https://app.sandbox.midtrans.com https://app.midtrans.com; "
             ."style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
             ."font-src 'self' https://fonts.gstatic.com data:; "
             ."img-src 'self' data: https:; "
-            ."connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; "
+            ."connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://app.sandbox.midtrans.com https://app.midtrans.com; "
+            ."frame-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com; "
             ."frame-ancestors 'self';"
         );
 
