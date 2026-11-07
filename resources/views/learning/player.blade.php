@@ -20,18 +20,16 @@
         <li aria-current="page">{{ $lessonTitle }}</li>
       </ol>
       <h1>{{ $lessonTitle }}</h1>
-      <div class="hero">
-        <div class="meta">
-          @if ($lesson->is_preview)
-            <span>Preview</span>
-          @endif
-          @if ($lesson->duration)
-            <span>{{ $lesson->duration }} menit</span>
-          @endif
-          @if ($enrollment)
-            <span>{{ $percent }}% selesai</span>
-          @endif
-        </div>
+      <div class="lesson-meta">
+        @if ($lesson->is_preview)
+          <span class="badge bg-secondary-lt">Preview</span>
+        @endif
+        @if ($lesson->duration)
+          <span class="badge bg-secondary-lt">{{ $lesson->duration }} menit</span>
+        @endif
+        @if ($enrollment)
+          <span class="badge bg-green-lt">{{ $percent }}% selesai</span>
+        @endif
       </div>
     </div>
   </section>
