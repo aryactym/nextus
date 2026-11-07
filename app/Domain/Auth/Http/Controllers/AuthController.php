@@ -17,15 +17,28 @@ class AuthController extends Controller
 {
     public function login()
     {
-        return view('auth.login');
+        $a = random_int(1, 9);
+        $b = random_int(1, 9);
+        session(['login_captcha_answer' => $a + $b]);
+
+        return view('auth.login', compact('a', 'b'));
     }
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+            'captcha' => ['required', 'integer'],
         ]);
+
+        if ((int) $request->input('captcha') !== (int) session('login_captcha_answer')) {
+            return back()->withErrors([
+                'captcha' => 'Jawaban verifikasi salah.',
+            ])->onlyInput('email');
+        }
+
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
