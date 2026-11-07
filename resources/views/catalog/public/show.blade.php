@@ -308,8 +308,15 @@
                     <button class="btn btn-primary w-100" type="submit">Daftar kursus ini</button>
                   </form>
                 @else
-                  <p class="text-secondary">Kursus ini memerlukan pembayaran atau donasi. Pembayaran via Midtrans segera tersedia.</p>
-                  <button class="btn btn-primary w-100" type="button" disabled>Segera tersedia</button>
+                  <form action="{{ route('enroll.store', $course->slug) }}" method="POST">
+                    @csrf
+                    <button class="btn btn-primary w-100" type="submit">
+                      Daftar &amp; bayar via Midtrans
+                    </button>
+                  </form>
+                  <p class="text-secondary small mt-2 mb-0">
+                    Akses dan sertifikat dibuka setelah pembayaran lunas.
+                  </p>
                 @endif
               @endauth
 
