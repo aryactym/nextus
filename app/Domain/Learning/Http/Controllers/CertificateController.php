@@ -50,7 +50,8 @@ class CertificateController extends Controller
             }
         }
 
-        $pdf = Pdf::loadView('learning.certificate-pdf', compact('certificate', 'backgroundDataUri'));
+        $pdf = Pdf::loadView('learning.certificate-pdf', compact('certificate', 'backgroundDataUri'))
+            ->setPaper('A4', 'landscape');
 
         return $pdf->download('sertifikat-'.$certificate->code.'.pdf');
     }
