@@ -29,7 +29,9 @@
     $panjangKursus = mb_strlen($kursus);
     $ukuranKursus  = $panjangKursus > 70 ? 14 : ($panjangKursus > 48 ? 17 : 20);
 
-    $logo = public_path('images/logo-nextus.png');
+    $logoPath = public_path('images/logo-nextus.png');
+    $logoUrl = asset('images/logo-nextus.png');
+    $hasLogo = is_file($logoPath);
 @endphp
 <!doctype html>
 <html lang="id">
@@ -203,8 +205,8 @@
     <div class="corner c-br"></div>
 
     <div class="main">
-        @if (is_file($logo))
-            <img class="logo" src="{{ $logo }}" alt="NextUs">
+        @if ($hasLogo)
+            <img class="logo" src="{{ $logoUrl }}" alt="NextUs">
         @else
             <p class="brand-text">NextUs</p>
         @endif
