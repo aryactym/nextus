@@ -10,17 +10,24 @@ use App\Domain\Settings\Models\Sponsor;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SponsorController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         abort_unless(auth()->user()->can('manage settings'), 403);
 
-        $sponsors = Sponsor::active()->get();
+        $q = trim((string) $request->input('q', ''));
 
-        return view('admin.sponsors.index', compact('sponsors'));
+        $sponsors = Sponsor::query()
+            ->when($q !== '', fn ($query) => $query->where('name', 'like', '%'.$q.'%'))
+            ->active()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.sponsors.index', compact('sponsors', 'q'));
     }
 
     public function create(): View
