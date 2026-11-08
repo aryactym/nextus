@@ -21,7 +21,7 @@
     $isLocked = ! $earned;
 @endphp
 
-<div class="text-center badge-component">
+<div class="badge-component" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
   <img
     class="{{ $isLocked ? 'badge-locked' : '' }}"
     src="{{ asset($imagePath) }}"
@@ -29,9 +29,9 @@
     width="{{ $size }}"
     height="{{ $size }}"
     loading="lazy"
-    @if ($isLocked) style="filter: grayscale(1); opacity: .35;" @endif
+    style="display: block; margin: 0 auto; object-fit: contain; {{ $isLocked ? 'filter: grayscale(1); opacity: .35;' : '' }}"
   >
-  <div class="mt-2">
+  <div class="mt-2" style="text-align: center;">
     <span class="small fw-bold">{{ $tierLabel }}</span>
     @if ($isLocked)
       @if ($progressCurrent !== null && $progressTotal !== null)

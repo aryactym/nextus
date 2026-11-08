@@ -219,10 +219,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Syarat kelulusan (requirement) --}}
-        <div class="col-lg-4">
+            {{-- Syarat kelulusan (requirement) --}}
             <div class="card mb-3">
                 <div class="card-header">
                     <h3 class="card-title">Syarat kelulusan</h3>

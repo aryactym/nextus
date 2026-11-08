@@ -33,7 +33,7 @@
           @endphp
           <div class="col-md-4">
             <div class="card h-100">
-              <div class="card-body text-center">
+              <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                 <x-badge
                   :badge="$badge"
                   :tier="$tier"
