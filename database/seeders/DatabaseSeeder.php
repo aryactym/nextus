@@ -47,5 +47,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PendidikanSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(SponsorSeeder::class);
+        $this->call(DemoSeeder::class);
     }
 }
