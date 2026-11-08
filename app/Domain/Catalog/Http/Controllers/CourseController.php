@@ -102,6 +102,15 @@ class CourseController extends Controller
     {
         abort_unless(auth()->user()->can('manage courses'), 403);
         $data = $request->validated();
+        
+        \Log::info('CourseController.update', [
+            'course_id' => $course->id,
+            'validated_data_keys' => array_keys($data),
+            'title' => $data['title'] ?? null,
+            'slug' => $data['slug'] ?? null,
+            'level' => $data['level'] ?? null,
+        ]);
+        
         $data['suggested_amounts'] = $data['suggested_amounts'] ?? null;
         $data['allow_custom_amount'] = $data['allow_custom_amount'] ?? true;
         $data['currency'] = $data['currency'] ?? 'IDR';
