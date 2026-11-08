@@ -6,7 +6,6 @@ use App\Domain\Catalog\Http\Requests\StoreCourseRequest;
 use App\Domain\Catalog\Http\Requests\UpdateCourseRequest;
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
-use App\Domain\Catalog\Models\CourseRequirement;
 use App\Domain\Catalog\Models\Pendidikan;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
@@ -102,13 +101,12 @@ class CourseController extends Controller
     {
         abort_unless(auth()->user()->can('manage courses'), 403);
         $data = $request->validated();
-        
-        // DEBUG: Log semua request data
-        \Log::info('CourseController.update ALL REQUEST DATA', [
-            'all_input' => $request->all(),
-            'validated' => $data,
+
+        \Log::info('CourseController.update START', [
+            'course_id' => $course->id,
+            'course_title_before' => $course->title,
         ]);
-        
+
         $data['suggested_amounts'] = $data['suggested_amounts'] ?? null;
         $data['allow_custom_amount'] = $data['allow_custom_amount'] ?? true;
         $data['currency'] = $data['currency'] ?? 'IDR';
@@ -132,59 +130,19 @@ class CourseController extends Controller
 
         $course->update($data);
 
-        // Syarat kelulusan (requirement)
-        $this->saveRequirement($course, $request);
-
         return redirect()->route('admin.courses.index')
             ->with('success', 'Kursus berhasil diperbarui.');
     }
 
+    /**
+     * Simpan atau hapus syarat kelulusan kursus.
+     * DIHANDLE DI ENDPOINT TERPISAH, bukan di course update
+     */
     private function saveRequirement(Course $course, Request $request): void
     {
-        $clear = $request->boolean('clear_requirement');
+        // SKIP sepenuhnya — requirement dihandle via separate endpoint
+        // Jangan sentuh requirement saat course update
 
-        if ($clear) {
-            try {
-                $course->requirement?->forceDelete();
-            } catch (\Exception $e) {
-                \Log::warning('Gagal hapus requirement', ['error' => $e->getMessage()]);
-            }
-            return;
-        }
-
-        // Jika form tidak dikirim requirement field sama sekali, jangan ubah
-        // Cek apakah ada field requirement yang dikirim
-        $hasRequirementFields = $request->has('prerequisite_course_id') 
-            || $request->has('min_grade') 
-            || $request->has('pendidikan_id') 
-            || $request->has('min_age') 
-            || $request->has('max_age') 
-            || $request->has('notes');
-
-        if (!$hasRequirementFields) {
-            return; // Form tidak kirim requirement field, skip
-        }
-
-        $data = $request->only([
-            'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
-        ]);
-
-        if ((int) ($data['prerequisite_course_id'] ?? 0) === $course->id) {
-            $data['prerequisite_course_id'] = null;
-        }
-
-        foreach (['prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age'] as $field) {
-            if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === '0')) {
-                $data[$field] = null;
-            }
-        }
-
-        $data['course_id'] = $course->id;
-
-        CourseRequirement::updateOrCreate(
-            ['course_id' => $course->id],
-            $data,
-        );
     }
 
     public function destroy(Course $course)
