@@ -103,14 +103,6 @@ class CourseController extends Controller
         abort_unless(auth()->user()->can('manage courses'), 403);
         $data = $request->validated();
         
-        \Log::info('CourseController.update', [
-            'course_id' => $course->id,
-            'validated_data_keys' => array_keys($data),
-            'title' => $data['title'] ?? null,
-            'slug' => $data['slug'] ?? null,
-            'level' => $data['level'] ?? null,
-        ]);
-        
         $data['suggested_amounts'] = $data['suggested_amounts'] ?? null;
         $data['allow_custom_amount'] = $data['allow_custom_amount'] ?? true;
         $data['currency'] = $data['currency'] ?? 'IDR';
@@ -146,14 +138,6 @@ class CourseController extends Controller
      */
     private function saveRequirement(Course $course, Request $request): void
     {
-        \Log::info('saveRequirement called', [
-            'course_id' => $course->id,
-            'clear_requirement' => $request->boolean('clear_requirement'),
-            'request_data' => $request->only([
-                'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
-            ]),
-        ]);
-
         $clear = $request->boolean('clear_requirement');
 
         if ($clear) {
@@ -192,8 +176,6 @@ class CourseController extends Controller
             ['course_id' => $course->id],
             $data,
         );
-
-        \Log::info('saveRequirement completed', ['course_id' => $course->id]);
     }
 
     public function destroy(Course $course)
