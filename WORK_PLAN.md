@@ -160,14 +160,18 @@ Commit Fase 3, lalu mulai Fase 4 — Kuis & Sertifikat (engine kuis, template se
 - `/verify/{code}`: nama, kursus, tanggal, status, OG meta, JSON-LD credential
 - Tombol Add to LinkedIn, bagikan
 
-### Progress Fase 4
-Belum dimulai.
+### Progress Fase 4 — SELESAI
+- Quiz engine: pilihan ganda, scoring, passing grade, percobaan unlimited, acak soal, timer — OK.
+- Kelulusan & enrollment completed: skor >= passing grade + semua pelajaran selesai => enrollment.status='completed' — OK.
+- Template sertifikat: view Blade + QR code, bilingual fallback, kode unik (NX-YYYY-XXXXXXXX), checksum, status revoke — OK.
+- PDF sertifikat via dompdf: download langsung, render HTML ke PDF landscape A4 — OK.
+- Halaman verifikasi & LinkedIn: `/verifikasi/{code}`, status valid/revoked/not_found, OG meta (siap), JSON-LD (siap) — OK.
 
 ### Masalah saat ini Fase 4
-Belum ada.
+Tidak ada.
 
 ### Next move Fase 4
-Mulai setelah Fase 3 selesai & commit.
+Commit Fase 4, lalu mulai Fase 5 — Pembayaran Midtrans (orders, webhooks, settlement).
 
 ---
 
@@ -232,7 +236,7 @@ Mulai setelah Fase 5 selesai & commit.
 | --- | --- | --- | --- | --- |
 | 1 | 7fc32a5 | 6 Nov 2026 | Selesai | Fondasi RBAC, skema DB inti, traits & helper reusable |
 | 2 | 06b02f4 | 8 Nov 2026 | Selesai | CRUD + tenant isolation + komponen Blade batch 2, 23 test lulus |
-| 3 | — | — | Selesai | Katalog publik, enroll gratis, player, dashboard learner + gamification |
-| 4 | — | — | Belum | — |
+| 3 | df3cc77 | 8 Nov 2026 | Selesai | Katalog publik, enroll gratis, player, dashboard learner + gamification |
+| 4 | — | — | Selesai | Quiz engine, sertifikat auto-issue, PDF, verifikasi |
 | 5 | — | — | Belum | — |
 | 6 | — | — | Belum | — |
