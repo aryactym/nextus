@@ -80,8 +80,6 @@
   {{ $slot }}
 </main>
 
-<x-public-footer />
-
 @if ($sponsors->isNotEmpty())
     <section class="section section-alt">
         <div class="container-xl">
@@ -111,6 +109,8 @@
         </div>
     </section>
 @endif
+
+<x-public-footer />
 
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.7.3/dist/js/tabler.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
