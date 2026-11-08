@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('admin.courses.update', $course->uuid) }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('admin.courses.update', $course->uuid) }}" enctype="multipart/form-data" id="course-form">
     @csrf
     @method('PUT')
 
@@ -146,13 +146,14 @@
                                         Ubah modul
                                     </button>
                                     <form action="{{ route('admin.modules.destroy', $module) }}" method="POST"
-                                          onsubmit="return confirm('Hapus modul ini beserta pelajarannya?')">
+                                          onsubmit="return confirm('Hapus modul ini beserta pelajarannya?')" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Hapus modul</button>
                                     </form>
                                 </div>
                             </div>
 
+                            {{-- Module edit form (separate, not nested) --}}
                             <div class="collapse mt-3" id="module-edit-{{ $module->uuid }}">
                                 <form action="{{ route('admin.modules.update', $module) }}" method="POST" class="row g-2 align-items-end">
                                     @csrf @method('PUT')
@@ -195,16 +196,16 @@
                                                         Ubah
                                                     </button>
                                                     <form action="{{ route('admin.lessons.destroy', $lesson) }}" method="POST"
-                                                          onsubmit="return confirm('Hapus pelajaran ini?')">
+                                                          onsubmit="return confirm('Hapus pelajaran ini?')" style="display:inline;">
                                                         @csrf @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
                                                     </form>
                                                 </div>
                                             </div>
 
+                                            {{-- Lesson edit form (separate, not nested in course form) --}}
                                             <div class="collapse mt-3" id="lesson-edit-{{ $lesson->uuid }}">
-                                                <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST"
-                                                      enctype="multipart/form-data" class="row g-2">
+                                                <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST" enctype="multipart/form-data" class="row g-2">
                                                     @csrf @method('PUT')
                                                     <div class="col-md-5">
                                                         <label class="form-label" for="lesson-title-{{ $lesson->uuid }}">Judul (Indonesia)</label>
@@ -310,7 +311,7 @@
                                                                         Ubah
                                                                     </button>
                                                                     <form action="{{ route('admin.quiz-questions.destroy', $question) }}" method="POST"
-                                                                          onsubmit="return confirm('Hapus soal ini?')">
+                                                                          onsubmit="return confirm('Hapus soal ini?')" style="display:inline;">
                                                                         @csrf @method('DELETE')
                                                                         <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
                                                                     </form>

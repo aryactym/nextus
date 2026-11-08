@@ -137,6 +137,14 @@ class CourseController extends Controller
      */
     private function saveRequirement(Course $course, Request $request): void
     {
+        \Log::info('saveRequirement called', [
+            'course_id' => $course->id,
+            'clear_requirement' => $request->boolean('clear_requirement'),
+            'request_data' => $request->only([
+                'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
+            ]),
+        ]);
+
         $clear = $request->boolean('clear_requirement');
 
         if ($clear) {
@@ -175,6 +183,8 @@ class CourseController extends Controller
             ['course_id' => $course->id],
             $data,
         );
+
+        \Log::info('saveRequirement completed', ['course_id' => $course->id]);
     }
 
     public function destroy(Course $course)
