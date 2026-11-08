@@ -22,6 +22,7 @@ use App\Domain\Payment\Http\Controllers\OrderController;
 use App\Domain\Payment\Http\Controllers\PaymentController;
 use App\Domain\Payment\Http\Controllers\WebhookController;
 use App\Domain\Settings\Http\Controllers\SettingController;
+use App\Domain\Settings\Http\Controllers\SponsorController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -161,6 +162,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('settings.test-midtrans');
     Route::post('settings/favicon', [SettingController::class, 'updateFavicon'])
         ->name('settings.update-favicon');
+
+    Route::resource('sponsors', SponsorController::class)->except(['show']);
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
         ->middleware(['auth', 'signed', 'throttle:uploads'])

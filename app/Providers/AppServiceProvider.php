@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Domain\Settings\Models\Setting;
+use App\Domain\Settings\Models\Sponsor;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -63,6 +64,12 @@ class AppServiceProvider extends ServiceProvider
                     'facebookPixelId' => null,
                     'favicon' => null,
                 ]);
+            }
+
+            try {
+                $view->with(['sponsors' => Sponsor::active()->get()]);
+            } catch (\Throwable) {
+                $view->with(['sponsors' => collect()]);
             }
         });
 

@@ -431,4 +431,30 @@ aside[aria-label="Kurikulum"] .accordion-item.module-active .accordion-button {
   .result dl { grid-template-columns: 1fr; gap: .15rem; }
   .result dd { margin-bottom: .6rem; }
 }
+
+/* ====== Sponsor Slider (halaman utama) ====== */
+.sponsor-slider {
+  gap: 2rem;
+  padding: 1rem 0;
+}
+.sponsor-slider .sponsor-logo {
+  filter: grayscale(40%);
+  transition: filter 0.2s, transform 0.2s;
+}
+.sponsor-slider .sponsor-logo:hover {
+  filter: grayscale(0%);
+  transform: translateY(-2px);
+}
+@media (max-width: 767.98px) {
+  .sponsor-slider {
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+  }
+  .sponsor-slider .sponsor-logo {
+    flex: 0 0 auto;
+    max-width: 150px !important;
+  }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

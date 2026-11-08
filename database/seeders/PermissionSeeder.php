@@ -18,6 +18,7 @@ class PermissionSeeder extends Seeder
             'manage courses',
             'manage payments',
             'manage settings',
+            'manage sponsors',
             'manage users',
         ];
 
