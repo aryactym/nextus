@@ -6,6 +6,7 @@ use App\Domain\Admin\Http\Controllers\UserController;
 use App\Domain\Auth\Http\Controllers\AuthController;
 use App\Domain\Catalog\Http\Controllers\CategoryController;
 use App\Domain\Catalog\Http\Controllers\CourseController;
+use App\Domain\Catalog\Http\Controllers\CourseRequirementController;
 use App\Domain\Catalog\Http\Controllers\LessonController;
 use App\Domain\Catalog\Http\Controllers\MediaController;
 use App\Domain\Catalog\Http\Controllers\ModuleController;
@@ -129,7 +130,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::put('pages/{page}', [PageController::class, 'update'])->name('pages.update');
 
     Route::resource('categories', CategoryController::class)->except(['show']);
-    Route::resource('courses', CourseController::class)->except(['show']);
+    Route::resource('courses', CourseController::class);
+    Route::put('courses/{course}/requirement', [CourseRequirementController::class, 'update'])
+        ->name('courses.requirement.update');
     Route::post('courses/{course}/modules', [ModuleController::class, 'store'])
         ->name('courses.modules.store');
     Route::put('modules/{module}', [ModuleController::class, 'update'])

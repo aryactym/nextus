@@ -83,6 +83,34 @@ class CourseController extends Controller
             ->with('success', 'Kursus berhasil ditambahkan.');
     }
 
+    public function show(Course $course)
+    {
+        abort_unless(auth()->user()->can('manage courses'), 403);
+
+        $course->load([
+            'category',
+            'modules.lessons',
+            'enrollments' => fn ($q) => $q->with(['user', 'certificate', 'order'])->latest('enrolled_at'),
+        ]);
+
+        $enrolledCount = $course->enrollments->count();
+        $completedCount = $course->enrollments->whereNotNull('completed_at')->count();
+        $certificateCount = $course->enrollments->filter(fn ($e) => $e->certificate !== null)->count();
+        $moduleCount = $course->modules->count();
+        $lessonCount = $course->modules->sum(fn ($m) => $m->lessons->count());
+        $revenue = $course->enrollments
+            ->filter(fn ($e) => $e->order && $e->order->status === 'paid')
+            ->sum(fn ($e) => $e->order->amount);
+        $avgProgress = $enrolledCount > 0
+            ? (int) round($course->enrollments->avg('progress_percent'))
+            : 0;
+
+        return view('catalog.courses.show', compact(
+            'course', 'enrolledCount', 'completedCount', 'certificateCount',
+            'moduleCount', 'lessonCount', 'revenue', 'avgProgress'
+        ));
+    }
+
     public function edit(Course $course)
     {
         abort_unless(auth()->user()->can('manage courses'), 403);

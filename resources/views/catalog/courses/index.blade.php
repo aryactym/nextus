@@ -86,7 +86,11 @@
                 @endphp
                 <tr>
                     <td class="text-secondary">{{ $courses->firstItem() + $loop->index }}</td>
-                    <td>{{ $course->getTranslation('title', 'id') }}</td>
+                    <td>
+                        <a href="{{ route('admin.courses.show', $course->uuid) }}" class="fw-medium text-reset">
+                            {{ $course->getTranslation('title', 'id') }}
+                        </a>
+                    </td>
                     <td>{{ $course->category?->getTranslation('name', 'id') ?? '-' }}</td>
                     <td>{{ $accessLabels[$course->access_type] ?? $course->access_type }}</td>
                     <td>{{ $accessLabels[$course->certificate_type] ?? $course->certificate_type }}</td>
@@ -97,6 +101,7 @@
                     </td>
                     <td class="text-end">
                         <div class="btn-list justify-content-end flex-nowrap">
+                            <a href="{{ route('admin.courses.show', $course->uuid) }}" class="btn btn-sm btn-outline-secondary">Detail</a>
                             <a href="{{ route('admin.courses.edit', $course->uuid) }}" class="btn btn-sm btn-outline-primary">Ubah</a>
                             <form action="{{ route('admin.courses.destroy', $course->uuid) }}" method="POST" class="d-inline">
                                 @csrf @method('DELETE')
