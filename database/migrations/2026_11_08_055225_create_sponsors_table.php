@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('sponsors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('logo')->nullable();
-            $table->string('url')->nullable();
+            $table->string('slug')->unique();
+            $table->string('logo_url')->nullable();
+            $table->string('website_url')->nullable();
+            $table->text('description')->nullable();
             $table->integer('sort')->default(0);
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('is_active');
             $table->index('sort');
         });
     }
