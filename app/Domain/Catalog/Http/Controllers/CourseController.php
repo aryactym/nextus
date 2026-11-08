@@ -133,9 +133,6 @@ class CourseController extends Controller
             ->with('success', 'Kursus berhasil diperbarui.');
     }
 
-    /**
-     * Simpan atau hapus syarat kelulusan kursus.
-     */
     private function saveRequirement(Course $course, Request $request): void
     {
         $clear = $request->boolean('clear_requirement');
@@ -149,17 +146,27 @@ class CourseController extends Controller
             return;
         }
 
-        // Selalu simpan requirement jika clear_requirement tidak di-cek
+        // Jika form tidak dikirim requirement field sama sekali, jangan ubah
+        // Cek apakah ada field requirement yang dikirim
+        $hasRequirementFields = $request->has('prerequisite_course_id') 
+            || $request->has('min_grade') 
+            || $request->has('pendidikan_id') 
+            || $request->has('min_age') 
+            || $request->has('max_age') 
+            || $request->has('notes');
+
+        if (!$hasRequirementFields) {
+            return; // Form tidak kirim requirement field, skip
+        }
+
         $data = $request->only([
             'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
         ]);
 
-        // Validasi: prerequisite tidak boleh sama dengan course itu sendiri
         if ((int) ($data['prerequisite_course_id'] ?? 0) === $course->id) {
             $data['prerequisite_course_id'] = null;
         }
 
-        // Convert kosong string ke null untuk field numeric
         foreach (['prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age'] as $field) {
             if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === '0')) {
                 $data[$field] = null;
