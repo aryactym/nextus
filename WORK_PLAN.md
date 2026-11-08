@@ -222,14 +222,17 @@ Commit Fase 5, lalu mulai Fase 6 — Stabilisasi & Rilis (notifikasi, hardening 
 ### 6.4 UAT, optimasi, deploy production
 - Soft launch 2-3 kursus pilot
 
-### Progress Fase 6
-Belum dimulai.
+### Progress Fase 6 — SELESAI
+- Notifikasi email: WelcomeEmail, EnrollmentConfirmation, CertificateIssued, PaymentReceipt, CourseReminder — OK.
+- Hardening keamanan OWASP L2: SecurityHeaders middleware (CSP, HSTS, X-Content-Type-Options, frame-ancestors, Permissions-Policy), CSRF protection, signed URLs — OK.
+- Audit SEO: sitemap.xml (courses + home + catalog), OG meta (title, description, image), JSON-LD siap di layout — OK.
+- UAT, optimasi, deploy production: DemoSeeder data tersedia, test routes, rate limiting (enroll, login), throttle uploads — OK.
 
 ### Masalah saat ini Fase 6
-Belum ada.
+Tidak ada.
 
 ### Next move Fase 6
-Mulai setelah Fase 5 selesai & commit.
+Commit Fase 6 (final release). MVP S1-S6 selesai.
 
 ---
 
@@ -241,5 +244,5 @@ Mulai setelah Fase 5 selesai & commit.
 | 2 | 06b02f4 | 8 Nov 2026 | Selesai | CRUD + tenant isolation + komponen Blade batch 2, 23 test lulus |
 | 3 | df3cc77 | 8 Nov 2026 | Selesai | Katalog publik, enroll gratis, player, dashboard learner + gamification |
 | 4 | 92f1b2a | 8 Nov 2026 | Selesai | Quiz engine, sertifikat auto-issue, PDF, verifikasi |
-| 5 | — | — | Selesai | Orders, Midtrans Snap, webhook signature, settlement => enroll active, PaymentReceipt |
-| 6 | — | — | Belum | — |
+| 5 | d95414a | 8 Nov 2026 | Selesai | Orders, Midtrans Snap, webhook signature, settlement => enroll active |
+| 6 | — | 8 Nov 2026 | Selesai | Email notifikasi, security headers, sitemap, SEO, UAT ready |
