@@ -399,3 +399,46 @@ it('returns 404 when editing a course from another organization', function () {
         ->get(route('admin.courses.edit', $otherCourse->uuid))
         ->assertNotFound();
 });
+
+it('saves course requirement (prerequisite) when updating course', function () {
+    ['user' => $user, 'organization' => $organization] = courseUserWithOrganization();
+
+    $prereq = Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Kursus Prasyarat'],
+        'slug' => 'kursus-prasyarat',
+        'status' => 'published',
+    ]);
+
+    $course = Course::create([
+        'organization_id' => $organization->id,
+        'title' => ['id' => 'Kursus Utama'],
+        'slug' => 'kursus-utama',
+        'level' => 'intermediate',
+        'access_type' => 'free',
+        'certificate_type' => 'free',
+        'status' => 'draft',
+    ]);
+
+    $this->actingAs($user)
+        ->put(route('admin.courses.update', $course->uuid), [
+            'title' => ['id' => 'Kursus Utama'],
+            'slug' => 'kursus-utama',
+            'level' => 'intermediate',
+            'access_type' => 'free',
+            'certificate_type' => 'free',
+            'status' => 'draft',
+            'prerequisite_course_id' => $prereq->id,
+            'min_grade' => 80,
+            'min_age' => 18,
+            'notes' => 'Sudah lulus kursus prasyarat',
+        ])
+        ->assertRedirect(route('admin.courses.index'));
+
+    $course->refresh();
+    expect($course->requirement)->not->toBeNull();
+    expect($course->requirement->prerequisite_course_id)->toBe($prereq->id);
+    expect($course->requirement->min_grade)->toBe(80);
+    expect($course->requirement->min_age)->toBe(18);
+    expect($course->requirement->notes)->toBe('Sudah lulus kursus prasyarat');
+});

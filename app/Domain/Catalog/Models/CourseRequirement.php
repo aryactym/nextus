@@ -13,11 +13,13 @@ class CourseRequirement extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'course_id', 'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'notes',
+        'course_id', 'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
     ];
 
     protected $casts = [
         'min_grade' => 'integer',
+        'min_age' => 'integer',
+        'max_age' => 'integer',
         'deleted_at' => 'datetime',
     ];
 

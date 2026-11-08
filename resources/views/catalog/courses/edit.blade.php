@@ -287,6 +287,38 @@
                         <div class="form-hint">Peserta harus memiliki pendidikan setingkat ini atau lebih tinggi.</div>
                     </div>
 
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="min_age">Usia minimal peserta</label>
+                            <div class="input-group">
+                                <input type="number" id="min_age" name="min_age"
+                                       class="form-control @error('min_age') is-invalid @enderror"
+                                       value="{{ old('min_age', optional($course->requirement)->min_age) }}"
+                                       min="1" max="150" placeholder="cth: 17">
+                                <span class="input-group-text">tahun</span>
+                            </div>
+                            @error('min_age')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="max_age">Usia maksimal peserta</label>
+                            <div class="input-group">
+                                <input type="number" id="max_age" name="max_age"
+                                       class="form-control @error('max_age') is-invalid @enderror"
+                                       value="{{ old('max_age', optional($course->requirement)->max_age) }}"
+                                       min="1" max="150" placeholder="cth: 45">
+                                <span class="input-group-text">tahun</span>
+                            </div>
+                            @error('max_age')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-12">
+                            <div class="form-hint">Biarkan kosong jika tidak ada batasan usia.</div>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label" for="notes">Catatan syarat</label>
                         <textarea id="notes" name="notes" rows="2"

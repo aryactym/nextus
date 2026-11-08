@@ -6,6 +6,7 @@ use App\Domain\Catalog\Http\Requests\StoreCourseRequest;
 use App\Domain\Catalog\Http\Requests\UpdateCourseRequest;
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Course;
+use App\Domain\Catalog\Models\CourseRequirement;
 use App\Domain\Catalog\Models\Pendidikan;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
@@ -145,7 +146,7 @@ class CourseController extends Controller
         }
 
         $data = $request->only([
-            'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'notes',
+            'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
         ]);
 
         // Validasi sederhana: prerequisite tidak boleh sama dengan course itu sendiri
@@ -153,7 +154,24 @@ class CourseController extends Controller
             $data['prerequisite_course_id'] = null;
         }
 
-        $course->requirement()->updateOrCreate(
+        // Convert kosong string ke null untuk field numeric
+        foreach (['prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age'] as $field) {
+            if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === '0')) {
+                $data[$field] = null;
+            }
+        }
+
+        // Jangan simpan requirement jika semua field kosong
+        $hasAnyValue = collect($data)->filter(fn ($v) => $v !== null && $v !== '')->isNotEmpty();
+        if (!$hasAnyValue) {
+            $course->requirement?->delete();
+
+            return;
+        }
+
+        $data['course_id'] = $course->id;
+
+        CourseRequirement::updateOrCreate(
             ['course_id' => $course->id],
             $data,
         );
