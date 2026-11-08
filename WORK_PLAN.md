@@ -194,14 +194,17 @@ Commit Fase 4, lalu mulai Fase 5 — Pembayaran Midtrans (orders, webhooks, sett
 ### 5.4 Receipt/invoice email + laporan transaksi admin
 - Email pembukuan, laporan dasar admin
 
-### Progress Fase 5
-Belum dimulai.
+### Progress Fase 5 — SELESAI
+- Orders & Midtrans Snap: tabel orders, payment_events (idempotensi), Snap token, popup QRIS/VA/e-wallet/kartu — OK.
+- Webhook Midtrans: POST /webhooks/midtrans, SHA512 signature validation, idempotensi (cek order.status sebelum ubah) — OK.
+- Gerbang akses & sertifikat: enrollment active setelah settlement (capture/settlement), sertifikat free terbit otomatis — OK.
+- Receipt/invoice email + laporan transaksi admin: PaymentReceipt email, OrderController index/show dengan search & filter status — OK.
 
 ### Masalah saat ini Fase 5
-Belum ada.
+Tidak ada.
 
 ### Next move Fase 5
-Mulai setelah Fase 4 selesai & commit.
+Commit Fase 5, lalu mulai Fase 6 — Stabilisasi & Rilis (notifikasi, hardening keamanan, SEO, UAT, deploy).
 
 ---
 
@@ -237,6 +240,6 @@ Mulai setelah Fase 5 selesai & commit.
 | 1 | 7fc32a5 | 6 Nov 2026 | Selesai | Fondasi RBAC, skema DB inti, traits & helper reusable |
 | 2 | 06b02f4 | 8 Nov 2026 | Selesai | CRUD + tenant isolation + komponen Blade batch 2, 23 test lulus |
 | 3 | df3cc77 | 8 Nov 2026 | Selesai | Katalog publik, enroll gratis, player, dashboard learner + gamification |
-| 4 | — | — | Selesai | Quiz engine, sertifikat auto-issue, PDF, verifikasi |
-| 5 | — | — | Belum | — |
+| 4 | 92f1b2a | 8 Nov 2026 | Selesai | Quiz engine, sertifikat auto-issue, PDF, verifikasi |
+| 5 | — | — | Selesai | Orders, Midtrans Snap, webhook signature, settlement => enroll active, PaymentReceipt |
 | 6 | — | — | Belum | — |
