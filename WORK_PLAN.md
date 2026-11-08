@@ -126,14 +126,17 @@ Commit Fase 2, lalu mulai Fase 3 — Katalog publik & pengalaman belajar (Enroll
 ### 3.5 Reusable komponen Blade (batch 3)
 - `x-progress-bar`, `x-course-card`, `x-lesson-list`
 
-### Progress Fase 3
-Belum dimulai.
+### Progress Fase 3 — SELESAI
+- PublicCourseController (index, show): katalog dengan filter kategori/level/akses/durasi, facet counts, pencarian — OK.
+- EnrollmentController: free enroll langsung, paid/donation ke Midtrans (pindah Fase 5) — OK.
+- PlayerController + CourseProgressService: player modul > pelajaran, progres otomatis `lesson_progress`, soal kuis dengan scoring — OK.
+- DashboardController: riwayat kursus, progres, sertifikat, gamification (XP level, badges) — OK.
 
 ### Masalah saat ini Fase 3
-Belum ada.
+Tidak ada.
 
 ### Next move Fase 3
-Mulai setelah Fase 2 selesai & commit.
+Commit Fase 3, lalu mulai Fase 4 — Kuis & Sertifikat (engine kuis, template sertifikat, PDF, verifikasi).
 
 ---
 
@@ -228,8 +231,8 @@ Mulai setelah Fase 5 selesai & commit.
 | Fase | Commit hash | Tanggal | Selesai | Catatan |
 | --- | --- | --- | --- | --- |
 | 1 | 7fc32a5 | 6 Nov 2026 | Selesai | Fondasi RBAC, skema DB inti, traits & helper reusable |
-| 2 | — | — | Selesai | CRUD + tenant isolation + komponen Blade batch 2, 23 test lulus |
-| 3 | — | — | Belum | — |
+| 2 | 06b02f4 | 8 Nov 2026 | Selesai | CRUD + tenant isolation + komponen Blade batch 2, 23 test lulus |
+| 3 | — | — | Selesai | Katalog publik, enroll gratis, player, dashboard learner + gamification |
 | 4 | — | — | Belum | — |
 | 5 | — | — | Belum | — |
 | 6 | — | — | Belum | — |
