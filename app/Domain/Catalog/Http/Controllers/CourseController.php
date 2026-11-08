@@ -142,15 +142,16 @@ class CourseController extends Controller
 
         if ($clear) {
             $course->requirement?->delete();
-
             return;
         }
 
+        // Jika clear_requirement tidak di-cek, selalu simpan requirement
+        // Bahkan jika field kosong (user mungkin belum selesai mengisi)
         $data = $request->only([
             'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
         ]);
 
-        // Validasi sederhana: prerequisite tidak boleh sama dengan course itu sendiri
+        // Validasi: prerequisite tidak boleh sama dengan course itu sendiri
         if ((int) ($data['prerequisite_course_id'] ?? 0) === $course->id) {
             $data['prerequisite_course_id'] = null;
         }
@@ -160,14 +161,6 @@ class CourseController extends Controller
             if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === '0')) {
                 $data[$field] = null;
             }
-        }
-
-        // Jangan simpan requirement jika semua field kosong
-        $hasAnyValue = collect($data)->filter(fn ($v) => $v !== null && $v !== '')->isNotEmpty();
-        if (!$hasAnyValue) {
-            $course->requirement?->delete();
-
-            return;
         }
 
         $data['course_id'] = $course->id;
