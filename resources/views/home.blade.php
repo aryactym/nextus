@@ -129,6 +129,37 @@
     </div>
   </section>
 
+  <!-- ============ MITRA & SPONSOR ============ -->
+  @if ($sponsors->isNotEmpty())
+    <section class="section section-alt">
+      <div class="container-xl">
+        <h2 class="text-center mb-4">Mitra &amp; Sponsor Kami</h2>
+        <div class="sponsor-slider d-flex flex-wrap justify-content-center gap-4 align-items-center">
+          @foreach ($sponsors as $sponsor)
+            @if ($sponsor->url)
+              <a href="{{ $sponsor->url }}" target="_blank" rel="noopener"
+                 class="d-block text-decoration-none">
+                <img src="{{ Storage::disk('public')->url($sponsor->logo) }}"
+                     alt="{{ $sponsor->name }}"
+                     class="sponsor-logo img-fluid"
+                     style="max-height: 50px; max-width: 180px; object-fit: contain; opacity: 0.85; transition: opacity 0.2s;"
+                     onmouseover="this.style.opacity='1'"
+                     onmouseout="this.style.opacity='0.85'">
+              </a>
+            @else
+              <img src="{{ Storage::disk('public')->url($sponsor->logo) }}"
+                   alt="{{ $sponsor->name }}"
+                   class="sponsor-logo img-fluid"
+                   style="max-height: 50px; max-width: 180px; object-fit: contain; opacity: 0.85; transition: opacity 0.2s;"
+                   onmouseover="this.style.opacity='1'"
+                   onmouseout="this.style.opacity='0.85'">
+            @endif
+          @endforeach
+        </div>
+      </div>
+    </section>
+  @endif
+
   <!-- ============ VERIFIKASI SERTIFIKAT ============ -->
   <section class="verify" aria-labelledby="h-verif">
     <div class="container-xl">

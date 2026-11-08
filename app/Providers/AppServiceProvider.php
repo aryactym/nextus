@@ -65,13 +65,13 @@ class AppServiceProvider extends ServiceProvider
                     'favicon' => null,
                 ]);
             }
-
-            try {
-                $view->with(['sponsors' => Sponsor::active()->get()]);
-            } catch (\Throwable) {
-                $view->with(['sponsors' => collect()]);
-            }
         });
+
+        try {
+            View::share('sponsors', Sponsor::active()->get());
+        } catch (Throwable) {
+            View::share('sponsors', collect());
+        }
 
         View::addLocation(base_path('docs'));
     }
