@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('course_requirements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained('courses')->restrictOnDelete();
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
             $table->foreignId('prerequisite_course_id')->nullable()
                 ->constrained('courses')
                 ->nullOnDelete();
