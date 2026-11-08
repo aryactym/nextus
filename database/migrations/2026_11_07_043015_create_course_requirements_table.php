@@ -10,14 +10,16 @@ return new class extends Migration
     {
         Schema::create('course_requirements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained('courses')->restrictOnDelete();
             $table->foreignId('prerequisite_course_id')->nullable()
                 ->constrained('courses')
                 ->nullOnDelete();
-            $table->integer('min_grade')->nullable(); // nilai minimal prerequisite course (0-100)
+            $table->integer('min_grade')->nullable();
             $table->foreignId('pendidikan_id')->nullable()
                 ->constrained('pendidikans')
                 ->nullOnDelete();
+            $table->unsignedSmallInteger('min_age')->nullable();
+            $table->unsignedSmallInteger('max_age')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();

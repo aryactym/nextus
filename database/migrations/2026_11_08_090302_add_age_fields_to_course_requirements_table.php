@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('course_requirements', function (Blueprint $table) {
-            $table->unsignedSmallInteger('min_age')->nullable()->after('pendidikan_id');
-            $table->unsignedSmallInteger('max_age')->nullable()->after('min_age');
-        });
+        // Age fields sudah di-add ke create_course_requirements_table
+        // Tidak perlu di-add lagi
     }
 
     public function down(): void
     {
-        Schema::table('course_requirements', function (Blueprint $table) {
-            $table->dropColumn(['min_age', 'max_age']);
-        });
+        // Tidak ada yang di-drop
     }
 };

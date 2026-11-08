@@ -141,12 +141,15 @@ class CourseController extends Controller
         $clear = $request->boolean('clear_requirement');
 
         if ($clear) {
-            $course->requirement?->delete();
+            try {
+                $course->requirement?->forceDelete();
+            } catch (\Exception $e) {
+                \Log::warning('Gagal hapus requirement', ['error' => $e->getMessage()]);
+            }
             return;
         }
 
-        // Jika clear_requirement tidak di-cek, selalu simpan requirement
-        // Bahkan jika field kosong (user mungkin belum selesai mengisi)
+        // Selalu simpan requirement jika clear_requirement tidak di-cek
         $data = $request->only([
             'prerequisite_course_id', 'min_grade', 'pendidikan_id', 'min_age', 'max_age', 'notes',
         ]);
