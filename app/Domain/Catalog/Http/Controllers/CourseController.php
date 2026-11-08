@@ -103,6 +103,12 @@ class CourseController extends Controller
         abort_unless(auth()->user()->can('manage courses'), 403);
         $data = $request->validated();
         
+        // DEBUG: Log semua request data
+        \Log::info('CourseController.update ALL REQUEST DATA', [
+            'all_input' => $request->all(),
+            'validated' => $data,
+        ]);
+        
         $data['suggested_amounts'] = $data['suggested_amounts'] ?? null;
         $data['allow_custom_amount'] = $data['allow_custom_amount'] ?? true;
         $data['currency'] = $data['currency'] ?? 'IDR';

@@ -26,6 +26,15 @@
 <form method="POST" action="{{ route('admin.courses.update', $course->uuid) }}" enctype="multipart/form-data" id="course-form">
     @csrf
     @method('PUT')
+    
+    <!-- Hidden fields untuk ensure requirement field selalu dikirim -->
+    <input type="hidden" name="prerequisite_course_id" value="">
+    <input type="hidden" name="min_grade" value="">
+    <input type="hidden" name="pendidikan_id" value="">
+    <input type="hidden" name="min_age" value="">
+    <input type="hidden" name="max_age" value="">
+    <input type="hidden" name="notes" value="">
+    <input type="hidden" name="clear_requirement" value="0">
 
     <div class="row">
         <div class="col-lg-8">
