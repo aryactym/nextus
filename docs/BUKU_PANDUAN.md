@@ -87,30 +87,30 @@ Semua akun menggunakan password: **`password`**
 
 ### Platform Operator
 
-| Nama | Email | Role |
-|---|---|---|
-| Super Admin | `admin@example.com` | Super Admin |
+| Nama | Email | Password | Role |
+|---|---|---|---|
+| Super Admin | `admin@example.com` | `password` | Super Admin |
 
 ### MPZ Gerak Bareng — Admin Organisasi
 
-| Nama | Email | Role | Jabatan |
-|---|---|---|---|
-| Admin MPZ | `admin@mpzgerakbareng.org` | Org Admin | Koordinator Pelatihan |
+| Nama | Email | Password | Role | Jabatan |
+|---|---|---|---|---|
+| Admin MPZ | `admin@mpzgerakbareng.org` | `password` | Org Admin | Koordinator Pelatihan |
 
 ### MPZ Gerak Bareng — Peserta (10 orang)
 
-| Nama | Email | Jabatan | Kategori |
-|---|---|---|---|
-| Ahmad Fauzi | `ahmad.fauzi@mpzgerakbareng.org` | Staf Program | Officer |
-| Siti Rahmawati | `siti.r@mpzgerakbareng.org` | Staf Keuangan | Officer |
-| Budi Santoso | `budi.s@mpzgerakbareng.org` | Supervisor Program | Supervisor |
-| Dewi Kusuma | `dewi.k@mpzgerakbareng.org` | Relawan Senior | Officer |
-| Hendra Wijaya | `hendra.w@mpzgerakbareng.org` | Manajer Lapangan | Manajer |
-| Fatimah Azzahra | `fatimah.a@mpzgerakbareng.org` | Staf Komunikasi | Officer |
-| Rizky Pratama | `rizky.p@mpzgerakbareng.org` | Koordinator Relawan | Supervisor |
-| Nurul Hidayah | `nurul.h@mpzgerakbareng.org` | Analis Data | Officer |
-| Andi Kurniawan | `andi.k@mpzgerakbareng.org` | Staf IT | Officer |
-| Maya Sari | `maya.s@mpzgerakbareng.org` | Direktur Program | Direktur |
+| Nama | Email | Password | Jabatan | Kategori |
+|---|---|---|---|---|
+| Ahmad Fauzi | `ahmad.fauzi@mpzgerakbareng.org` | `password` | Staf Program | Officer |
+| Siti Rahmawati | `siti.r@mpzgerakbareng.org` | `password` | Staf Keuangan | Officer |
+| Budi Santoso | `budi.s@mpzgerakbareng.org` | `password` | Supervisor Program | Supervisor |
+| Dewi Kusuma | `dewi.k@mpzgerakbareng.org` | `password` | Relawan Senior | Officer |
+| Hendra Wijaya | `hendra.w@mpzgerakbareng.org` | `password` | Manajer Lapangan | Manajer |
+| Fatimah Azzahra | `fatimah.a@mpzgerakbareng.org` | `password` | Staf Komunikasi | Officer |
+| Rizky Pratama | `rizky.p@mpzgerakbareng.org` | `password` | Koordinator Relawan | Supervisor |
+| Nurul Hidayah | `nurul.h@mpzgerakbareng.org` | `password` | Analis Data | Officer |
+| Andi Kurniawan | `andi.k@mpzgerakbareng.org` | `password` | Staf IT | Officer |
+| Maya Sari | `maya.s@mpzgerakbareng.org` | `password` | Direktur Program | Direktur |
 
 ---
 
