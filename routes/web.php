@@ -168,4 +168,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->middleware(['auth', 'signed', 'throttle:uploads'])
         ->name('uploads.show')
         ->where('path', '.*');
+
+    // ---- Org Admin ----
+    Route::prefix('org')->name('org.')->group(function () {
+        Route::get('learners', fn () => abort(404))->name('learners.index');
+        Route::get('reports', fn () => abort(404))->name('reports.index');
+    });
 });

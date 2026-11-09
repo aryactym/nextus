@@ -20,6 +20,9 @@ class PermissionSeeder extends Seeder
             'manage settings',
             'manage sponsors',
             'manage users',
+            'manage blog',
+            'manage org learners',
+            'view org reports',
         ];
 
         foreach ($permissions as $name) {
@@ -32,5 +35,8 @@ class PermissionSeeder extends Seeder
 
         Role::firstOrCreate(['name' => 'Instructor', 'guard_name' => 'web'])
             ->givePermissionTo(['manage courses']);
+
+        Role::firstOrCreate(['name' => 'Org Admin', 'guard_name' => 'web'])
+            ->givePermissionTo(['manage org learners', 'view org reports']);
     }
 }

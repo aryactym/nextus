@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $roles = [
             'Super Admin' => 'Pengaturan sistem dan semua organisasi',
             'Admin' => 'Kelola user, kategori, harga, template sertifikat, transaksi, laporan',
+            'Org Admin' => 'Kelola peserta dan lihat laporan capaian organisasi sendiri',
             'Instructor' => 'Kelola kursus, modul, materi, kuis; lihat progres peserta',
             'Learner' => 'Daftar, belajar, kuis, unduh sertifikat, donasi/bayar, riwayat transaksi',
             'Guest' => 'Lihat katalog, preview kursus, ganti bahasa, verifikasi sertifikat',
