@@ -26,6 +26,7 @@ use App\Domain\Settings\Http\Controllers\SettingController;
 use App\Domain\Settings\Http\Controllers\SponsorController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\Org\LearnerController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -171,7 +172,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // ---- Org Admin ----
     Route::prefix('org')->name('org.')->group(function () {
-        Route::get('learners', fn () => abort(404))->name('learners.index');
+        // Tahap 2: learner management
+        Route::resource('learners', LearnerController::class)->except(['show']);
+        Route::get('learners/{learner}', [LearnerController::class, 'show'])->name('learners.show');
+        Route::patch('learners/{learner}/restore', [LearnerController::class, 'restore'])->name('learners.restore');
+        Route::get('learners-import', fn () => back()->with('info', 'Fitur import CSV akan hadir di tahap berikutnya.'))->name('learners.import');
+
+        // Tahap 4: reports (placeholder)
         Route::get('reports', fn () => abort(404))->name('reports.index');
     });
 });
