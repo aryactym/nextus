@@ -1,18 +1,42 @@
 {{--
     Filter bar shared across all report tabs.
-    Props: $f (filters array), $routeName, $courses (optional collection for course dropdown)
+    Props:
+      $f          — filters array (date_from, date_to, course_id, org_id)
+      $routeName  — named route for form action
+      $courses    — optional collection for course dropdown
+      $orgs       — collection of organisations (only non-empty for Super Admin / Admin)
+      $orgId      — currently selected org ID
 --}}
+@php $canPickOrg = isset($orgs) && $orgs->isNotEmpty(); @endphp
+
 <div class="card mb-3">
     <div class="card-body">
         <form method="GET" action="{{ route($routeName) }}" class="row g-2 align-items-end" id="report-filter-form">
             <input type="hidden" name="date_from" id="filter_date_from" value="{{ $f['date_from'] }}">
             <input type="hidden" name="date_to"   id="filter_date_to"   value="{{ $f['date_to'] }}">
 
-            <div class="col-12 col-md-4">
+            {{-- Org picker — Super Admin / Admin only --}}
+            @if ($canPickOrg)
+                <div class="col-12 col-md-3">
+                    <label class="form-label form-label-sm">Organisasi</label>
+                    <select name="org_id" id="org-filter" class="form-select form-select-sm">
+                        <option value="">— Pilih organisasi —</option>
+                        @foreach ($orgs as $org)
+                            <option value="{{ $org->id }}"
+                                @selected((string) ($f['org_id'] ?? $orgId) === (string) $org->id)>
+                                {{ $org->getTranslation('name', 'id') }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+
+            {{-- Date range --}}
+            <div class="col-12 col-md-{{ $canPickOrg ? '3' : '4' }}">
                 <label class="form-label form-label-sm">Periode pendaftaran</label>
                 <div class="input-icon">
                     <span class="input-icon-addon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                              stroke-linejoin="round" class="icon" aria-hidden="true">
                             <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -21,16 +45,18 @@
                             <line x1="3" y1="10" x2="21" y2="10"/>
                         </svg>
                     </span>
-                    <input type="text" id="daterange-report" class="form-control" placeholder="Semua periode"
+                    <input type="text" id="daterange-report" class="form-control form-control-sm"
+                           placeholder="Semua periode"
                            value="{{ ($f['date_from'] && $f['date_to']) ? $f['date_from'].' — '.$f['date_to'] : '' }}"
                            autocomplete="off" readonly>
                 </div>
             </div>
 
+            {{-- Course picker --}}
             @if (isset($courses) && $courses->isNotEmpty())
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-3">
                     <label class="form-label form-label-sm">Kursus</label>
-                    <select name="course_id" id="course-filter" class="form-select">
+                    <select name="course_id" id="course-filter" class="form-select form-select-sm">
                         <option value="">Semua kursus</option>
                         @foreach ($courses as $course)
                             <option value="{{ $course->id }}"
@@ -44,7 +70,7 @@
 
             <div class="col-12 col-md-auto d-flex gap-2">
                 <button type="submit" class="btn btn-primary btn-sm">Terapkan</button>
-                @if ($f['date_from'] || $f['date_to'] || $f['course_id'])
+                @if ($f['date_from'] || $f['date_to'] || $f['course_id'] || ($f['org_id'] ?? null))
                     <a href="{{ route($routeName) }}" class="btn btn-link btn-sm">Reset</a>
                 @endif
             </div>
@@ -68,12 +94,12 @@
         numberOfMonths: 2,
         numberOfColumns: 2,
         format: 'YYYY-MM-DD',
-        setup: function (picker) {
-            picker.on('selected', function (s, e) {
+        setup: function (p) {
+            p.on('selected', function (s, e) {
                 document.getElementById('filter_date_from').value = s.format('YYYY-MM-DD');
                 document.getElementById('filter_date_to').value   = e.format('YYYY-MM-DD');
             });
-            picker.on('clear:selection', function () {
+            p.on('clear:selection', function () {
                 document.getElementById('filter_date_from').value = '';
                 document.getElementById('filter_date_to').value   = '';
             });
@@ -84,9 +110,17 @@
         picker.setDateRange('{{ $f['date_from'] }}', '{{ $f['date_to'] }}');
     @endif
 
-    var courseEl = document.getElementById('course-filter');
-    if (courseEl) {
-        new TomSelect(courseEl, { allowEmptyOption: true, maxOptions: null });
+    ['org-filter', 'course-filter'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) { new TomSelect(el, { allowEmptyOption: true, maxOptions: null }); }
+    });
+
+    // Saat organisasi berubah, langsung submit agar kursus dropdown ikut update
+    var orgEl = document.getElementById('org-filter');
+    if (orgEl) {
+        orgEl.tomselect.on('change', function () {
+            document.getElementById('report-filter-form').submit();
+        });
     }
 }());
 </script>
