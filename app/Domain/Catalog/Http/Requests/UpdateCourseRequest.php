@@ -36,15 +36,6 @@ class UpdateCourseRequest extends FormRequest
             'currency' => ['sometimes', 'string', 'size:3'],
             'passing_grade' => ['sometimes', 'nullable', 'integer', 'min:0', 'max:100'],
             'status' => ['sometimes', 'required', 'in:draft,published,archived'],
-
-            // Syarat kelulusan
-            'prerequisite_course_id' => ['sometimes', 'nullable', 'exists:courses,id'],
-            'min_grade' => ['sometimes', 'nullable', 'integer', 'min:0', 'max:100'],
-            'pendidikan_id' => ['sometimes', 'nullable', 'exists:pendidikans,id'],
-            'min_age' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:150'],
-            'max_age' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:150', 'gte:min_age'],
-            'notes' => ['sometimes', 'nullable', 'string'],
-            'clear_requirement' => ['sometimes', 'boolean'],
         ];
     }
 }

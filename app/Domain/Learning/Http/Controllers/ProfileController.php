@@ -34,12 +34,18 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
+            'nama_jabatan' => ['nullable', 'string', 'max:255'],
+            'kategori_jabatan' => ['nullable', 'string', 'max:100'],
+            'nama_organisasi' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'pendidikan_id' => $validated['pendidikan_id'] ?? null,
+            'nama_jabatan' => $validated['nama_jabatan'] ?? null,
+            'kategori_jabatan' => $validated['kategori_jabatan'] ?? null,
+            'nama_organisasi' => $validated['nama_organisasi'] ?? null,
         ]);
 
         return back()->with('success', 'Profil berhasil diperbarui.');

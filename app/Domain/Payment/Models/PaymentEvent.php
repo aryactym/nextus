@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaymentEvent extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid;
+    use HasFactory, HasUuid, SoftDeletes;
 
     protected $fillable = [
         'order_id', 'payload', 'signature_valid', 'received_at',

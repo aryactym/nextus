@@ -85,6 +85,45 @@
                   <div class="form-hint">Pendidikan ini digunakan untuk memenuhi syarat kelulusan kursus.</div>
                 </div>
 
+                <div class="mb-3">
+                  <label class="form-label" for="nama_jabatan">Nama jabatan</label>
+                  <input type="text" id="nama_jabatan" name="nama_jabatan"
+                         class="form-control @error('nama_jabatan') is-invalid @enderror"
+                         placeholder="Misal: Manajer Program"
+                         value="{{ old('nama_jabatan', $user->nama_jabatan) }}">
+                  @error('nama_jabatan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="kategori_jabatan">Kategori jabatan</label>
+                  <select id="kategori_jabatan" name="kategori_jabatan"
+                          class="form-select @error('kategori_jabatan') is-invalid @enderror">
+                    <option value="">Pilih kategori</option>
+                    @foreach (['Officer', 'Supervisor', 'Manajer', 'General Manajer', 'Direktur', 'Lainnya'] as $kategori)
+                      <option value="{{ $kategori }}"
+                          @selected(old('kategori_jabatan', $user->kategori_jabatan) === $kategori)>
+                        {{ $kategori }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('kategori_jabatan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="nama_organisasi">Nama organisasi</label>
+                  <input type="text" id="nama_organisasi" name="nama_organisasi"
+                         class="form-control @error('nama_organisasi') is-invalid @enderror"
+                         placeholder="Misal: BAZNAS, Yayasan XYZ"
+                         value="{{ old('nama_organisasi', $user->nama_organisasi) }}">
+                  @error('nama_organisasi')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+
                 <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary">Simpan perubahan</button>
                   <a href="{{ route('learning.dashboard') }}" class="btn btn-link">Kembali ke dashboard</a>

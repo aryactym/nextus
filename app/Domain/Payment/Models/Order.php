@@ -2,15 +2,18 @@
 
 namespace App\Domain\Payment\Models;
 
+use App\Domain\Catalog\Models\Course;
+use App\Models\User;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid;
+    use HasFactory, HasUuid, SoftDeletes;
 
     protected $fillable = [
         'uuid', 'midtrans_order_id', 'user_id', 'course_id', 'order_type',
@@ -26,15 +29,15 @@ class Order extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function course(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Catalog\Models\Course::class);
+        return $this->belongsTo(Course::class);
     }
 
-    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function events(): HasMany
     {
         return $this->hasMany(PaymentEvent::class);
     }

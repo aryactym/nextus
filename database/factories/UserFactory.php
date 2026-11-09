@@ -24,12 +24,17 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $kategoris = ['Officer', 'Supervisor', 'Manajer', 'General Manajer', 'Direktur', 'Lainnya'];
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'nama_jabatan' => fake()->optional()->jobTitle(),
+            'kategori_jabatan' => fake()->optional()->randomElement($kategoris),
+            'nama_organisasi' => fake()->optional()->company(),
         ];
     }
 

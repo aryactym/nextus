@@ -20,18 +20,24 @@ class UserController extends Controller
         abort_unless(auth()->user()->can('manage users'), 403);
 
         $q = trim((string) $request->input('q', ''));
+        $kategoriJabatan = trim((string) $request->input('kategori_jabatan', ''));
+        $namaOrganisasi = trim((string) $request->input('nama_organisasi', ''));
 
         $users = User::query()
             ->with('roles')
             ->when($q !== '', fn ($query) => $query->where(function ($query) use ($q): void {
                 $query->where('name', 'like', '%'.$q.'%')
-                    ->orWhere('email', 'like', '%'.$q.'%');
+                    ->orWhere('email', 'like', '%'.$q.'%')
+                    ->orWhere('nama_jabatan', 'like', '%'.$q.'%')
+                    ->orWhere('nama_organisasi', 'like', '%'.$q.'%');
             }))
+            ->when($kategoriJabatan !== '', fn ($query) => $query->where('kategori_jabatan', $kategoriJabatan))
+            ->when($namaOrganisasi !== '', fn ($query) => $query->where('nama_organisasi', 'like', '%'.$namaOrganisasi.'%'))
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'q'));
+        return view('admin.users.index', compact('users', 'q', 'kategoriJabatan', 'namaOrganisasi'));
     }
 
     public function create(): View
@@ -54,6 +60,9 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'string', 'exists:roles,name'],
             'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
+            'nama_jabatan' => ['nullable', 'string', 'max:255'],
+            'kategori_jabatan' => ['nullable', 'string', 'max:100'],
+            'nama_organisasi' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = User::create([
@@ -61,6 +70,10 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'organization_id' => auth()->user()->organization_id,
+            'pendidikan_id' => $validated['pendidikan_id'] ?? null,
+            'nama_jabatan' => $validated['nama_jabatan'] ?? null,
+            'kategori_jabatan' => $validated['kategori_jabatan'] ?? null,
+            'nama_organisasi' => $validated['nama_organisasi'] ?? null,
             'locale' => 'id',
         ]);
 
@@ -90,12 +103,18 @@ class UserController extends Controller
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'string', 'exists:roles,name'],
             'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
+            'nama_jabatan' => ['nullable', 'string', 'max:255'],
+            'kategori_jabatan' => ['nullable', 'string', 'max:100'],
+            'nama_organisasi' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'pendidikan_id' => $validated['pendidikan_id'] ?? null,
+            'nama_jabatan' => $validated['nama_jabatan'] ?? null,
+            'kategori_jabatan' => $validated['kategori_jabatan'] ?? null,
+            'nama_organisasi' => $validated['nama_organisasi'] ?? null,
         ]);
 
         if (! empty($validated['password'])) {

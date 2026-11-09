@@ -42,7 +42,7 @@
             <li><a href="{{ route('jadwal') }}">Jadwal kursus</a></li>
           @endif
           <li><a href="{{ route('verifikasi') }}">Verifikasi sertifikat</a></li>
-          <li><a href="{{ route('home') }}" hreflang="en">English</a></li>
+          <li><a href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('en') }}" hreflang="en">English</a></li>
         </ul>
       </div>
 

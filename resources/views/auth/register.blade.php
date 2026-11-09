@@ -95,13 +95,47 @@
 
               <div class="row g-3 mb-3">
                 <div class="col-md-6">
-                  <label class="form-label" for="organization">Lembaga <span class="text-secondary fw-normal">(opsional)</span></label>
+                  <label class="form-label" for="nama_jabatan">Nama jabatan <span class="text-secondary fw-normal">(opsional)</span></label>
                   <input
-                    class="form-control"
-                    id="organization" name="organization"
-                    autocomplete="organization"
-                    value="{{ old('organization') }}"
+                    class="form-control @error('nama_jabatan') is-invalid @enderror"
+                    id="nama_jabatan" name="nama_jabatan" type="text"
+                    placeholder="Misal: Manajer Program"
+                    value="{{ old('nama_jabatan') }}"
                   >
+                  @error('nama_jabatan')
+                    <div class="field-error" style="display:block">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="kategori_jabatan">Kategori jabatan <span class="text-secondary fw-normal">(opsional)</span></label>
+                  <select class="form-select @error('kategori_jabatan') is-invalid @enderror" id="kategori_jabatan" name="kategori_jabatan">
+                    <option value="">Pilih kategori</option>
+                    <option value="Officer" {{ old('kategori_jabatan') === 'Officer' ? 'selected' : '' }}>Officer</option>
+                    <option value="Supervisor" {{ old('kategori_jabatan') === 'Supervisor' ? 'selected' : '' }}>Supervisor</option>
+                    <option value="Manajer" {{ old('kategori_jabatan') === 'Manajer' ? 'selected' : '' }}>Manajer</option>
+                    <option value="General Manajer" {{ old('kategori_jabatan') === 'General Manajer' ? 'selected' : '' }}>General Manajer</option>
+                    <option value="Direktur" {{ old('kategori_jabatan') === 'Direktur' ? 'selected' : '' }}>Direktur</option>
+                    <option value="Lainnya" {{ old('kategori_jabatan') === 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                  </select>
+                  @error('kategori_jabatan')
+                    <div class="field-error" style="display:block">{{ $message }}</div>
+                  @enderror
+                </div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="nama_organisasi">Nama organisasi <span class="text-secondary fw-normal">(opsional)</span></label>
+                  <input
+                    class="form-control @error('nama_organisasi') is-invalid @enderror"
+                    id="nama_organisasi" name="nama_organisasi" type="text"
+                    autocomplete="organization"
+                    placeholder="Misal: BAZNAS, Yayasan XYZ"
+                    value="{{ old('nama_organisasi') }}"
+                  >
+                  @error('nama_organisasi')
+                    <div class="field-error" style="display:block">{{ $message }}</div>
+                  @enderror
                 </div>
               </div>
 

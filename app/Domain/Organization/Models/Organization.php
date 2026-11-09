@@ -10,7 +10,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Organization extends Model
 {
-    use HasFactory, SoftDeletes, HasUuid, HasTranslations;
+    use HasFactory, HasTranslations, HasUuid, SoftDeletes;
 
     public $translatable = ['name'];
 

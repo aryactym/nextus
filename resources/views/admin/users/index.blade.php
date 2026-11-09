@@ -15,9 +15,30 @@
 
 <div class="card">
     <div class="card-header">
-        <form method="GET" action="{{ route('admin.users.index') }}" class="d-flex gap-2">
-            <input type="search" name="q" value="{{ $q }}" class="form-control" placeholder="Cari nama atau email">
-            <button type="submit" class="btn btn-outline-secondary">Cari</button>
+        <form method="GET" action="{{ route('admin.users.index') }}" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label form-label-sm mb-1">Cari nama / email / jabatan / organisasi</label>
+                <input type="search" name="q" value="{{ $q }}" class="form-control form-control-sm" placeholder="Ketik untuk mencari...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label form-label-sm mb-1">Kategori jabatan</label>
+                <select name="kategori_jabatan" class="form-select form-select-sm">
+                    <option value="">Semua kategori</option>
+                    @foreach (['Officer', 'Supervisor', 'Manajer', 'General Manajer', 'Direktur', 'Lainnya'] as $kategori)
+                        <option value="{{ $kategori }}" @selected($kategoriJabatan === $kategori)>{{ $kategori }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label form-label-sm mb-1">Nama organisasi</label>
+                <input type="search" name="nama_organisasi" value="{{ $namaOrganisasi }}" class="form-control form-control-sm" placeholder="Filter organisasi...">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-outline-secondary flex-fill">Filter</button>
+                @if ($q !== '' || $kategoriJabatan !== '' || $namaOrganisasi !== '')
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-ghost-secondary">Reset</a>
+                @endif
+            </div>
         </form>
     </div>
     <div class="table-responsive">
@@ -26,6 +47,9 @@
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
+                    <th>Jabatan</th>
+                    <th>Kategori</th>
+                    <th>Organisasi</th>
                     <th>Peran</th>
                     <th class="w-1"></th>
                 </tr>
@@ -35,6 +59,15 @@
                     <tr>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->nama_jabatan ?? '—' }}</td>
+                        <td>
+                            @if ($user->kategori_jabatan)
+                                <span class="badge bg-azure-lt">{{ $user->kategori_jabatan }}</span>
+                            @else
+                                <span class="text-secondary">—</span>
+                            @endif
+                        </td>
+                        <td>{{ $user->nama_organisasi ?? '—' }}</td>
                         <td>
                             @foreach ($user->roles as $role)
                                 <span class="badge bg-blue-lt">{{ $role->name }}</span>
@@ -55,7 +88,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-secondary">Belum ada pengguna.</td>
+                        <td colspan="7" class="text-center text-secondary">Belum ada pengguna.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -71,4 +104,3 @@
     </div>
 </div>
 @endsection
-

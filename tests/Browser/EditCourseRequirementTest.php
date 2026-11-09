@@ -16,9 +16,9 @@ class EditCourseRequirementTest extends DuskTestCase
     {
         $user = User::where('email', 'admin@example.com')->first();
         $course = Course::find(1); // Pengantar Zakat
-        
+
         // Pastikan course punya requirement dulu
-        if (!$course->requirement) {
+        if (! $course->requirement) {
             $course->requirement()->create([
                 'prerequisite_course_id' => null,
                 'min_grade' => null,
@@ -31,14 +31,14 @@ class EditCourseRequirementTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user, $course) {
             $browser->loginAs($user)
-                    ->visit('/admin/courses/' . $course->uuid . '/edit')
-                    ->assertSee('Syarat kelulusan')
+                ->visit('/admin/courses/'.$course->uuid.'/edit')
+                ->assertSee('Syarat kelulusan')
                     // Jangan ubah apa pun, cukup scroll & click simpan
-                    ->scrollIntoView('@save-button')
-                    ->click('button[type="submit"]')
+                ->scrollIntoView('@save-button')
+                ->click('button[type="submit"]')
                     // Tunggu redirect ke courses index
-                    ->waitForLocation('/admin/courses')
-                    ->assertSee('berhasil diperbarui');
+                ->waitForLocation('/admin/courses')
+                ->assertSee('berhasil diperbarui');
         });
 
         // Verifikasi requirement masih ada
@@ -58,15 +58,15 @@ class EditCourseRequirementTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user, $course) {
             $browser->loginAs($user)
-                    ->visit('/admin/courses/' . $course->uuid . '/edit')
-                    ->assertSee('Syarat kelulusan')
+                ->visit('/admin/courses/'.$course->uuid.'/edit')
+                ->assertSee('Syarat kelulusan')
                     // Isi pendidikan minimal
-                    ->select('pendidikan_id', '3')
-                    ->type('notes', 'Memerlukan pendidikan minimal S1')
-                    ->scrollIntoView('@save-button')
-                    ->click('button[type="submit"]')
-                    ->waitForLocation('/admin/courses')
-                    ->assertSee('berhasil diperbarui');
+                ->select('pendidikan_id', '3')
+                ->type('notes', 'Memerlukan pendidikan minimal S1')
+                ->scrollIntoView('@save-button')
+                ->click('button[type="submit"]')
+                ->waitForLocation('/admin/courses')
+                ->assertSee('berhasil diperbarui');
         });
 
         // Verifikasi requirement ter-update
@@ -85,7 +85,7 @@ class EditCourseRequirementTest extends DuskTestCase
         $course = Course::find(3); // Dasar Fasilitasi
 
         // Buat requirement dulu
-        if (!$course->requirement) {
+        if (! $course->requirement) {
             $course->requirement()->create([
                 'prerequisite_course_id' => null,
                 'min_grade' => 80,
@@ -98,16 +98,16 @@ class EditCourseRequirementTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user, $course) {
             $browser->loginAs($user)
-                    ->visit('/admin/courses/' . $course->uuid . '/edit')
-                    ->assertSee('Syarat kelulusan')
+                ->visit('/admin/courses/'.$course->uuid.'/edit')
+                ->assertSee('Syarat kelulusan')
                     // Scroll ke requirement card
-                    ->scrollIntoView('@requirement-card')
+                ->scrollIntoView('@requirement-card')
                     // Check checkbox "Hapus semua syarat kelulusan"
-                    ->check('clear_requirement')
-                    ->scrollIntoView('@save-button')
-                    ->click('button[type="submit"]')
-                    ->waitForLocation('/admin/courses')
-                    ->assertSee('berhasil diperbarui');
+                ->check('clear_requirement')
+                ->scrollIntoView('@save-button')
+                ->click('button[type="submit"]')
+                ->waitForLocation('/admin/courses')
+                ->assertSee('berhasil diperbarui');
         });
 
         // Verifikasi requirement sudah dihapus (soft delete)

@@ -62,9 +62,10 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'role' => ['nullable', 'string', 'max:50'],
-            'organization' => ['nullable', 'string', 'max:255'],
             'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
+            'nama_jabatan' => ['nullable', 'string', 'max:255'],
+            'kategori_jabatan' => ['nullable', 'string', 'max:100'],
+            'nama_organisasi' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'terms' => ['accepted'],
         ]);
@@ -78,6 +79,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'pendidikan_id' => $request->pendidikan_id,
+            'nama_jabatan' => $request->nama_jabatan,
+            'kategori_jabatan' => $request->kategori_jabatan,
+            'nama_organisasi' => $request->nama_organisasi,
             'locale' => 'id',
         ]);
         $user->assignRole(Role::where('name', 'Learner')->first() ?? 'Learner');

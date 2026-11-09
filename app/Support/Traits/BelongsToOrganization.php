@@ -24,9 +24,10 @@ trait BelongsToOrganization
 
     public function scopeForOrganization(Builder $query, ?int $organizationId = null): Builder
     {
-        if (!filled($organizationId)) {
+        if (! filled($organizationId)) {
             $organizationId = organization_id();
         }
+
         return $query->where('organization_id', $organizationId);
     }
 }

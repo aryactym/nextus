@@ -15,9 +15,9 @@ class EditCourseRequirementTest extends TestCase
     {
         $user = User::where('email', 'admin@example.com')->first();
         $course = Course::find(1); // Pengantar Zakat
-        
+
         // Pastikan course punya requirement dulu
-        if (!$course->requirement) {
+        if (! $course->requirement) {
             $course->requirement()->forceCreate([
                 'prerequisite_course_id' => null,
                 'min_grade' => null,
@@ -49,7 +49,7 @@ class EditCourseRequirementTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.courses.index'))
-                ->assertSessionHas('success', 'Kursus berhasil diperbarui.');
+            ->assertSessionHas('success', 'Kursus berhasil diperbarui.');
 
         // Verifikasi requirement masih ada dengan data sama
         $course->refresh();
@@ -91,7 +91,7 @@ class EditCourseRequirementTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.courses.index'))
-                ->assertSessionHas('success', 'Kursus berhasil diperbarui.');
+            ->assertSessionHas('success', 'Kursus berhasil diperbarui.');
 
         // Verifikasi requirement ter-update
         $course->refresh();
@@ -109,7 +109,7 @@ class EditCourseRequirementTest extends TestCase
         $course = Course::find(3); // Dasar Fasilitasi
 
         // Buat requirement dulu
-        if (!$course->requirement) {
+        if (! $course->requirement) {
             $course->requirement()->create([
                 'prerequisite_course_id' => null,
                 'min_grade' => 80,
@@ -139,7 +139,7 @@ class EditCourseRequirementTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.courses.index'))
-                ->assertSessionHas('success', 'Kursus berhasil diperbarui.');
+            ->assertSessionHas('success', 'Kursus berhasil diperbarui.');
 
         // Verifikasi requirement sudah dihapus (soft delete)
         $course->refresh();

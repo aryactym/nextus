@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Domain\Catalog\Models\Sponsor;
+use Illuminate\Database\Seeder;
 
 class SponsorSeeder extends Seeder
 {
