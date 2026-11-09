@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebijakan privasi | Akademi Filantropi</title>
+<meta name="theme-color" content="#333333">
+<meta name="description" content="Kebijakan privasi Akademi Filantropi: data yang dikumpulkan, tujuan pemrosesan, verifikasi sertifikat, cookie, dan hak Anda.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler.min.css">
+<style>
+  /* ====== TOKEN (samakan dengan nilai asli Kaya bila sudah dicek di DevTools) ====== */
+  :root{
+    --kaya-font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --kaya-ink:#333333;
+    --kaya-primary:#d6312b;
+    --kaya-primary-dark:#b02520;
+    --kaya-soft:#f6f4f1;
+    --kaya-line:#e4e0da;
+    --kaya-muted:#5f5a55;
+    --radius:.75rem;
+    --radius-sm:.5rem;
+    --shadow-sm:0 1px 2px rgba(51,51,51,.06),0 2px 8px rgba(51,51,51,.05);
+    --shadow-md:0 8px 24px rgba(51,51,51,.12);
+    --section-y:clamp(3rem,6vw,5rem);
+
+    --tblr-font-sans-serif:var(--kaya-font);
+    --tblr-body-font-family:var(--kaya-font);
+    --tblr-body-color:var(--kaya-ink);
+    --tblr-secondary:var(--kaya-muted);
+    --tblr-secondary-rgb:95,90,85;
+    --tblr-primary:var(--kaya-primary);
+    --tblr-primary-rgb:214,49,43;
+    --tblr-link-color:var(--kaya-primary);
+    --tblr-link-hover-color:var(--kaya-primary-dark);
+    --tblr-border-radius:var(--radius-sm);
+  }
+  body{font-family:var(--kaya-font);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.h1,.h2,.h3{font-family:var(--kaya-font);font-weight:700;letter-spacing:-.01em;line-height:1.25;}
+  .btn{font-weight:600;border-radius:var(--radius-sm);}
+  .btn-primary{--tblr-btn-bg:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary-dark);--tblr-btn-hover-border-color:var(--kaya-primary-dark);--tblr-btn-active-bg:var(--kaya-primary-dark);--tblr-btn-active-border-color:var(--kaya-primary-dark);}
+  .btn-outline-primary{--tblr-btn-color:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary);--tblr-btn-hover-border-color:var(--kaya-primary);}
+  .form-control{border-radius:var(--radius-sm);}
+  a:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--kaya-ink);outline-offset:2px;}
+  .site-footer a:focus-visible,.verify .btn:focus-visible,.hero .btn:focus-visible{outline-color:#fff;}
+
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--kaya-ink);color:#fff;padding:.5rem 1rem;z-index:2000;}
+  .skip-link:focus{left:0;}
+
+  /* ====== ritme section ====== */
+  .section{padding:var(--section-y) 0;}
+  .section-alt{background:var(--kaya-soft);}
+  .section-head{max-width:60ch;margin-bottom:2rem;}
+  .section-head h2{margin:0 0 .5rem;font-size:clamp(1.5rem,2.6vw,1.875rem);}
+  .section-head p{margin:0;color:var(--kaya-muted);font-size:1.05rem;}
+  .lead-text{font-size:1.125rem;color:var(--kaya-muted);max-width:52ch;margin-bottom:1.5rem;}
+
+  /* ====== header ====== */
+  .site-header{background:#fff;border-bottom:1px solid var(--kaya-line);position:sticky;top:0;z-index:1030;}
+  .brand-mark{display:inline-flex;align-items:center;text-decoration:none;}
+  .brand-logo{height:44px;width:auto;display:block;}
+  .site-header .nav{gap:.25rem;}
+  .site-header .nav-link{color:var(--kaya-ink);font-weight:500;padding:.5rem .85rem;border-radius:var(--radius-sm);}
+  .site-header .nav-link:hover{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  /* ====== hero ====== */
+  .hero{position:relative;color:#fff;background:var(--kaya-ink);overflow:hidden;}
+  .hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+  .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(30,30,30,.92) 0%,rgba(30,30,30,.78) 45%,rgba(30,30,30,.3) 100%);}
+  .hero .container-xl{position:relative;z-index:2;padding-top:clamp(3.5rem,8vw,6rem);padding-bottom:clamp(3.5rem,8vw,6rem);}
+  .hero h1{font-size:clamp(2rem,4.2vw,3.25rem);line-height:1.15;max-width:20ch;color:#fff;margin:0;}
+  .hero p.lead{font-size:1.15rem;max-width:54ch;color:rgba(255,255,255,.92);}
+  .hero-search{max-width:640px;}
+  .hero-search .form-control{height:3.4rem;border:0;box-shadow:var(--shadow-md);}
+  .hero-search .btn{height:3.4rem;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem;padding:0;}
+  .hero .meta span{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;font-size:.875rem;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;}
+  .hero .meta svg{width:18px;height:18px;flex:none;}
+
+  /* ====== topik ====== */
+  .topic{display:flex;align-items:center;gap:1rem;height:100%;padding:1.1rem 1.25rem;background:#fff;color:var(--kaya-ink);border:1px solid var(--kaya-line);border-radius:var(--radius);box-shadow:var(--shadow-sm);text-decoration:none;font-weight:600;transition:border-color .15s,box-shadow .15s;}
+  .topic:hover{border-color:var(--kaya-primary);box-shadow:var(--shadow-md);color:var(--kaya-ink);}
+  .topic .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;transition:background .15s,color .15s;}
+  .topic:hover .ico{background:var(--kaya-primary);color:#fff;}
+  .topic .txt{flex:1;line-height:1.35;}
+  .topic small{display:block;font-weight:400;color:var(--kaya-muted);margin-top:.2rem;}
+  .topic::after{content:"";flex:none;width:.5rem;height:.5rem;border-top:2px solid var(--kaya-muted);border-right:2px solid var(--kaya-muted);transform:rotate(45deg);}
+
+  /* ====== tentang & organisasi ====== */
+  .media-img{width:100%;height:100%;max-height:420px;object-fit:cover;display:block;border-radius:var(--radius);}
+  .feature{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding:1.1rem 1.25rem;background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);}
+  .feature.mb-0{margin-bottom:0!important;}
+  .feature .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;}
+  .feature h3{font-size:1.05rem;margin:0 0 .2rem;}
+  .feature p{margin:0;color:var(--kaya-muted);}
+
+  /* ====== kursus ====== */
+  .course-card{border:1px solid var(--kaya-line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .15s,border-color .15s;}
+  .course-card:hover{box-shadow:var(--shadow-md);border-color:#d2ccc4;}
+  .course-img{aspect-ratio:16/9;width:100%;object-fit:cover;object-position:var(--pos,center);display:block;}
+  .course-card .card-body{padding:1.25rem 1.25rem 1.5rem;}
+  .course-card h3{font-size:1.1rem;margin:0 0 .5rem;}
+  .course-card .card-body p{margin-bottom:1rem;}
+  .course-meta{font-size:.85rem;color:var(--kaya-muted);display:flex;gap:.5rem 1rem;flex-wrap:wrap;}
+  .course-meta span+span{padding-left:1rem;border-left:1px solid var(--kaya-line);}
+  .course-card .card-footer{background:var(--kaya-soft);border-top:1px solid var(--kaya-line);padding:.75rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--kaya-muted);}
+  .badge-access{font-weight:600;}
+
+  /* ====== verifikasi ====== */
+  .verify{background:var(--kaya-ink);color:#fff;padding:clamp(2.5rem,5vw,3.5rem) 0;}
+  .verify p{color:rgba(255,255,255,.85);}
+  .verify .form-control{height:3rem;border:0;}
+  .verify .btn{height:3rem;}
+
+  /* ====== footer ====== */
+  .site-footer{background:var(--kaya-ink);color:#e9e6e1;padding:3.5rem 0 2rem;}
+  .site-footer a{color:#fff;text-decoration:none;}
+  .site-footer a:hover{text-decoration:underline;text-underline-offset:3px;}
+  .footer-logo{height:44px;width:auto;background:#fff;padding:.35rem .6rem;border-radius:var(--radius-sm);display:block;}
+  .footer-title{color:#fff;font-size:1rem;margin:0 0 1rem;}
+  .site-footer ul{list-style:none;padding:0;margin:0;}
+  .site-footer li{margin-bottom:.6rem;}
+  .site-footer .legal{border-top:1px solid rgba(255,255,255,.2);margin-top:2.5rem;padding-top:1.5rem;font-size:.85rem;color:rgba(233,230,225,.85);}
+
+  @media (max-width:767.98px){
+    .hero::before{background:linear-gradient(180deg,rgba(30,30,30,.85) 0%,rgba(30,30,30,.8) 100%);}
+    .course-meta span+span{padding-left:.75rem;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+  /* ====== halaman dalam ====== */
+  .page-hero{background:var(--kaya-soft);border-bottom:1px solid var(--kaya-line);padding:clamp(2rem,4vw,3rem) 0;}
+  .page-hero h1{font-size:clamp(1.75rem,3.4vw,2.5rem);margin:.5rem 0 .5rem;}
+  .page-hero p{color:var(--kaya-muted);font-size:1.1rem;max-width:60ch;margin:0;}
+  .crumbs{font-size:.875rem;color:var(--kaya-muted);display:flex;gap:.5rem;list-style:none;padding:0;margin:0;}
+  .crumbs li+li::before{content:"/";margin-right:.5rem;}
+  .crumbs a{color:var(--kaya-muted);}
+  .site-header .nav-link[aria-current="page"]{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  .legal{display:grid;grid-template-columns:minmax(0,1fr);gap:2.5rem;}
+  @media (min-width:992px){.legal{grid-template-columns:270px minmax(0,1fr);}}
+  .toc{position:sticky;top:6rem;align-self:start;max-height:calc(100vh - 8rem);overflow:auto;}
+  .toc h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--kaya-muted);margin-bottom:.75rem;}
+  .toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--kaya-line);}
+  .toc a{display:block;padding:.4rem .9rem;margin-left:-2px;border-left:2px solid transparent;color:var(--kaya-ink);text-decoration:none;font-size:.92rem;font-weight:500;}
+  .toc a:hover{color:var(--kaya-primary);}
+  .toc a.active{border-left-color:var(--kaya-primary);color:var(--kaya-primary);font-weight:600;}
+  .toc-mobile{border:1px solid var(--kaya-line);border-radius:var(--radius);background:#fff;padding:.75rem 1rem;}
+  .toc-mobile summary{font-weight:600;cursor:pointer;}
+  .toc-mobile ol{margin:.75rem 0 0;padding-left:1.25rem;}
+  .prose{max-width:75ch;}
+  .prose section{scroll-margin-top:6rem;margin-bottom:2.25rem;}
+  .prose h2{font-size:1.4rem;margin:0 0 .75rem;}
+  .prose h3{font-size:1.05rem;margin:1.25rem 0 .4rem;}
+  .prose p,.prose li{font-size:1.04rem;}
+  .prose ul,.prose ol{padding-left:1.25rem;}
+  .prose li{margin-bottom:.4rem;}
+  .meta-line{color:var(--kaya-muted);font-size:.95rem;margin:0;}
+  mark{background:#fff3bf;color:var(--kaya-ink);padding:0 .25rem;border-radius:3px;}
+  .draft-note{margin-bottom:2rem;padding:1rem 1.25rem;border:1px solid #f59f00;border-left-width:6px;border-radius:var(--radius-sm);background:#fff9e6;}
+  .draft-note p{margin:0;font-size:.95rem;}
+  .table-wrap{overflow-x:auto;margin:1rem 0;border:1px solid var(--kaya-line);border-radius:var(--radius-sm);}
+  .table-wrap table{width:100%;min-width:560px;border-collapse:collapse;font-size:.95rem;}
+  .table-wrap th,.table-wrap td{padding:.7rem .9rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--kaya-line);}
+  .table-wrap th{background:var(--kaya-soft);font-weight:600;}
+  .table-wrap tr:last-child td{border-bottom:0;}
+  .other-link{margin-top:2rem;padding:1.25rem;background:var(--kaya-soft);border-radius:var(--radius);}
+  .other-link p{margin:0 0 .75rem;}
+  @media print{.site-header,.site-footer,.toc,.toc-mobile,.draft-note,.other-link,.skip-link{display:none!important}.legal{display:block}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#konten">Lewati ke konten utama</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container-xl">
+    <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
+      <a class="brand-mark" href="/id" aria-label="Akademi Filantropi, ke beranda">
+        <img class="brand-logo" src="https://kayaconnect.org/theme/kaya/pix/logo.png" alt="Akademi Filantropi" height="44">
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link" href="/id/kursus">Katalog</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/jadwal">Jadwal</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/verifikasi">Verifikasi sertifikat</a></li>
+        </ul>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <div class="dropdown">
+          <button class="btn btn-ghost-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="visually-hidden">Bahasa: </span>Indonesia</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item active" href="/id" hreflang="id">Indonesia</a>
+            <a class="dropdown-item" href="/en" hreflang="en">English</a>
+          </div>
+        </div>
+        <a class="btn btn-outline-primary" href="/id/masuk">Masuk</a>
+        <a class="btn btn-primary" href="/id/daftar">Daftar gratis</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="konten">
+  <section class="page-hero">
+    <div class="container-xl">
+      <ol class="crumbs"><li><a href="/id">Beranda</a></li><li aria-current="page">Kebijakan privasi</li></ol>
+      <h1>Kebijakan privasi</h1>
+      <p>Cara kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda.</p>
+      <p class="meta-line mt-3">Terakhir diperbarui: <mark>[tanggal]</mark> · Berlaku sejak: <mark>[tanggal]</mark></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container-xl">
+      <div class="legal">
+        <nav class="toc d-none d-lg-block" aria-label="Isi halaman"><h2>Isi halaman</h2><ol><li><a href="#pengendali">1. Pendahuluan dan pengendali data</a></li><li><a href="#data">2. Data yang kami kumpulkan</a></li><li><a href="#tujuan">3. Tujuan dan dasar pemrosesan</a></li><li><a href="#verifikasi">4. Data pada halaman verifikasi sertifikat</a></li><li><a href="#pihak-ketiga">5. Pembagian data kepada pihak lain</a></li><li><a href="#cookie">6. Cookie dan penyimpanan lokal</a></li><li><a href="#retensi">7. Lama penyimpanan</a></li><li><a href="#keamanan">8. Keamanan</a></li><li><a href="#hak">9. Hak Anda</a></li><li><a href="#anak">10. Data anak</a></li><li><a href="#lintas-negara">11. Transfer data ke luar negeri</a></li><li><a href="#perubahan">12. Perubahan kebijakan</a></li><li><a href="#kontak">13. Kontak dan pejabat pelindungan data</a></li></ol></nav>
+        <details class="toc-mobile d-lg-none"><summary>Isi halaman</summary><ol><li><a href="#pengendali">Pendahuluan dan pengendali data</a></li><li><a href="#data">Data yang kami kumpulkan</a></li><li><a href="#tujuan">Tujuan dan dasar pemrosesan</a></li><li><a href="#verifikasi">Data pada halaman verifikasi sertifikat</a></li><li><a href="#pihak-ketiga">Pembagian data kepada pihak lain</a></li><li><a href="#cookie">Cookie dan penyimpanan lokal</a></li><li><a href="#retensi">Lama penyimpanan</a></li><li><a href="#keamanan">Keamanan</a></li><li><a href="#hak">Hak Anda</a></li><li><a href="#anak">Data anak</a></li><li><a href="#lintas-negara">Transfer data ke luar negeri</a></li><li><a href="#perubahan">Perubahan kebijakan</a></li><li><a href="#kontak">Kontak dan pejabat pelindungan data</a></li></ol></details>
+        <div class="prose">
+          <div class="draft-note"><p><strong>Draf template.</strong> Teks bertanda kuning <mark>[...]</mark> harus diisi atau disesuaikan dengan praktik sebenarnya. Minta penasihat hukum meninjau dokumen ini sebelum dipublikasikan, lalu hapus kotak ini.</p></div>
+          <section id="pengendali" aria-labelledby="h-pengendali"><h2 id="h-pengendali">1. Pendahuluan dan pengendali data</h2><p>Kebijakan ini menjelaskan bagaimana <mark>[nama badan hukum]</mark> ("kami") mengumpulkan, menggunakan, menyimpan, dan melindungi data pribadi Anda saat memakai Akademi Filantropi. Kami memproses data pribadi sesuai peraturan perundang-undangan yang berlaku, termasuk Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi dan peraturan pelaksanaannya. Dalam kebijakan ini, kami bertindak sebagai Pengendali Data Pribadi.</p></section>
+<section id="data" aria-labelledby="h-data"><h2 id="h-data">2. Data yang kami kumpulkan</h2><p>Kami hanya mengumpulkan data yang diperlukan untuk menjalankan Layanan.</p><div class="table-wrap"><table><thead><tr><th scope="col">Kategori</th><th scope="col">Contoh data</th><th scope="col">Sumber</th></tr></thead><tbody>
+<tr><td>Data akun</td><td>Nama lengkap, email, kata sandi (disimpan dalam bentuk terenkripsi/hash), peran, lembaga</td><td>Anda</td></tr>
+<tr><td>Data belajar</td><td>Kursus yang diikuti, progres, hasil kuis, Sertifikat dan kodenya</td><td>Aktivitas Anda di Layanan</td></tr>
+<tr><td>Data Kegiatan</td><td>Pendaftaran webinar atau pelatihan, kehadiran</td><td>Anda dan penyelenggara</td></tr>
+<tr><td>Data teknis</td><td>Alamat IP, jenis perangkat dan browser, log akses, preferensi bahasa</td><td>Perangkat Anda secara otomatis</td></tr>
+<tr><td>Komunikasi</td><td>Pesan ke tim bantuan dan tanggapan kami</td><td>Anda</td></tr>
+<tr><td><mark>[data lain bila ada, mis. data donasi]</mark></td><td><mark>[rincian]</mark></td><td><mark>[sumber]</mark></td></tr></tbody></table></div></section>
+<section id="tujuan" aria-labelledby="h-tujuan"><h2 id="h-tujuan">3. Tujuan dan dasar pemrosesan</h2><table class="visually-hidden"><tr><td></td></tr></table><ul><li><strong>Menyediakan Layanan</strong>: membuat dan mengelola akun, memberikan akses Kursus, mencatat progres, dan menerbitkan Sertifikat. Dasar: pelaksanaan perjanjian dengan Anda.</li><li><strong>Verifikasi Sertifikat</strong>: memungkinkan pihak lain memeriksa keaslian Sertifikat (lihat bagian berikutnya). Dasar: pelaksanaan perjanjian dan persetujuan Anda.</li><li><strong>Komunikasi layanan</strong>: mengirim konfirmasi, pengingat jadwal, dan pemberitahuan penting. Dasar: pelaksanaan perjanjian.</li><li><strong>Keamanan dan pencegahan kecurangan</strong>: melindungi akun dan integritas penilaian. Dasar: kepentingan yang sah.</li><li><strong>Peningkatan Layanan</strong>: menganalisis penggunaan secara agregat. Dasar: kepentingan yang sah <mark>[atau persetujuan, sesuaikan]</mark>.</li><li><strong>Informasi program dan buletin</strong>: hanya jika Anda memilih menerimanya, dan dapat Anda hentikan kapan saja. Dasar: persetujuan.</li><li><strong>Kewajiban hukum</strong>: memenuhi permintaan yang sah dari otoritas.</li></ul></section>
+<section id="verifikasi" aria-labelledby="h-verifikasi"><h2 id="h-verifikasi">4. Data pada halaman verifikasi sertifikat</h2><p>Siapa pun yang memiliki kode Sertifikat dapat melihat nama pemilik, nama Kursus, tanggal terbit, dan status Sertifikat pada halaman <a href="/id/verifikasi">Verifikasi sertifikat</a>. Kami tidak menampilkan email, alamat, atau data pribadi lain pada halaman tersebut. Dengan menerima Sertifikat, Anda memahami bahwa informasi ini dapat dilihat oleh pihak yang Anda beri kode atau QR. <mark>[Jelaskan cara pemilik menonaktifkan tampilan publik, jika ada.]</mark></p></section>
+<section id="pihak-ketiga" aria-labelledby="h-pihak-ketiga"><h2 id="h-pihak-ketiga">5. Pembagian data kepada pihak lain</h2><p>Kami tidak menjual data pribadi Anda. Kami membagikan data hanya kepada:</p><ul><li>penyedia layanan yang membantu operasional, misalnya <mark>[hosting, pengiriman email, platform webinar seperti Zoom, analitik]</mark>, yang hanya boleh memakai data sesuai instruksi kami;</li><li>mitra penyelenggara Kegiatan, sebatas data yang diperlukan untuk pelaksanaan Kegiatan yang Anda ikuti;</li><li>otoritas yang berwenang, bila diwajibkan oleh hukum.</li></ul></section>
+<section id="cookie" aria-labelledby="h-cookie"><h2 id="h-cookie">6. Cookie dan penyimpanan lokal</h2><p>Kami menggunakan cookie dan penyimpanan lokal pada browser untuk menjaga sesi masuk, mengingat preferensi (misalnya bahasa dan daftar periksa pada Panduan memulai), serta mengukur penggunaan Layanan. Anda dapat mengatur atau menghapus cookie melalui pengaturan browser; sebagian fitur mungkin tidak berfungsi tanpa cookie yang diperlukan. <mark>[Cantumkan daftar cookie dan alat analitik yang dipakai, serta mekanisme persetujuan bila ada.]</mark></p></section>
+<section id="retensi" aria-labelledby="h-retensi"><h2 id="h-retensi">7. Lama penyimpanan</h2><p>Kami menyimpan data selama akun aktif dan selama diperlukan untuk tujuan di atas. Data Sertifikat disimpan <mark>[lama penyimpanan, mis. selama Sertifikat dapat diverifikasi]</mark> agar keasliannya tetap dapat diperiksa. Setelah tidak diperlukan, data dihapus atau dianonimkan, kecuali kami wajib menyimpannya berdasarkan hukum.</p></section>
+<section id="keamanan" aria-labelledby="h-keamanan"><h2 id="h-keamanan">8. Keamanan</h2><p>Kami menerapkan langkah teknis dan organisasi yang wajar, antara lain pembatasan akses, penyimpanan kata sandi dalam bentuk hash, dan koneksi terenkripsi (HTTPS). Tidak ada sistem yang sepenuhnya bebas risiko. Jika terjadi kegagalan pelindungan data pribadi yang berdampak pada Anda, kami akan menyampaikan pemberitahuan sesuai peraturan yang berlaku.</p></section>
+<section id="hak" aria-labelledby="h-hak"><h2 id="h-hak">9. Hak Anda</h2><p>Sesuai peraturan yang berlaku, Anda berhak untuk:</p><ul><li>mendapatkan informasi tentang pemrosesan data Anda;</li><li>mengakses dan memperoleh salinan data pribadi Anda;</li><li>memperbaiki data yang tidak akurat atau tidak lengkap;</li><li>meminta penghapusan atau pemusnahan data, dengan pengecualian yang diatur hukum;</li><li>menarik persetujuan dan membatasi pemrosesan tertentu;</li><li>mengajukan keberatan atas pemrosesan tertentu, termasuk keputusan berdasarkan pemrosesan otomatis;</li><li>menggunakan hak lain yang diberikan peraturan perundang-undangan.</li></ul><p>Untuk menggunakan hak ini, hubungi kami melalui <mark>[email atau formulir permintaan data]</mark>. Kami akan menanggapi dalam <mark>[jangka waktu, sesuaikan dengan ketentuan yang berlaku]</mark>.</p></section>
+<section id="anak" aria-labelledby="h-anak"><h2 id="h-anak">10. Data anak</h2><p>Layanan tidak ditujukan bagi anak di bawah usia <mark>[usia minimal, selaras dengan Syarat dan ketentuan]</mark> tanpa persetujuan orang tua atau wali. Jika Anda menduga kami memiliki data anak tanpa persetujuan yang sah, hubungi kami agar dapat kami tindak lanjuti.</p></section>
+<section id="lintas-negara" aria-labelledby="h-lintas-negara"><h2 id="h-lintas-negara">11. Transfer data ke luar negeri</h2><p>Sebagian penyedia layanan kami dapat memproses data di luar Indonesia. Dalam hal itu kami memastikan adanya pelindungan yang memadai sesuai peraturan yang berlaku. <mark>[Sebutkan negara dan penyedia, atau hapus bagian ini jika semua data diproses di Indonesia.]</mark></p></section>
+<section id="perubahan" aria-labelledby="h-perubahan"><h2 id="h-perubahan">12. Perubahan kebijakan</h2><p>Kami dapat memperbarui kebijakan ini. Tanggal pembaruan tercantum di bagian atas halaman, dan perubahan penting akan kami umumkan melalui Layanan atau email.</p></section>
+<section id="kontak" aria-labelledby="h-kontak"><h2 id="h-kontak">13. Kontak dan pejabat pelindungan data</h2><p>Pertanyaan atau permintaan terkait data pribadi dapat disampaikan kepada <mark>[nama badan hukum]</mark> melalui <mark>[email resmi]</mark> atau melalui halaman <a href="/id/bantuan">Bantuan</a>. Alamat: <mark>[alamat lengkap]</mark>.</p><p>Pejabat atau petugas pelindungan data: <mark>[nama/jabatan dan email, jika ditunjuk]</mark>.</p></section>
+          <div class="other-link"><p>Aturan penggunaan Layanan dijelaskan dalam <a href="/id/syarat">Syarat dan ketentuan</a>.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container-xl">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <a href="/id"><img class="footer-logo" src="https://kayaconnect.org/theme/kaya/pix/logo_en.png" alt="Akademi Filantropi" height="44"></a>
+        <p class="mt-3">Pelatihan dan sertifikasi online untuk filantropi Islam.</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Tentang</h2>
+        <ul>
+          <li><a href="/id/tentang">Apa itu Akademi Filantropi?</a></li>
+          <li><a href="/id/organisasi">Solusi organisasi</a></li>
+          <li><a href="/id/syarat">Syarat dan ketentuan</a></li>
+          <li><a href="/id/privasi">Kebijakan privasi</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Bantuan</h2>
+        <ul>
+          <li><a href="/id/bantuan">Butuh bantuan?</a></li>
+          <li><a href="/id/panduan">Panduan memulai</a></li>
+          <li><a href="/en">English</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <h2 class="footer-title">Ikuti kami</h2>
+        <ul>
+          <li><a href="#" rel="noopener">Instagram</a></li>
+          <li><a href="#" rel="noopener">YouTube</a></li>
+          <li><a href="#" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">&copy; 2026 Akademi Filantropi. Seluruh hak dilindungi.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/js/tabler.min.js"></script>
+<script>
+var links=[].slice.call(document.querySelectorAll(".toc a")),secs=links.map(function(a){return document.querySelector(a.getAttribute("href"))});
+if("IntersectionObserver" in window){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){var on=a.getAttribute("href")==="#"+e.target.id;a.classList.toggle("active",on);if(on)a.setAttribute("aria-current","true");else a.removeAttribute("aria-current")})}})},{rootMargin:"-15% 0px -75% 0px"});secs.forEach(function(s){if(s)io.observe(s)})}
+document.querySelectorAll(".toc-mobile a").forEach(function(a){a.addEventListener("click",function(){a.closest("details").open=false})});
+</script>
+</body>
+</html>

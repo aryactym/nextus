@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syarat dan ketentuan | Akademi Filantropi</title>
+<meta name="theme-color" content="#333333">
+<meta name="description" content="Syarat dan ketentuan penggunaan Akademi Filantropi: akun, kursus, donasi, sertifikat, dan hak kekayaan intelektual.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler.min.css">
+<style>
+  /* ====== TOKEN (samakan dengan nilai asli Kaya bila sudah dicek di DevTools) ====== */
+  :root{
+    --kaya-font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --kaya-ink:#333333;
+    --kaya-primary:#d6312b;
+    --kaya-primary-dark:#b02520;
+    --kaya-soft:#f6f4f1;
+    --kaya-line:#e4e0da;
+    --kaya-muted:#5f5a55;
+    --radius:.75rem;
+    --radius-sm:.5rem;
+    --shadow-sm:0 1px 2px rgba(51,51,51,.06),0 2px 8px rgba(51,51,51,.05);
+    --shadow-md:0 8px 24px rgba(51,51,51,.12);
+    --section-y:clamp(3rem,6vw,5rem);
+
+    --tblr-font-sans-serif:var(--kaya-font);
+    --tblr-body-font-family:var(--kaya-font);
+    --tblr-body-color:var(--kaya-ink);
+    --tblr-secondary:var(--kaya-muted);
+    --tblr-secondary-rgb:95,90,85;
+    --tblr-primary:var(--kaya-primary);
+    --tblr-primary-rgb:214,49,43;
+    --tblr-link-color:var(--kaya-primary);
+    --tblr-link-hover-color:var(--kaya-primary-dark);
+    --tblr-border-radius:var(--radius-sm);
+  }
+  body{font-family:var(--kaya-font);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.h1,.h2,.h3{font-family:var(--kaya-font);font-weight:700;letter-spacing:-.01em;line-height:1.25;}
+  .btn{font-weight:600;border-radius:var(--radius-sm);}
+  .btn-primary{--tblr-btn-bg:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary-dark);--tblr-btn-hover-border-color:var(--kaya-primary-dark);--tblr-btn-active-bg:var(--kaya-primary-dark);--tblr-btn-active-border-color:var(--kaya-primary-dark);}
+  .btn-outline-primary{--tblr-btn-color:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary);--tblr-btn-hover-border-color:var(--kaya-primary);}
+  .form-control{border-radius:var(--radius-sm);}
+  a:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--kaya-ink);outline-offset:2px;}
+  .site-footer a:focus-visible,.verify .btn:focus-visible,.hero .btn:focus-visible{outline-color:#fff;}
+
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--kaya-ink);color:#fff;padding:.5rem 1rem;z-index:2000;}
+  .skip-link:focus{left:0;}
+
+  /* ====== ritme section ====== */
+  .section{padding:var(--section-y) 0;}
+  .section-alt{background:var(--kaya-soft);}
+  .section-head{max-width:60ch;margin-bottom:2rem;}
+  .section-head h2{margin:0 0 .5rem;font-size:clamp(1.5rem,2.6vw,1.875rem);}
+  .section-head p{margin:0;color:var(--kaya-muted);font-size:1.05rem;}
+  .lead-text{font-size:1.125rem;color:var(--kaya-muted);max-width:52ch;margin-bottom:1.5rem;}
+
+  /* ====== header ====== */
+  .site-header{background:#fff;border-bottom:1px solid var(--kaya-line);position:sticky;top:0;z-index:1030;}
+  .brand-mark{display:inline-flex;align-items:center;text-decoration:none;}
+  .brand-logo{height:44px;width:auto;display:block;}
+  .site-header .nav{gap:.25rem;}
+  .site-header .nav-link{color:var(--kaya-ink);font-weight:500;padding:.5rem .85rem;border-radius:var(--radius-sm);}
+  .site-header .nav-link:hover{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  /* ====== hero ====== */
+  .hero{position:relative;color:#fff;background:var(--kaya-ink);overflow:hidden;}
+  .hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+  .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(30,30,30,.92) 0%,rgba(30,30,30,.78) 45%,rgba(30,30,30,.3) 100%);}
+  .hero .container-xl{position:relative;z-index:2;padding-top:clamp(3.5rem,8vw,6rem);padding-bottom:clamp(3.5rem,8vw,6rem);}
+  .hero h1{font-size:clamp(2rem,4.2vw,3.25rem);line-height:1.15;max-width:20ch;color:#fff;margin:0;}
+  .hero p.lead{font-size:1.15rem;max-width:54ch;color:rgba(255,255,255,.92);}
+  .hero-search{max-width:640px;}
+  .hero-search .form-control{height:3.4rem;border:0;box-shadow:var(--shadow-md);}
+  .hero-search .btn{height:3.4rem;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem;padding:0;}
+  .hero .meta span{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;font-size:.875rem;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;}
+  .hero .meta svg{width:18px;height:18px;flex:none;}
+
+  /* ====== topik ====== */
+  .topic{display:flex;align-items:center;gap:1rem;height:100%;padding:1.1rem 1.25rem;background:#fff;color:var(--kaya-ink);border:1px solid var(--kaya-line);border-radius:var(--radius);box-shadow:var(--shadow-sm);text-decoration:none;font-weight:600;transition:border-color .15s,box-shadow .15s;}
+  .topic:hover{border-color:var(--kaya-primary);box-shadow:var(--shadow-md);color:var(--kaya-ink);}
+  .topic .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;transition:background .15s,color .15s;}
+  .topic:hover .ico{background:var(--kaya-primary);color:#fff;}
+  .topic .txt{flex:1;line-height:1.35;}
+  .topic small{display:block;font-weight:400;color:var(--kaya-muted);margin-top:.2rem;}
+  .topic::after{content:"";flex:none;width:.5rem;height:.5rem;border-top:2px solid var(--kaya-muted);border-right:2px solid var(--kaya-muted);transform:rotate(45deg);}
+
+  /* ====== tentang & organisasi ====== */
+  .media-img{width:100%;height:100%;max-height:420px;object-fit:cover;display:block;border-radius:var(--radius);}
+  .feature{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding:1.1rem 1.25rem;background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);}
+  .feature.mb-0{margin-bottom:0!important;}
+  .feature .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;}
+  .feature h3{font-size:1.05rem;margin:0 0 .2rem;}
+  .feature p{margin:0;color:var(--kaya-muted);}
+
+  /* ====== kursus ====== */
+  .course-card{border:1px solid var(--kaya-line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .15s,border-color .15s;}
+  .course-card:hover{box-shadow:var(--shadow-md);border-color:#d2ccc4;}
+  .course-img{aspect-ratio:16/9;width:100%;object-fit:cover;object-position:var(--pos,center);display:block;}
+  .course-card .card-body{padding:1.25rem 1.25rem 1.5rem;}
+  .course-card h3{font-size:1.1rem;margin:0 0 .5rem;}
+  .course-card .card-body p{margin-bottom:1rem;}
+  .course-meta{font-size:.85rem;color:var(--kaya-muted);display:flex;gap:.5rem 1rem;flex-wrap:wrap;}
+  .course-meta span+span{padding-left:1rem;border-left:1px solid var(--kaya-line);}
+  .course-card .card-footer{background:var(--kaya-soft);border-top:1px solid var(--kaya-line);padding:.75rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--kaya-muted);}
+  .badge-access{font-weight:600;}
+
+  /* ====== verifikasi ====== */
+  .verify{background:var(--kaya-ink);color:#fff;padding:clamp(2.5rem,5vw,3.5rem) 0;}
+  .verify p{color:rgba(255,255,255,.85);}
+  .verify .form-control{height:3rem;border:0;}
+  .verify .btn{height:3rem;}
+
+  /* ====== footer ====== */
+  .site-footer{background:var(--kaya-ink);color:#e9e6e1;padding:3.5rem 0 2rem;}
+  .site-footer a{color:#fff;text-decoration:none;}
+  .site-footer a:hover{text-decoration:underline;text-underline-offset:3px;}
+  .footer-logo{height:44px;width:auto;background:#fff;padding:.35rem .6rem;border-radius:var(--radius-sm);display:block;}
+  .footer-title{color:#fff;font-size:1rem;margin:0 0 1rem;}
+  .site-footer ul{list-style:none;padding:0;margin:0;}
+  .site-footer li{margin-bottom:.6rem;}
+  .site-footer .legal{border-top:1px solid rgba(255,255,255,.2);margin-top:2.5rem;padding-top:1.5rem;font-size:.85rem;color:rgba(233,230,225,.85);}
+
+  @media (max-width:767.98px){
+    .hero::before{background:linear-gradient(180deg,rgba(30,30,30,.85) 0%,rgba(30,30,30,.8) 100%);}
+    .course-meta span+span{padding-left:.75rem;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+  /* ====== halaman dalam ====== */
+  .page-hero{background:var(--kaya-soft);border-bottom:1px solid var(--kaya-line);padding:clamp(2rem,4vw,3rem) 0;}
+  .page-hero h1{font-size:clamp(1.75rem,3.4vw,2.5rem);margin:.5rem 0 .5rem;}
+  .page-hero p{color:var(--kaya-muted);font-size:1.1rem;max-width:60ch;margin:0;}
+  .crumbs{font-size:.875rem;color:var(--kaya-muted);display:flex;gap:.5rem;list-style:none;padding:0;margin:0;}
+  .crumbs li+li::before{content:"/";margin-right:.5rem;}
+  .crumbs a{color:var(--kaya-muted);}
+  .site-header .nav-link[aria-current="page"]{color:var(--kaya-primary);background:var(--kaya-soft);}
+
+  .legal{display:grid;grid-template-columns:minmax(0,1fr);gap:2.5rem;}
+  @media (min-width:992px){.legal{grid-template-columns:270px minmax(0,1fr);}}
+  .toc{position:sticky;top:6rem;align-self:start;max-height:calc(100vh - 8rem);overflow:auto;}
+  .toc h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--kaya-muted);margin-bottom:.75rem;}
+  .toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--kaya-line);}
+  .toc a{display:block;padding:.4rem .9rem;margin-left:-2px;border-left:2px solid transparent;color:var(--kaya-ink);text-decoration:none;font-size:.92rem;font-weight:500;}
+  .toc a:hover{color:var(--kaya-primary);}
+  .toc a.active{border-left-color:var(--kaya-primary);color:var(--kaya-primary);font-weight:600;}
+  .toc-mobile{border:1px solid var(--kaya-line);border-radius:var(--radius);background:#fff;padding:.75rem 1rem;}
+  .toc-mobile summary{font-weight:600;cursor:pointer;}
+  .toc-mobile ol{margin:.75rem 0 0;padding-left:1.25rem;}
+  .prose{max-width:75ch;}
+  .prose section{scroll-margin-top:6rem;margin-bottom:2.25rem;}
+  .prose h2{font-size:1.4rem;margin:0 0 .75rem;}
+  .prose h3{font-size:1.05rem;margin:1.25rem 0 .4rem;}
+  .prose p,.prose li{font-size:1.04rem;}
+  .prose ul,.prose ol{padding-left:1.25rem;}
+  .prose li{margin-bottom:.4rem;}
+  .meta-line{color:var(--kaya-muted);font-size:.95rem;margin:0;}
+  mark{background:#fff3bf;color:var(--kaya-ink);padding:0 .25rem;border-radius:3px;}
+  .draft-note{margin-bottom:2rem;padding:1rem 1.25rem;border:1px solid #f59f00;border-left-width:6px;border-radius:var(--radius-sm);background:#fff9e6;}
+  .draft-note p{margin:0;font-size:.95rem;}
+  .table-wrap{overflow-x:auto;margin:1rem 0;border:1px solid var(--kaya-line);border-radius:var(--radius-sm);}
+  .table-wrap table{width:100%;min-width:560px;border-collapse:collapse;font-size:.95rem;}
+  .table-wrap th,.table-wrap td{padding:.7rem .9rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--kaya-line);}
+  .table-wrap th{background:var(--kaya-soft);font-weight:600;}
+  .table-wrap tr:last-child td{border-bottom:0;}
+  .other-link{margin-top:2rem;padding:1.25rem;background:var(--kaya-soft);border-radius:var(--radius);}
+  .other-link p{margin:0 0 .75rem;}
+  @media print{.site-header,.site-footer,.toc,.toc-mobile,.draft-note,.other-link,.skip-link{display:none!important}.legal{display:block}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#konten">Lewati ke konten utama</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container-xl">
+    <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
+      <a class="brand-mark" href="/id" aria-label="Akademi Filantropi, ke beranda">
+        <img class="brand-logo" src="https://kayaconnect.org/theme/kaya/pix/logo.png" alt="Akademi Filantropi" height="44">
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link" href="/id/kursus">Katalog</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/jadwal">Jadwal</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/verifikasi">Verifikasi sertifikat</a></li>
+        </ul>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <div class="dropdown">
+          <button class="btn btn-ghost-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="visually-hidden">Bahasa: </span>Indonesia</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item active" href="/id" hreflang="id">Indonesia</a>
+            <a class="dropdown-item" href="/en" hreflang="en">English</a>
+          </div>
+        </div>
+        <a class="btn btn-outline-primary" href="/id/masuk">Masuk</a>
+        <a class="btn btn-primary" href="/id/daftar">Daftar gratis</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="konten">
+  <section class="page-hero">
+    <div class="container-xl">
+      <ol class="crumbs"><li><a href="/id">Beranda</a></li><li aria-current="page">Syarat dan ketentuan</li></ol>
+      <h1>Syarat dan ketentuan</h1>
+      <p>Aturan penggunaan Akademi Filantropi. Mohon dibaca sebelum membuat akun dan mengikuti kursus.</p>
+      <p class="meta-line mt-3">Terakhir diperbarui: <mark>[tanggal]</mark> · Berlaku sejak: <mark>[tanggal]</mark></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container-xl">
+      <div class="legal">
+        <nav class="toc d-none d-lg-block" aria-label="Isi halaman"><h2>Isi halaman</h2><ol><li><a href="#penerimaan">1. Penerimaan syarat</a></li><li><a href="#definisi">2. Definisi</a></li><li><a href="#akun">3. Akun dan keamanan</a></li><li><a href="#penggunaan">4. Penggunaan yang diperbolehkan</a></li><li><a href="#kursus">5. Kursus, akses, dan donasi</a></li><li><a href="#sertifikat">6. Sertifikat dan verifikasi</a></li><li><a href="#hki">7. Hak kekayaan intelektual</a></li><li><a href="#konten">8. Konten dari Pengguna</a></li><li><a href="#penafian">9. Penafian dan batasan tanggung jawab</a></li><li><a href="#penghentian">10. Penangguhan dan penghentian</a></li><li><a href="#perubahan">11. Perubahan Syarat</a></li><li><a href="#hukum">12. Hukum yang berlaku dan penyelesaian sengketa</a></li><li><a href="#kontak">13. Kontak</a></li></ol></nav>
+        <details class="toc-mobile d-lg-none"><summary>Isi halaman</summary><ol><li><a href="#penerimaan">Penerimaan syarat</a></li><li><a href="#definisi">Definisi</a></li><li><a href="#akun">Akun dan keamanan</a></li><li><a href="#penggunaan">Penggunaan yang diperbolehkan</a></li><li><a href="#kursus">Kursus, akses, dan donasi</a></li><li><a href="#sertifikat">Sertifikat dan verifikasi</a></li><li><a href="#hki">Hak kekayaan intelektual</a></li><li><a href="#konten">Konten dari Pengguna</a></li><li><a href="#penafian">Penafian dan batasan tanggung jawab</a></li><li><a href="#penghentian">Penangguhan dan penghentian</a></li><li><a href="#perubahan">Perubahan Syarat</a></li><li><a href="#hukum">Hukum yang berlaku dan penyelesaian sengketa</a></li><li><a href="#kontak">Kontak</a></li></ol></details>
+        <div class="prose">
+          <div class="draft-note"><p><strong>Draf template.</strong> Teks bertanda kuning <mark>[...]</mark> harus diisi atau disesuaikan dengan praktik sebenarnya. Minta penasihat hukum meninjau dokumen ini sebelum dipublikasikan, lalu hapus kotak ini.</p></div>
+          <section id="penerimaan" aria-labelledby="h-penerimaan"><h2 id="h-penerimaan">1. Penerimaan syarat</h2><p>Dengan membuat akun atau menggunakan Akademi Filantropi ("Layanan"), Anda menyatakan telah membaca, memahami, dan menyetujui Syarat dan Ketentuan ini serta <a href="/id/privasi">Kebijakan Privasi</a>. Jika tidak setuju, mohon tidak menggunakan Layanan.</p><p>Layanan dikelola oleh <mark>[nama badan hukum]</mark> ("kami").</p></section>
+<section id="definisi" aria-labelledby="h-definisi"><h2 id="h-definisi">2. Definisi</h2><ul><li><strong>Pengguna</strong>: setiap orang yang mengakses atau memakai Layanan, baik dengan akun maupun tanpa akun.</li><li><strong>Akun</strong>: akun pribadi yang dibuat Pengguna untuk mengikuti kursus.</li><li><strong>Kursus</strong>: materi pembelajaran daring beserta kuis dan penilaiannya.</li><li><strong>Sertifikat</strong>: bukti penyelesaian kursus berbentuk digital yang memuat kode verifikasi.</li><li><strong>Kegiatan</strong>: webinar, pelatihan, atau batch kursus yang tercantum pada halaman <a href="/id/jadwal">Jadwal</a>.</li></ul></section>
+<section id="akun" aria-labelledby="h-akun"><h2 id="h-akun">3. Akun dan keamanan</h2><ul><li>Anda wajib memberikan data yang benar, lengkap, dan mutakhir, termasuk nama lengkap yang akan dicetak pada Sertifikat.</li><li>Satu orang hanya boleh memiliki satu akun. Akun bersifat pribadi dan tidak boleh dipindahtangankan.</li><li>Anda bertanggung jawab menjaga kerahasiaan kata sandi dan seluruh aktivitas pada akun Anda. Segera hubungi kami jika menduga akun disalahgunakan.</li><li>Layanan ditujukan bagi pengguna berusia minimal <mark>[usia minimal, mis. 17]</mark> tahun. Pengguna di bawah usia tersebut memerlukan persetujuan orang tua atau wali.</li></ul></section>
+<section id="penggunaan" aria-labelledby="h-penggunaan"><h2 id="h-penggunaan">4. Penggunaan yang diperbolehkan</h2><p>Anda setuju untuk tidak:</p><ul><li>menyalahgunakan Layanan, termasuk mengakses akun orang lain atau mengganggu keamanan sistem;</li><li>mengerjakan kuis atau ujian dengan cara curang, atau meminta orang lain mengerjakannya atas nama Anda;</li><li>menyalin, merekam, atau menyebarluaskan materi Kursus tanpa izin tertulis;</li><li>mengunggah atau menyampaikan konten yang melanggar hukum, menghina, atau melanggar hak pihak lain;</li><li>menggunakan Layanan untuk tujuan yang bertentangan dengan peraturan perundang-undangan yang berlaku.</li></ul></section>
+<section id="kursus" aria-labelledby="h-kursus"><h2 id="h-kursus">5. Kursus, akses, dan donasi</h2><ul><li>Sebagian Kursus dapat diikuti secara gratis. Sebagian lain memerlukan donasi untuk masuk, sebagaimana tertera pada label akses di halaman Kursus.</li><li>Donasi bersifat sukarela dan dipakai untuk <mark>[jelaskan peruntukan donasi]</mark>. Donasi yang telah dibayarkan <mark>[jelaskan kebijakan pengembalian dana, atau tulis bahwa tidak dapat dikembalikan]</mark>.</li><li>Kami dapat mengubah, menjadwalkan ulang, atau menghentikan Kursus dan Kegiatan. Perubahan jadwal akan diinformasikan kepada peserta terdaftar.</li><li>Kuota Kegiatan terbatas dan pendaftaran dapat ditutup ketika kuota penuh.</li></ul></section>
+<section id="sertifikat" aria-labelledby="h-sertifikat"><h2 id="h-sertifikat">6. Sertifikat dan verifikasi</h2><ul><li>Sertifikat diterbitkan setelah Anda memenuhi seluruh syarat kelulusan Kursus, yaitu <mark>[syarat kelulusan, mis. materi selesai dan nilai minimum]</mark>.</li><li>Setiap Sertifikat memiliki kode unik dan QR. Siapa pun dapat memeriksa keasliannya melalui halaman <a href="/id/verifikasi">Verifikasi sertifikat</a>. Hasil verifikasi menampilkan nama pemilik, nama Kursus, tanggal terbit, dan status Sertifikat.</li><li>Kami dapat mencabut Sertifikat yang diperoleh dengan cara curang atau berdasarkan data yang tidak benar. Status pencabutan akan tampil pada hasil verifikasi.</li><li>Permohonan koreksi nama pada Sertifikat diajukan melalui <mark>[kanal dan prosedur]</mark>.</li></ul></section>
+<section id="hki" aria-labelledby="h-hki"><h2 id="h-hki">7. Hak kekayaan intelektual</h2><p>Seluruh materi pada Layanan, termasuk teks, video, kuis, logo, dan desain, dilindungi hak cipta dan hak kekayaan intelektual lainnya milik kami atau pemberi lisensi kami. Kami memberi Anda hak terbatas, non-eksklusif, dan tidak dapat dipindahtangankan untuk mengakses materi tersebut hanya untuk keperluan belajar pribadi. <mark>[Sesuaikan jika materi berlisensi terbuka.]</mark></p></section>
+<section id="konten" aria-labelledby="h-konten"><h2 id="h-konten">8. Konten dari Pengguna</h2><p>Jika Anda mengirimkan konten (misalnya komentar atau jawaban tugas), Anda tetap memiliki hak atas konten tersebut dan memberi kami izin untuk menyimpan serta menampilkannya sebatas yang diperlukan untuk menjalankan Layanan. Anda menjamin konten tersebut tidak melanggar hak pihak lain.</p></section>
+<section id="penafian" aria-labelledby="h-penafian"><h2 id="h-penafian">9. Penafian dan batasan tanggung jawab</h2><ul><li>Materi Kursus bersifat edukatif dan bukan nasihat hukum, keagamaan, atau keuangan yang mengikat. Untuk keputusan penting, konsultasikan dengan pihak yang berwenang.</li><li>Kami berupaya menjaga Layanan tetap tersedia, tetapi tidak menjamin Layanan bebas gangguan atau kesalahan.</li><li>Sejauh diizinkan hukum, kami tidak bertanggung jawab atas kerugian tidak langsung yang timbul dari penggunaan Layanan. <mark>[Sesuaikan dengan saran penasihat hukum.]</mark></li></ul></section>
+<section id="penghentian" aria-labelledby="h-penghentian"><h2 id="h-penghentian">10. Penangguhan dan penghentian</h2><p>Kami dapat menangguhkan atau menutup akun yang melanggar Syarat ini, setelah memberi pemberitahuan bila memungkinkan. Anda dapat meminta penutupan akun kapan saja melalui halaman Bantuan. Ketentuan yang menurut sifatnya tetap berlaku setelah penghentian (misalnya hak kekayaan intelektual) akan tetap berlaku.</p></section>
+<section id="perubahan" aria-labelledby="h-perubahan"><h2 id="h-perubahan">11. Perubahan Syarat</h2><p>Kami dapat memperbarui Syarat ini. Perubahan penting akan diumumkan melalui Layanan atau email <mark>[sebutkan masa pemberitahuan, mis. 14 hari]</mark> sebelum berlaku. Penggunaan Layanan setelah perubahan berlaku berarti Anda menyetujui Syarat yang baru.</p></section>
+<section id="hukum" aria-labelledby="h-hukum"><h2 id="h-hukum">12. Hukum yang berlaku dan penyelesaian sengketa</h2><p>Syarat ini tunduk pada hukum Republik Indonesia. Kami mengutamakan penyelesaian sengketa secara musyawarah. Bila tidak tercapai, sengketa diselesaikan melalui <mark>[pengadilan negeri atau lembaga arbitrase, sebutkan lokasi]</mark>.</p></section>
+<section id="kontak" aria-labelledby="h-kontak"><h2 id="h-kontak">13. Kontak</h2><p>Pertanyaan tentang dokumen ini dapat disampaikan kepada <mark>[nama badan hukum]</mark> melalui <mark>[email resmi]</mark> atau melalui halaman <a href="/id/bantuan">Bantuan</a>. Alamat: <mark>[alamat lengkap]</mark>.</p></section>
+          <div class="other-link"><p>Cara kami mengelola data pribadi Anda dijelaskan dalam <a href="/id/privasi">Kebijakan privasi</a>.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container-xl">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <a href="/id"><img class="footer-logo" src="https://kayaconnect.org/theme/kaya/pix/logo_en.png" alt="Akademi Filantropi" height="44"></a>
+        <p class="mt-3">Pelatihan dan sertifikasi online untuk filantropi Islam.</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Tentang</h2>
+        <ul>
+          <li><a href="/id/tentang">Apa itu Akademi Filantropi?</a></li>
+          <li><a href="/id/organisasi">Solusi organisasi</a></li>
+          <li><a href="/id/syarat">Syarat dan ketentuan</a></li>
+          <li><a href="/id/privasi">Kebijakan privasi</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Bantuan</h2>
+        <ul>
+          <li><a href="/id/bantuan">Butuh bantuan?</a></li>
+          <li><a href="/id/panduan">Panduan memulai</a></li>
+          <li><a href="/en">English</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <h2 class="footer-title">Ikuti kami</h2>
+        <ul>
+          <li><a href="#" rel="noopener">Instagram</a></li>
+          <li><a href="#" rel="noopener">YouTube</a></li>
+          <li><a href="#" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">&copy; 2026 Akademi Filantropi. Seluruh hak dilindungi.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/js/tabler.min.js"></script>
+<script>
+var links=[].slice.call(document.querySelectorAll(".toc a")),secs=links.map(function(a){return document.querySelector(a.getAttribute("href"))});
+if("IntersectionObserver" in window){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){var on=a.getAttribute("href")==="#"+e.target.id;a.classList.toggle("active",on);if(on)a.setAttribute("aria-current","true");else a.removeAttribute("aria-current")})}})},{rootMargin:"-15% 0px -75% 0px"});secs.forEach(function(s){if(s)io.observe(s)})}
+document.querySelectorAll(".toc-mobile a").forEach(function(a){a.addEventListener("click",function(){a.closest("details").open=false})});
+</script>
+</body>
+</html>

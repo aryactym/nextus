@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beranda | Akademi Filantropi</title>
+<meta name="theme-color" content="#0B6B3A">
+<meta name="description" content="Platform pelatihan dan sertifikasi online untuk lembaga filantropi Islam. Kursus mandiri, kuis, dan sertifikat yang bisa diverifikasi.">
+<meta property="og:image" content="https://kayaconnect.org/pluginfile.php/104233/mod_page/content/14/kaya.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler.min.css">
+<style>
+  /* ====== TOKEN (samakan dengan nilai asli Kaya bila sudah dicek di DevTools) ====== */
+  :root{
+    --kaya-font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+    /* Palet NextUs */
+    --nx-green:#0B6B3A;        /* NextUs Green: Trust, Growth */
+    --nx-green-dark:#08532D;   /* turunan hijau utama untuk hover/active */
+    --nx-fresh:#58B947;        /* Fresh Green: Hope, Progress */
+    --nx-light:#DFF3E1;        /* Light Green: Learning */
+    --nx-yellow:#F7B500;       /* Accent Yellow: Inspiration */
+    --nx-yellow-dark:#D99D00;
+    --nx-dark:#1F2937;         /* Neutral Dark: Clarity */
+    --nx-gray:#E5E7EB;         /* Neutral Gray: Balance */
+
+    --kaya-ink:var(--nx-dark);
+    --kaya-primary:var(--nx-green);
+    --kaya-primary-dark:var(--nx-green-dark);
+    --kaya-soft:var(--nx-light);
+    --kaya-line:var(--nx-gray);
+    --kaya-muted:#4B5563;
+    --radius:.75rem;
+    --radius-sm:.5rem;
+    --shadow-sm:0 1px 2px rgba(31,41,55,.06),0 2px 8px rgba(31,41,55,.05);
+    --shadow-md:0 8px 24px rgba(31,41,55,.14);
+    --section-y:clamp(3rem,6vw,5rem);
+
+    --tblr-font-sans-serif:var(--kaya-font);
+    --tblr-body-font-family:var(--kaya-font);
+    --tblr-body-color:var(--kaya-ink);
+    --tblr-secondary:var(--kaya-muted);
+    --tblr-secondary-rgb:75,85,99;
+    --tblr-primary:var(--kaya-primary);
+    --tblr-primary-rgb:11,107,58;
+    --tblr-link-color:var(--kaya-primary);
+    --tblr-link-hover-color:var(--kaya-primary-dark);
+    --tblr-border-radius:var(--radius-sm);
+  }
+  body{font-family:var(--kaya-font);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4,.h1,.h2,.h3{font-family:var(--kaya-font);font-weight:700;letter-spacing:-.01em;line-height:1.25;}
+  .btn{font-weight:600;border-radius:var(--radius-sm);}
+  .btn-primary{--tblr-btn-bg:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary-dark);--tblr-btn-hover-border-color:var(--kaya-primary-dark);--tblr-btn-active-bg:var(--kaya-primary-dark);--tblr-btn-active-border-color:var(--kaya-primary-dark);}
+  .btn-accent{--tblr-btn-color:var(--nx-dark);--tblr-btn-hover-color:var(--nx-dark);--tblr-btn-active-color:var(--nx-dark);--tblr-btn-bg:var(--nx-yellow);--tblr-btn-border-color:var(--nx-yellow);--tblr-btn-hover-bg:var(--nx-yellow-dark);--tblr-btn-hover-border-color:var(--nx-yellow-dark);--tblr-btn-active-bg:var(--nx-yellow-dark);--tblr-btn-active-border-color:var(--nx-yellow-dark);color:var(--nx-dark);}
+  .btn-outline-primary{--tblr-btn-color:var(--kaya-primary);--tblr-btn-border-color:var(--kaya-primary);--tblr-btn-hover-bg:var(--kaya-primary);--tblr-btn-hover-border-color:var(--kaya-primary);}
+  .form-control{border-radius:var(--radius-sm);}
+  .form-control:focus{border-color:var(--nx-green);box-shadow:0 0 0 .2rem rgba(11,107,58,.2);}
+  .badge.bg-green-lt{background:var(--nx-light)!important;color:var(--nx-green)!important;}
+  .badge.bg-azure-lt{background:rgba(247,181,0,.2)!important;color:#6B4E00!important;}
+  a:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--kaya-ink);outline-offset:2px;}
+  .site-footer a:focus-visible,.verify .btn:focus-visible,.hero .btn:focus-visible{outline-color:#fff;}
+
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--kaya-ink);color:#fff;padding:.5rem 1rem;z-index:2000;}
+  .skip-link:focus{left:0;}
+
+  /* ====== ritme section ====== */
+  .section{padding:var(--section-y) 0;}
+  .section-alt{background:var(--kaya-soft);}
+  .section-head{max-width:60ch;margin-bottom:2rem;}
+  .section-head h2{margin:0 0 .5rem;font-size:clamp(1.5rem,2.6vw,1.875rem);}
+  .section-head p{margin:0;color:var(--kaya-muted);font-size:1.05rem;}
+  .lead-text{font-size:1.125rem;color:var(--kaya-muted);max-width:52ch;margin-bottom:1.5rem;}
+
+  /* ====== header ====== */
+  .site-header{background:#fff;border-bottom:1px solid var(--kaya-line);position:sticky;top:0;z-index:1030;}
+  .brand-mark{display:inline-flex;align-items:center;text-decoration:none;}
+  .brand-logo{height:44px;width:auto;display:block;}
+  .site-header .nav{gap:.25rem;}
+  .site-header .nav-link{color:var(--kaya-ink);font-weight:500;padding:.5rem .85rem;border-radius:var(--radius-sm);}
+  .site-header .nav-link:hover{color:var(--kaya-primary);background:var(--kaya-soft);}
+  .site-header{border-bottom-color:var(--nx-gray);}
+
+  /* ====== hero ====== */
+  .hero{position:relative;color:#fff;background:var(--nx-green-dark);overflow:hidden;}
+  .hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+  .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(6,56,31,.94) 0%,rgba(8,83,45,.8) 45%,rgba(11,107,58,.28) 100%);}
+  .hero .container-xl{position:relative;z-index:2;padding-top:clamp(3.5rem,8vw,6rem);padding-bottom:clamp(3.5rem,8vw,6rem);}
+  .hero h1{font-size:clamp(2rem,4.2vw,3.25rem);line-height:1.15;max-width:20ch;color:#fff;margin:0;}
+  .hero p.lead{font-size:1.15rem;max-width:54ch;color:rgba(255,255,255,.92);}
+  .hero-search{max-width:640px;}
+  .hero-search .form-control{height:3.4rem;border:0;box-shadow:var(--shadow-md);}
+  .hero-search .btn{height:3.4rem;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem;padding:0;}
+  .hero .meta span{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .85rem;font-size:.875rem;font-weight:500;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;}
+  .hero .meta svg{width:18px;height:18px;flex:none;color:var(--nx-yellow);}
+
+  /* ====== topik ====== */
+  .topic{display:flex;align-items:center;gap:1rem;height:100%;padding:1.1rem 1.25rem;background:#fff;color:var(--kaya-ink);border:1px solid var(--kaya-line);border-radius:var(--radius);box-shadow:var(--shadow-sm);text-decoration:none;font-weight:600;transition:border-color .15s,box-shadow .15s;}
+  .topic:hover{border-color:var(--kaya-primary);box-shadow:var(--shadow-md);color:var(--kaya-ink);}
+  .topic .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;transition:background .15s,color .15s;}
+  .topic:hover .ico{background:var(--kaya-primary);color:#fff;}
+  .topic .txt{flex:1;line-height:1.35;}
+  .topic small{display:block;font-weight:400;color:var(--kaya-muted);margin-top:.2rem;}
+  .topic::after{content:"";flex:none;width:.5rem;height:.5rem;border-top:2px solid var(--kaya-muted);border-right:2px solid var(--kaya-muted);transform:rotate(45deg);}
+
+  /* ====== tentang & organisasi ====== */
+  .media-img{width:100%;height:100%;max-height:420px;object-fit:cover;display:block;border-radius:var(--radius);}
+  .feature{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding:1.1rem 1.25rem;background:#fff;border:1px solid var(--kaya-line);border-radius:var(--radius);}
+  .feature.mb-0{margin-bottom:0!important;}
+  .feature .ico{flex:none;width:3rem;height:3rem;display:grid;place-items:center;background:var(--kaya-soft);color:var(--kaya-primary);border-radius:50%;}
+  .feature h3{font-size:1.05rem;margin:0 0 .2rem;}
+  .feature p{margin:0;color:var(--kaya-muted);}
+
+  /* ====== kursus ====== */
+  .course-card{border:1px solid var(--kaya-line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .15s,border-color .15s;}
+  .course-card:hover{box-shadow:var(--shadow-md);border-color:var(--nx-fresh);}
+  .course-img{aspect-ratio:16/9;width:100%;object-fit:cover;object-position:var(--pos,center);display:block;}
+  .course-card .card-body{padding:1.25rem 1.25rem 1.5rem;}
+  .course-card h3{font-size:1.1rem;margin:0 0 .5rem;}
+  .course-card .card-body p{margin-bottom:1rem;}
+  .course-meta{font-size:.85rem;color:var(--kaya-muted);display:flex;gap:.5rem 1rem;flex-wrap:wrap;}
+  .course-meta span+span{padding-left:1rem;border-left:1px solid var(--kaya-line);}
+  .course-card .card-footer{background:var(--kaya-soft);border-top:1px solid var(--kaya-line);padding:.75rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--kaya-muted);}
+  .badge-access{font-weight:600;}
+
+  /* ====== verifikasi ====== */
+  .verify{background:var(--nx-green);color:#fff;padding:clamp(2.5rem,5vw,3.5rem) 0;}
+  .verify p{color:rgba(255,255,255,.85);}
+  .verify .form-control{height:3rem;border:0;}
+  .verify .btn{height:3rem;}
+
+  /* ====== footer ====== */
+  .site-footer{background:var(--nx-dark);color:var(--nx-gray);padding:3.5rem 0 2rem;}
+  .site-footer a{color:#fff;text-decoration:none;}
+  .site-footer a:hover{color:var(--nx-fresh);text-decoration:underline;text-underline-offset:3px;}
+  .footer-logo{height:44px;width:auto;background:#fff;padding:.35rem .6rem;border-radius:var(--radius-sm);display:block;}
+  .footer-title{color:#fff;font-size:1rem;margin:0 0 1rem;}
+  .site-footer ul{list-style:none;padding:0;margin:0;}
+  .site-footer li{margin-bottom:.6rem;}
+  .site-footer .legal{border-top:1px solid rgba(255,255,255,.2);margin-top:2.5rem;padding-top:1.5rem;font-size:.85rem;color:rgba(229,231,235,.85);}
+
+  @media (max-width:767.98px){
+    .hero::before{background:linear-gradient(180deg,rgba(6,56,31,.88) 0%,rgba(8,83,45,.84) 100%);}
+    .course-meta span+span{padding-left:.75rem;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#konten">Lewati ke konten utama</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container-xl">
+    <div class="d-flex flex-wrap align-items-center justify-content-between py-3 gap-3">
+      <a class="brand-mark" href="/id" aria-label="Akademi Filantropi, ke beranda">
+        <img class="brand-logo" src="https://kayaconnect.org/theme/kaya/pix/logo.png" alt="Akademi Filantropi" height="44">
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-link" href="/id/kursus">Katalog</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/jadwal">Jadwal</a></li>
+          <li class="nav-item"><a class="nav-link" href="/id/verifikasi">Verifikasi sertifikat</a></li>
+        </ul>
+      </nav>
+      <div class="d-flex align-items-center gap-2">
+        <div class="dropdown">
+          <button class="btn btn-ghost-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="visually-hidden">Bahasa: </span>Indonesia</button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item active" href="/id" hreflang="id">Indonesia</a>
+            <a class="dropdown-item" href="/en" hreflang="en">English</a>
+          </div>
+        </div>
+        <a class="btn btn-outline-primary" href="/id/masuk">Masuk</a>
+        <a class="btn btn-primary" href="/id/daftar">Daftar gratis</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="konten">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="h-hero">
+    <img src="https://kayaconnect.org/pluginfile.php/1040715/block_html/content/hero_one.jpg" alt="" width="1600" height="700" fetchpriority="high">
+    <div class="container-xl">
+      <h1 id="h-hero">Belajar filantropi Islam, kapan saja dan di mana saja</h1>
+      <p class="lead mt-3 mb-4">Kursus mandiri untuk amil, relawan, dan mitra lembaga. Selesaikan kursus, dapatkan sertifikat yang bisa diverifikasi publik.</p>
+      <form class="hero-search row g-2" action="/id/kursus" method="get" role="search">
+        <div class="col-12 col-sm">
+          <label class="visually-hidden" for="q">Cari kursus</label>
+          <input class="form-control" id="q" name="q" type="search" placeholder="Cari kursus, misalnya: dasar zakat">
+        </div>
+        <div class="col-12 col-sm-auto"><button class="btn btn-accent w-100" type="submit">Cari kursus</button></div>
+      </form>
+      <div class="meta" role="list">
+        <span role="listitem"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="4" width="10" height="16" rx="2"/><path d="M11 5h2M12 17v.01"/></svg> Bisa diakses dari HP</span>
+        <span role="listitem"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="15" cy="15" r="3"/><path d="M13 17.5V22l2-1.5l2 1.5v-4.5M10 19H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10M6 9h12M6 12h3"/></svg> Sertifikat digital</span>
+        <span role="listitem"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M11.5 3a17 17 0 0 0 0 18M12.5 3a17 17 0 0 1 0 18"/></svg> Indonesia &amp; English</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TOPIK ============ -->
+  <section class="section" aria-labelledby="h-topik">
+    <div class="container-xl">
+      <div class="section-head">
+        <h2 class="h2" id="h-topik">Topik pelatihan</h2>
+        <p>Pilih bidang yang sesuai dengan peran Anda di lembaga.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4"><a class="topic" href="/id/kursus?kategori=dasar-ziswaf"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566a5 5 0 1 1 7.5 6.572"/></svg></span><span class="txt">Dasar Ziswaf<small>Zakat, infak, sedekah, wakaf</small></span></a></div>
+        <div class="col-md-6 col-lg-4"><a class="topic" href="/id/kursus?kategori=pengelolaan-zakat"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.8 9a2 2 0 0 0-1.8-1h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1M12 6v2m0 8v2"/></svg></span><span class="txt">Pengelolaan Zakat<small>Himpun, salur, laporkan</small></span></a></div>
+        <div class="col-md-6 col-lg-4"><a class="topic" href="/id/kursus?kategori=pemberdayaan"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span><span class="txt">Pemberdayaan Masyarakat<small>Program, UMKM, pendampingan</small></span></a></div>
+        <div class="col-md-6 col-lg-4"><a class="topic" href="/id/kursus?kategori=tata-kelola"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1-8.5 15a12 12 0 0 1-8.5-15a12 12 0 0 0 8.5-3"/><path d="M9 12l2 2l4-4"/></svg></span><span class="txt">Tata Kelola &amp; Kepatuhan<small>Akuntabilitas, standar, pelaporan</small></span></a></div>
+        <div class="col-md-6 col-lg-4"><a class="topic" href="/id/kursus?kategori=manajemen-lembaga"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span><span class="txt">Manajemen Lembaga<small>Kepemimpinan, SDM, digitalisasi</small></span></a></div>
+        <div class="col-md-6 col-lg-4"><a class="topic" href="/id/kursus?kategori=relawan-kebencanaan"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M15 15l3.35 3.35M9 15l-3.35 3.35M5.65 5.65L9 9m6-3.35L18.35 5.65M15 9l3.35-3.35"/></svg></span><span class="txt">Relawan &amp; Kebencanaan<small>Respon, keselamatan, safeguarding</small></span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TENTANG KAMI ============ -->
+  <section class="section section-alt" aria-labelledby="h-tentang">
+    <div class="container-xl">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+          <h2 class="h2" id="h-tentang">Tentang kami</h2>
+          <p class="lead-text">Akademi Filantropi adalah platform belajar online untuk amil, relawan, mitra, dan publik di lembaga filantropi Islam.</p>
+          <a class="btn btn-primary" href="/id/tentang">Pelajari lebih lanjut</a>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="4" width="10" height="16" rx="2"/><path d="M11 5h2M12 17v.01"/></svg></span><div><h3>Belajar mandiri</h3><p>Video, bacaan, dan kuis yang bisa diselesaikan dengan ritme Anda sendiri.</p></div></div>
+          <div class="feature"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="15" cy="15" r="3"/><path d="M13 17.5V22l2-1.5l2 1.5v-4.5M10 19H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10M6 9h12M6 12h3"/></svg></span><div><h3>Sertifikat terverifikasi</h3><p>Setiap sertifikat punya kode dan QR untuk dicek siapa saja.</p></div></div>
+          <div class="feature mb-0"><span class="ico"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M11.5 3a17 17 0 0 0 0 18M12.5 3a17 17 0 0 1 0 18"/></svg></span><div><h3>Dua bahasa</h3><p>Antarmuka dan sertifikat tersedia dalam bahasa Indonesia dan Inggris.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ORGANISASI ANDA ============ -->
+  <section class="section" aria-labelledby="h-org">
+    <div class="container-xl">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6 order-md-2">
+          <h2 class="h2" id="h-org">Untuk organisasi Anda</h2>
+          <p class="lead-text">Selain kursus untuk individu, lembaga bisa menyusun, mengelola, dan membagikan pelatihannya sendiri lewat portal organisasi, lengkap dengan logo, warna, dan sertifikat atas nama lembaga.</p>
+          <a class="btn btn-primary" href="/id/organisasi">Lihat solusi organisasi</a>
+        </div>
+        <div class="col-md-6 order-md-1">
+          <img class="media-img" src="https://kayaconnect.org/pluginfile.php/1040720/block_html/content/hero_two.jpg" alt="Seorang perempuan muda memimpin rapat perencanaan organisasi." width="720" height="480" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KURSUS TERSEDIA ============ -->
+  <section class="section" aria-labelledby="h-kursus">
+    <div class="container-xl">
+      <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
+        <div class="section-head mb-0">
+          <h2 class="h2" id="h-kursus">Kursus tersedia</h2>
+          <p>Kursus mandiri yang bisa langsung Anda ikuti.</p>
+        </div>
+        <a class="btn btn-outline-primary" href="/id/kursus">Semua kursus</a>
+      </div>
+      <div class="row g-4">
+        <article class="col-md-6 col-lg-4">
+          <div class="card course-card h-100">
+            <img class="course-img" src="https://kayaconnect.org/pluginfile.php/1040715/block_html/content/hero_one.jpg" alt="Dua orang belajar dari laptop" style="--pos:20% 40%" width="640" height="360" loading="lazy">
+            <div class="card-body">
+              <span class="badge bg-green-lt badge-access mb-2">Gratis</span>
+              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="/id/kursus/pengantar-zakat">Pengantar Zakat untuk Relawan</a></h3>
+              <p class="text-secondary">Dasar zakat dan peran relawan dalam penghimpunan.</p>
+              <div class="course-meta"><span>Pemula</span><span>2 jam</span></div>
+            </div>
+            <div class="card-footer text-secondary">Sertifikat gratis</div>
+          </div>
+        </article>
+        <article class="col-md-6 col-lg-4">
+          <div class="card course-card h-100">
+            <img class="course-img" src="https://kayaconnect.org/pluginfile.php/1040720/block_html/content/hero_two.jpg" alt="Perempuan memimpin rapat perencanaan" style="--pos:50% 30%" width="640" height="360" loading="lazy">
+            <div class="card-body">
+              <span class="badge bg-azure-lt badge-access mb-2">Donasi untuk masuk</span>
+              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="/id/kursus/dasar-pelaporan-program">Dasar Pelaporan Program</a></h3>
+              <p class="text-secondary">Menyusun laporan program yang akuntabel.</p>
+              <div class="course-meta"><span>Menengah</span><span>4 jam</span></div>
+            </div>
+            <div class="card-footer text-secondary">Sertifikat gratis</div>
+          </div>
+        </article>
+        <article class="col-md-6 col-lg-4">
+          <div class="card course-card h-100">
+            <img class="course-img" src="https://kayaconnect.org/pluginfile.php/1040715/block_html/content/hero_one.jpg" alt="Peserta pelatihan di lingkungan desa" style="--pos:85% 60%" width="640" height="360" loading="lazy">
+            <div class="card-body">
+              <span class="badge bg-green-lt badge-access mb-2">Gratis</span>
+              <h3 class="h3"><a class="text-reset text-decoration-none stretched-link" href="/id/kursus/dasar-fasilitasi-tot">Dasar Fasilitasi (ToT)</a></h3>
+              <p class="text-secondary">Prasyarat untuk mengelola pelatihan sebagai penyelenggara.</p>
+              <div class="course-meta"><span>Menengah</span><span>6 jam</span></div>
+            </div>
+            <div class="card-footer text-secondary">Sertifikat via donasi</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VERIFIKASI SERTIFIKAT ============ -->
+  <section class="verify" aria-labelledby="h-verif">
+    <div class="container-xl">
+      <div class="row g-3 align-items-center">
+        <div class="col-lg-5">
+          <h2 class="h2 text-white mb-1" id="h-verif">Verifikasi sertifikat</h2>
+          <p class="mb-0">Masukkan kode pada sertifikat untuk memeriksa keasliannya.</p>
+        </div>
+        <div class="col-lg-7">
+          <form class="row g-2" action="/id/verifikasi" method="get">
+            <div class="col">
+              <label class="visually-hidden" for="kode">Kode sertifikat</label>
+              <input class="form-control" id="kode" name="kode" placeholder="Contoh: AF-2026-000123">
+            </div>
+            <div class="col-auto"><button class="btn btn-accent h-100" type="submit">Periksa kode</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container-xl">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <a href="/id"><img class="footer-logo" src="https://kayaconnect.org/theme/kaya/pix/logo_en.png" alt="Akademi Filantropi" height="44"></a>
+        <p class="mt-3">Pelatihan dan sertifikasi online untuk filantropi Islam.</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Tentang</h2>
+        <ul>
+          <li><a href="/id/tentang">Apa itu Akademi Filantropi?</a></li>
+          <li><a href="/id/organisasi">Solusi organisasi</a></li>
+          <li><a href="/id/syarat">Syarat dan ketentuan</a></li>
+          <li><a href="/id/privasi">Kebijakan privasi</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <h2 class="footer-title">Bantuan</h2>
+        <ul>
+          <li><a href="/id/bantuan">Butuh bantuan?</a></li>
+          <li><a href="/id/panduan">Panduan memulai</a></li>
+          <li><a href="/en">English</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2">
+        <h2 class="footer-title">Ikuti kami</h2>
+        <ul>
+          <li><a href="#" rel="noopener">Instagram</a></li>
+          <li><a href="#" rel="noopener">YouTube</a></li>
+          <li><a href="#" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">&copy; 2026 Akademi Filantropi. Seluruh hak dilindungi.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/js/tabler.min.js"></script>
+</body>
+</html>
