@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Org\LearnerController;
 use App\Http\Controllers\Org\LearnerImportController;
+use App\Http\Controllers\Org\ReportController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -182,7 +183,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('learners-import/result', [LearnerImportController::class, 'result'])->name('learners.import.result');
         Route::get('learners-import/template', [LearnerImportController::class, 'template'])->name('learners.import.template');
 
-        // Tahap 4: reports (placeholder)
-        Route::get('reports', fn () => abort(404))->name('reports.index');
+        // Tahap 4: reports
+        Route::get('reports',                        [ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/by-topic',               [ReportController::class, 'byTopic'])->name('reports.by-topic');
+        Route::get('reports/by-course',              [ReportController::class, 'byCourse'])->name('reports.by-course');
+        Route::get('reports/by-course/{courseUuid}', [ReportController::class, 'byCourseDetail'])->name('reports.by-course.detail');
+        Route::get('reports/by-learner',             [ReportController::class, 'byLearner'])->name('reports.by-learner');
+        Route::get('reports/export/{type}',          [ReportController::class, 'exportCsv'])->name('reports.export')
+            ->where('type', 'topic|course|learner');
     });
 });
