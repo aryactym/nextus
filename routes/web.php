@@ -27,6 +27,7 @@ use App\Domain\Settings\Http\Controllers\SponsorController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Org\LearnerController;
+use App\Http\Controllers\Org\LearnerImportController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -176,7 +177,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::resource('learners', LearnerController::class)->except(['show']);
         Route::get('learners/{learner}', [LearnerController::class, 'show'])->name('learners.show');
         Route::patch('learners/{learner}/restore', [LearnerController::class, 'restore'])->name('learners.restore');
-        Route::get('learners-import', fn () => back()->with('info', 'Fitur import CSV akan hadir di tahap berikutnya.'))->name('learners.import');
+        Route::get('learners-import', [LearnerImportController::class, 'create'])->name('learners.import');
+        Route::post('learners-import', [LearnerImportController::class, 'store'])->name('learners.import.store');
+        Route::get('learners-import/result', [LearnerImportController::class, 'result'])->name('learners.import.result');
+        Route::get('learners-import/template', [LearnerImportController::class, 'template'])->name('learners.import.template');
 
         // Tahap 4: reports (placeholder)
         Route::get('reports', fn () => abort(404))->name('reports.index');
