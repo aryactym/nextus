@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Admin\Http\Controllers;
 
 use App\Domain\Catalog\Models\Pendidikan;
+use App\Domain\Organization\Models\Organization;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -22,9 +23,15 @@ class UserController extends Controller
         $q = trim((string) $request->input('q', ''));
         $kategoriJabatan = trim((string) $request->input('kategori_jabatan', ''));
         $namaOrganisasi = trim((string) $request->input('nama_organisasi', ''));
+        $orgId = $request->input('org_id') ? (int) $request->input('org_id') : null;
 
-        $users = User::query()
-            ->with('roles')
+        $organizations = Organization::whereNull('deleted_at')
+            ->where('status', 'active')
+            ->orderBy('name->id')
+            ->get(['id', 'name']);
+
+        $users = User::withoutGlobalScopes()
+            ->with('roles', 'organization')
             ->when($q !== '', fn ($query) => $query->where(function ($query) use ($q): void {
                 $query->where('name', 'like', '%'.$q.'%')
                     ->orWhere('email', 'like', '%'.$q.'%')
@@ -33,11 +40,12 @@ class UserController extends Controller
             }))
             ->when($kategoriJabatan !== '', fn ($query) => $query->where('kategori_jabatan', $kategoriJabatan))
             ->when($namaOrganisasi !== '', fn ($query) => $query->where('nama_organisasi', 'like', '%'.$namaOrganisasi.'%'))
+            ->when($orgId !== null, fn ($query) => $query->where('organization_id', $orgId))
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'q', 'kategoriJabatan', 'namaOrganisasi'));
+        return view('admin.users.index', compact('users', 'q', 'kategoriJabatan', 'namaOrganisasi', 'orgId', 'organizations'));
     }
 
     public function create(): View
