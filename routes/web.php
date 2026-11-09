@@ -24,11 +24,13 @@ use App\Domain\Payment\Http\Controllers\PaymentController;
 use App\Domain\Payment\Http\Controllers\WebhookController;
 use App\Domain\Settings\Http\Controllers\SettingController;
 use App\Domain\Settings\Http\Controllers\SponsorController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Org\LearnerController;
 use App\Http\Controllers\Org\LearnerImportController;
 use App\Http\Controllers\Org\ReportController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -48,7 +50,8 @@ Route::group([
     Route::get('/media/thumb/{path}', [MediaController::class, 'thumbnail'])
         ->name('media.thumbnail')->where('path', '.*');
     Route::get('/tentang', fn () => view('pages.tentang'))->name('tentang');
-    Route::get('/jadwal', fn () => view('pages.jadwal'))->name('jadwal');
+    Route::get('/jadwal', [ScheduleController::class, 'index'])->name('jadwal');
+    Route::get('/jadwal/{uuid}.ics', [ScheduleController::class, 'ics'])->name('jadwal.ics');
     Route::get('/panduan', fn () => view('pages.panduan'))->name('panduan');
     Route::get('/syarat', [PublicPageController::class, 'terms'])->name('syarat');
     Route::get('/privasi', [PublicPageController::class, 'privacy'])->name('privasi');
@@ -166,6 +169,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // ---- Blog ----
     Route::resource('posts', PostController::class)->except(['show']);
+
+    // ---- Events / Jadwal ----
+    Route::resource('events', EventController::class)->except(['show']);
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
         ->middleware(['auth', 'signed', 'throttle:uploads'])

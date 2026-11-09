@@ -486,3 +486,27 @@ aside[aria-label="Kurikulum"] .accordion-item.module-active .accordion-button {
 .blog-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: .92rem; }
 .blog-content th, .blog-content td { border: 1px solid var(--nu-kabut); padding: .5rem .75rem; }
 .blog-content th { background: var(--nu-kertas); font-weight: 600; }
+
+/* ====== Jadwal / Events ====== */
+.month { margin-top: 2rem; }
+.month h2 { font-size: 1.25rem; padding-bottom: .6rem; margin-bottom: 1rem; border-bottom: 2px solid var(--nu-malam); }
+
+.event { display: grid; grid-template-columns: auto 1fr; gap: 1rem 1.25rem; padding: 1.25rem; margin-bottom: 1rem; background: #fff; border: 1px solid var(--nu-kabut); border-radius: var(--nu-radius); box-shadow: var(--nu-shadow-sm); }
+@media (min-width: 768px) { .event { grid-template-columns: auto 1fr auto; align-items: start; } }
+.event.past { background: var(--nu-kertas); box-shadow: none; opacity: .75; }
+.event.past .date { background: var(--nu-batu); }
+
+.date { width: 4.25rem; text-align: center; border-radius: var(--nu-radius-sm); background: var(--nu-zamrud); color: #fff; padding: .5rem .25rem; line-height: 1.1; flex-shrink: 0; }
+.date b { display: block; font-size: 1.65rem; font-weight: 700; }
+.date span { font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+
+.event h3 { font-size: 1.05rem; margin: .25rem 0 .5rem; }
+.event-info { display: flex; flex-wrap: wrap; gap: .25rem 1rem; color: var(--nu-batu); font-size: .875rem; margin: 0; padding: 0; list-style: none; }
+.event-info li { display: flex; align-items: center; gap: .35rem; }
+.event-actions { display: flex; flex-wrap: wrap; gap: .5rem; grid-column: 1 / -1; align-items: flex-start; }
+@media (min-width: 768px) { .event-actions { grid-column: auto; flex-direction: column; align-items: stretch; min-width: 10rem; } }
+
+.empty { border: 1px dashed var(--nu-kabut); border-radius: var(--nu-radius); padding: 3rem 1.5rem; text-align: center; background: var(--nu-kertas); margin-top: 2rem; }
+.empty h2 { font-size: 1.25rem; }
+.bar-foot { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center; justify-content: space-between; margin: .75rem 0 .5rem; }
+.bar-foot p { margin: 0; color: var(--nu-batu); }

@@ -7,6 +7,14 @@
     <meta name="description" content="{{ $seo['description'] ?? '' }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- Favicon (dari Pengaturan admin) --}}
+    @if (! empty($favicon))
+        <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($favicon) }}">
+        <link rel="apple-touch-icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($favicon) }}">
+    @else
+        <link rel="icon" href="{{ asset('favicon.ico') }}">
+    @endif
+
     {{-- NextUs brand: Plus Jakarta Sans --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -246,6 +254,27 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">Artikel</span>
+                            </a>
+                        </li>
+                    @endcan
+
+                    @can('manage events')
+                        <li class="nav-item {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
+                            <a class="nav-link {{ request()->routeIs('admin.events.*') ? 'active' : '' }}"
+                               href="{{ route('admin.events.index') }}">
+                                <span class="nav-link-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon" aria-hidden="true">
+                                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                        <line x1="10" y1="14" x2="10" y2="17"/>
+                                        <line x1="14" y1="14" x2="14" y2="17"/>
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">Jadwal</span>
                             </a>
                         </li>
                     @endcan

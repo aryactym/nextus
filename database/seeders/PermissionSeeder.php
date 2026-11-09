@@ -21,6 +21,7 @@ class PermissionSeeder extends Seeder
             'manage sponsors',
             'manage users',
             'manage blog',
+            'manage events',
             'manage org learners',
             'view org reports',
         ];

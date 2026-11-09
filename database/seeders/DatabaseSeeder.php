@@ -50,5 +50,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SponsorSeeder::class);
         $this->call(DemoSeeder::class);
         $this->call(MpzSeeder::class);
+        $this->call(EventSeeder::class);
     }
 }
