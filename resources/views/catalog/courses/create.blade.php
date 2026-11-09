@@ -205,5 +205,8 @@
         </div>
     </div>
 </form>
+
+<x-hugerte :selectors="['#description_id']" />
+
 @endsection
 

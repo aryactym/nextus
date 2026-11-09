@@ -69,7 +69,7 @@ class PublicCourseController extends Controller
         $course = Course::withoutGlobalScope('organization')
             ->where('slug', $slug)
             ->where('status', 'published')
-            ->with(['category', 'organization', 'modules.lessons'])
+            ->with(['category', 'organization', 'modules.lessons', 'requirement.prerequisiteCourse', 'requirement.pendidikan'])
             ->firstOrFail();
 
         $enrollment = null;

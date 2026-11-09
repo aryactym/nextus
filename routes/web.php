@@ -24,6 +24,8 @@ use App\Domain\Payment\Http\Controllers\PaymentController;
 use App\Domain\Payment\Http\Controllers\WebhookController;
 use App\Domain\Settings\Http\Controllers\SettingController;
 use App\Domain\Settings\Http\Controllers\SponsorController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -49,15 +51,20 @@ Route::group([
     Route::get('/privasi', [PublicPageController::class, 'privacy'])->name('privasi');
     Route::get('/verifikasi', [CertificateController::class, 'verify'])->name('verifikasi');
     Route::get('/verifikasi/{code}', [CertificateController::class, 'verify'])->name('certificates.verify');
+
+    // ---- Blog (publik) ----
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 });
 
-Route::get('/en', function () {
-    return redirect()->route('home-id');
-})->name('home-en');
-
+// Locale switcher untuk default locale (id) — set session lalu redirect ke /
+// Diperlukan karena hideDefaultLocaleInURL=true, sehingga /id tidak ada di URL,
+// tapi session perlu di-reset agar localeSessionRedirect tidak redirect balik ke /en.
 Route::get('/id', function () {
-    return view('home');
-})->name('home-id');
+    session(['locale' => 'id']);
+
+    return redirect('/');
+})->name('locale.switch.id');
 
 Route::get('/sitemap.xml', function () {
     $courses = Course::withoutGlobalScope('organization')
@@ -69,20 +76,6 @@ Route::get('/sitemap.xml', function () {
         ->view('seo.sitemap', compact('courses'))
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
-Route::get('/en', function () {
-    app()->setLocale('en');
-    session(['locale' => 'en']);
-
-    return view('home');
-})->name('home-en');
-
-Route::get('/id', function () {
-    app()->setLocale('id');
-    session(['locale' => 'id']);
-
-    return view('home');
-})->name('home-id');
-
 Route::get('/bayar/{order}', [PaymentController::class, 'show'])
     ->middleware('auth')->name('payments.show');
 Route::post('/webhooks/midtrans', [WebhookController::class, 'handle'])
@@ -167,6 +160,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('settings.update-favicon');
 
     Route::resource('sponsors', SponsorController::class)->except(['show']);
+
+    // ---- Blog ----
+    Route::resource('posts', PostController::class)->except(['show']);
 
     Route::get('uploads/{path}', [UploadController::class, 'show'])
         ->middleware(['auth', 'signed', 'throttle:uploads'])

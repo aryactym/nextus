@@ -682,4 +682,6 @@
         </div>
     </div>
 
+<x-hugerte :selectors="['#description_id']" />
+
 @endsection

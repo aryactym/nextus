@@ -11,6 +11,7 @@
     $locale = app()->getLocale();
     $navItems = [
         ['route' => 'catalog.index',   'key' => 'catalog',  'label' => __('Katalog')],
+        ['route' => 'blog.index',      'key' => 'blog',     'label' => __('Blog')],
         ['route' => 'jadwal',          'key' => 'schedule', 'label' => __('Jadwal')],
         ['route' => 'verifikasi',      'key' => 'verify',   'label' => __('Verifikasi sertifikat')],
     ];
@@ -61,7 +62,7 @@
             aria-expanded="false"
           ><span class="visually-hidden">Bahasa: </span>{{ $locale === 'en' ? 'English' : 'Indonesia' }}</button>
           <div class="dropdown-menu">
-            <a class="dropdown-item{{ $locale === 'id' ? ' active' : '' }}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('id') }}" hreflang="id">Indonesia</a>
+            <a class="dropdown-item{{ $locale === 'id' ? ' active' : '' }}" href="{{ route('locale.switch.id') }}" hreflang="id">Indonesia</a>
             <a class="dropdown-item{{ $locale === 'en' ? ' active' : '' }}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL('en') }}" hreflang="en">English</a>
           </div>
         </div>

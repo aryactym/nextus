@@ -458,3 +458,31 @@ aside[aria-label="Kurikulum"] .accordion-item.module-active .accordion-button {
   }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ====== Share widget ====== */
+.share-widget { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--nu-kabut); }
+.share-label { font-size: .8rem; font-weight: 600; color: var(--nu-batu); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 .6rem; }
+.share-buttons { display: flex; flex-wrap: wrap; gap: .4rem; }
+.share-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .38rem .75rem; border-radius: 999px; font-size: .82rem; font-weight: 600; border: 1.5px solid transparent; cursor: pointer; text-decoration: none; transition: opacity .15s, transform .1s; white-space: nowrap; }
+.share-btn:hover { opacity: .85; transform: translateY(-1px); }
+.share-btn:active { transform: translateY(0); }
+.share-btn--wa  { background: #25d366; color: #fff; border-color: #25d366; }
+.share-btn--x   { background: #000; color: #fff; border-color: #000; }
+.share-btn--li  { background: #0a66c2; color: #fff; border-color: #0a66c2; }
+.share-btn--copy { background: var(--nu-kertas); color: var(--nu-malam); border-color: var(--nu-kabut); }
+.share-btn--copy:hover { background: #fff; border-color: var(--nu-zamrud); color: var(--nu-zamrud); }
+
+/* ====== Blog content (HugeRTE output) ====== */
+.blog-content { line-height: 1.8; color: var(--nu-malam); }
+.blog-content h2 { font-size: 1.5rem; margin: 2rem 0 .75rem; }
+.blog-content h3 { font-size: 1.2rem; margin: 1.75rem 0 .5rem; }
+.blog-content p  { margin-bottom: 1.25rem; }
+.blog-content ul, .blog-content ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+.blog-content li { margin-bottom: .4rem; }
+.blog-content a  { color: var(--nu-zamrud); text-decoration: underline; }
+.blog-content img { max-width: 100%; border-radius: var(--nu-radius); margin: 1rem 0; }
+.blog-content blockquote { border-left: 4px solid var(--nu-zamrud); padding: .75rem 1rem; background: var(--nu-kertas); border-radius: 0 var(--nu-radius-sm) var(--nu-radius-sm) 0; margin: 1.25rem 0; }
+.blog-content pre { background: #1e2430; color: #cdd6f4; padding: 1rem; border-radius: var(--nu-radius-sm); overflow-x: auto; font-size: .875rem; }
+.blog-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: .92rem; }
+.blog-content th, .blog-content td { border: 1px solid var(--nu-kabut); padding: .5rem .75rem; }
+.blog-content th { background: var(--nu-kertas); font-weight: 600; }

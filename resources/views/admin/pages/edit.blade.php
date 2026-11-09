@@ -71,12 +71,13 @@
                     </div>
 
                     <div class="mb-0">
-                        <x-rich-editor
+                        <label class="form-label" for="page-content">Isi halaman</label>
+                        <textarea
+                            id="page-content"
                             name="content"
-                            :value="old('content', $page->content)"
-                            label="Isi halaman"
-                            :rows="24"
-                        />
+                            rows="24"
+                            class="form-control @error('content') is-invalid @enderror"
+                        >{{ old('content', $page->content) }}</textarea>
                         <div class="form-hint">
                             Gunakan tombol format untuk teks. Judul bagian memakai format Heading 2 agar otomatis masuk daftar isi.
                         </div>
@@ -118,5 +119,8 @@
         </div>
     </div>
 </form>
+
+<x-hugerte :selectors="['#page-content']" :height="600" />
+
 @endsection
 
