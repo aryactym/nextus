@@ -43,6 +43,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
+            // Set session organization_id sesuai user yang login
+            session(['organization_id' => auth()->user()->organization_id]);
+
             return redirect()->intended(route('admin.dashboard'))
                 ->with('success', 'Selamat datang.');
         }

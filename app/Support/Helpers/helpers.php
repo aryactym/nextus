@@ -5,11 +5,20 @@ use Illuminate\Support\Facades\Session;
 
 if (! function_exists('organization_id')) {
     /**
-     * Ambil organization_id aktif dari session, default 1 (organisasi tunggal MVP).
+     * Ambil organization_id aktif.
+     * Prioritas: 1) user yang sedang login, 2) session, 3) null (tidak scope).
      */
     function organization_id(): ?int
     {
-        return Session::get('organization_id', 1);
+        // Gunakan org dari user yang sedang login
+        if (auth()->check()) {
+            return (int) auth()->user()->organization_id;
+        }
+
+        // Gunakan org dari session hanya jika di-set secara eksplisit
+        $fromSession = Session::get('organization_id');
+
+        return $fromSession !== null ? (int) $fromSession : null;
     }
 }
 
