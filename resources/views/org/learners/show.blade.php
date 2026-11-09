@@ -112,7 +112,15 @@
                                     </td>
                                     <td>
                                         @if ($enrollment->certificate)
-                                            <span class="badge bg-green-lt">Ada</span>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge bg-green-lt">Ada</span>
+                                                <a href="{{ route('certificates.pdf', $enrollment->certificate->code) }}"
+                                                   class="btn btn-sm btn-outline-primary"
+                                                   target="_blank"
+                                                   rel="noopener">
+                                                    Unduh PDF
+                                                </a>
+                                            </div>
                                         @else
                                             <span class="text-muted">—</span>
                                         @endif

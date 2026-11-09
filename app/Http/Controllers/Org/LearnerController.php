@@ -19,6 +19,23 @@ class LearnerController extends Controller
         return (int) auth()->user()->organization_id;
     }
 
+    /**
+     * Admin / Super Admin (pengelola user) boleh melihat peserta lintas organisasi,
+     * mis. saat membuka detail dari laporan organisasi lain.
+     */
+    private function canAccessAllOrganizations(): bool
+    {
+        return auth()->user()->can('manage users');
+    }
+
+    private function ensureCanAccessLearner(User $learner): void
+    {
+        abort_unless(
+            $this->canAccessAllOrganizations() || $learner->organization_id === $this->orgId(),
+            403
+        );
+    }
+
     public function index(Request $request): View
     {
         abort_unless(auth()->user()->can('manage org learners'), 403);
@@ -87,7 +104,7 @@ class LearnerController extends Controller
     public function show(User $learner): View
     {
         abort_unless(auth()->user()->can('manage org learners'), 403);
-        abort_unless($learner->organization_id === $this->orgId(), 403);
+        $this->ensureCanAccessLearner($learner);
 
         $learner->load([
             'enrollments.course.category',
@@ -101,7 +118,7 @@ class LearnerController extends Controller
     public function edit(User $learner): View
     {
         abort_unless(auth()->user()->can('manage org learners'), 403);
-        abort_unless($learner->organization_id === $this->orgId(), 403);
+        $this->ensureCanAccessLearner($learner);
 
         $pendidikans = Pendidikan::orderBy('level')->get();
 
@@ -111,7 +128,7 @@ class LearnerController extends Controller
     public function update(Request $request, User $learner): RedirectResponse
     {
         abort_unless(auth()->user()->can('manage org learners'), 403);
-        abort_unless($learner->organization_id === $this->orgId(), 403);
+        $this->ensureCanAccessLearner($learner);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -143,7 +160,7 @@ class LearnerController extends Controller
     public function destroy(User $learner): RedirectResponse
     {
         abort_unless(auth()->user()->can('manage org learners'), 403);
-        abort_unless($learner->organization_id === $this->orgId(), 403);
+        $this->ensureCanAccessLearner($learner);
         abort_unless($learner->id !== auth()->id(), 403);
 
         $learner->delete();
@@ -155,7 +172,7 @@ class LearnerController extends Controller
     public function restore(User $learner): RedirectResponse
     {
         abort_unless(auth()->user()->can('manage org learners'), 403);
-        abort_unless($learner->organization_id === $this->orgId(), 403);
+        $this->ensureCanAccessLearner($learner);
 
         $learner->restore();
 

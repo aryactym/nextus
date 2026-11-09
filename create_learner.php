@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Domain\Organization\Models\Organization;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 $org = Organization::first();

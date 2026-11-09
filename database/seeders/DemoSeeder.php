@@ -53,7 +53,7 @@ class DemoSeeder extends Seeder
         foreach ($courses as $index => $row) {
             [$title, $slug, $categorySlug, $level, $minutes, $access, $cert, $summary] = $row;
 
-            $course = Course::withoutGlobalScope('organization')->firstOrCreate(
+            $course = Course::withoutGlobalScopes()->withTrashed()->firstOrCreate(
                 ['slug' => $slug, 'organization_id' => $organization->id],
                 [
                     'category_id' => $categories[$categorySlug]->id,

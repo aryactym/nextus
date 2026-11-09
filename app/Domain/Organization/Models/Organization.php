@@ -2,6 +2,7 @@
 
 namespace App\Domain\Organization\Models;
 
+use App\Models\User;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

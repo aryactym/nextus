@@ -30,8 +30,11 @@
     $ukuranKursus  = $panjangKursus > 70 ? 14 : ($panjangKursus > 48 ? 17 : 20);
 
     $logoPath = public_path('images/logo-nextus.png');
-    $logoUrl = asset('images/logo-nextus.png');
     $hasLogo = is_file($logoPath);
+    // Embed sebagai data URI agar logo tetap tampil di PDF (dompdf tidak memuat URL remote).
+    $logoUrl = $hasLogo
+        ? 'data:image/png;base64,'.base64_encode((string) file_get_contents($logoPath))
+        : null;
 @endphp
 <!doctype html>
 <html lang="id">
@@ -192,6 +195,34 @@
             color: #546663;
         }
         .verify strong { color: #0A2A28; }
+
+        /* Tombol aksi (hanya tampil di halaman web, tidak di PDF/cetak) */
+        .cert-actions {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 2.5mm;
+            text-align: center;
+        }
+        .cert-action {
+            display: inline-block;
+            margin: 0 1mm;
+            padding: 1.6mm 4mm;
+            border: 0.3mm solid #0E6B5C;
+            border-radius: 20mm;
+            background: #FFFFFF;
+            color: #0E6B5C;
+            font-size: 8.5pt;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .cert-action-primary {
+            background: #0E6B5C;
+            color: #FFFFFF;
+        }
+        @media print {
+            .cert-actions { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -261,6 +292,20 @@
         Keaslian sertifikat dapat diverifikasi di <strong>{{ url('/verifikasi') }}</strong>
         dengan memasukkan kode <strong>{{ $kode }}</strong>.
     </div>
+
+    @if ($showActions ?? false)
+        <div class="cert-actions">
+            <a href="{{ route('certificates.pdf', $kode) }}" class="cert-action cert-action-primary">
+                Unduh PDF
+            </a>
+            <a href="{{ $linkedinUrl ?? '#' }}" class="cert-action" target="_blank" rel="noopener">
+                Tambahkan ke LinkedIn
+            </a>
+            <a href="{{ route('learning.dashboard') }}" class="cert-action">
+                Kembali ke Belajar Saya
+            </a>
+        </div>
+    @endif
 
 </div>
 </body>

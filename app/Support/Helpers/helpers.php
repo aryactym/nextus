@@ -10,8 +10,11 @@ if (! function_exists('organization_id')) {
      */
     function organization_id(): ?int
     {
-        // Gunakan org dari user yang sedang login
-        if (auth()->check()) {
+        // Jangan panggil auth()->check()/user() di sini: scope global User memanggil
+        // helper ini, sehingga resolusi user (retrieveById) akan memicunya lagi
+        // dan berujung rekursi tak berujung / memory exhausted.
+        // hasUser() hanya mengecek apakah user sudah di-resolve, tanpa query baru.
+        if (auth()->hasUser()) {
             return (int) auth()->user()->organization_id;
         }
 

@@ -23,7 +23,7 @@
                         <option value="">— Pilih organisasi —</option>
                         @foreach ($orgs as $org)
                             <option value="{{ $org->id }}"
-                                @selected((string) ($f['org_id'] ?? $orgId) === (string) $org->id)>
+                                @selected((string) ($f['org_id'] ?? $orgId ?? null) === (string) $org->id)>
                                 {{ $org->getTranslation('name', 'id') }}
                             </option>
                         @endforeach

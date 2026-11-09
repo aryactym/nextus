@@ -16,7 +16,7 @@
 </div>
 
 @include('org.reports._filter', ['routeName' => 'admin.org.reports.by-course.detail',
-    'courseUuid' => $course->uuid])
+    'courseUuid' => $course->uuid, 'orgs' => collect(), 'orgId' => $orgId])
 
 <div class="card">
     <div class="card-header">

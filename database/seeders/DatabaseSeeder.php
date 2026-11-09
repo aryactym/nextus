@@ -1,23 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Domain\Organization\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Organisasi default untuk MVP
-        $org = Organization::create([
-            'name' => 'Yayasan Filantropi Islam',
-            'slug' => 'yayasan-filantropi-islam',
-            'default_locale' => 'id',
-            'status' => 'active',
-        ]);
+        // Organisasi default — aman dijalankan berulang
+        $org = Organization::firstOrCreate(
+            ['slug' => 'yayasan-filantropi-islam'],
+            [
+                'name' => ['id' => 'Yayasan Filantropi Islam'],
+                'default_locale' => 'id',
+                'status' => 'active',
+            ]
+        );
 
         // Peran sistem
         $roles = [
@@ -30,19 +35,23 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($roles as $name => $description) {
-            Role::firstOrCreate(['name' => $name, 'guard_name' => 'web'])
-                ->description = $description;
+            Role::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }
 
-        // Super Admin awal
-        $admin = User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
-            'organization_id' => $org->id,
-            'locale' => 'id',
-        ]);
-        $admin->assignRole('Super Admin');
+        // Super Admin awal — skip bila sudah ada
+        $admin = User::withoutGlobalScopes()->firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'organization_id' => $org->id,
+                'locale' => 'id',
+            ]
+        );
+
+        if (! $admin->hasRole('Super Admin')) {
+            $admin->assignRole('Super Admin');
+        }
 
         $this->call(PermissionSeeder::class);
         $this->call(PendidikanSeeder::class);

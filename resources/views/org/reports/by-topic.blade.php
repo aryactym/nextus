@@ -17,7 +17,7 @@
 </div>
 
 @include('org.reports._tabs')
-@include('org.reports._filter', ['routeName' => 'admin.org.reports.by-topic'])
+@include('org.reports._filter', ['routeName' => 'admin.org.reports.by-topic', 'orgs' => $orgs, 'orgId' => $orgId])
 
 <div class="card">
     <div class="card-header">

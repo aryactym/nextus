@@ -11,7 +11,7 @@
 </div>
 
 @include('org.reports._tabs')
-@include('org.reports._filter', ['routeName' => 'admin.org.reports.index', 'courses' => $courses])
+@include('org.reports._filter', ['routeName' => 'admin.org.reports.index', 'courses' => $courses, 'orgs' => $orgs, 'orgId' => $orgId])
 
 {{-- Stat cards --}}
 <div class="row row-cards mb-3">
