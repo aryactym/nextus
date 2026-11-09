@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Domain\Catalog\Models\Pendidikan;
 use App\Domain\Learning\Models\Certificate;
 use App\Domain\Learning\Models\Enrollment;
+use App\Domain\Organization\Models\Organization;
 use App\Support\Traits\BelongsToOrganization;
 use App\Support\Traits\HasUuid;
 use Database\Factories\UserFactory;
