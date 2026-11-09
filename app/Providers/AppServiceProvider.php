@@ -10,6 +10,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL; // 1. Tambahkan import URL facade
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Midtrans\Config;
@@ -30,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // 2. Paksa HTTPS jika aplikasi berjalan di environment production
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         Gate::before(function ($user) {
             return $user->hasRole('Super Admin') ? true : null;
         });
