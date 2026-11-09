@@ -28,6 +28,6 @@ trait HasUuid
 
     public function resolveRouteBinding($value, $field = null): ?self
     {
-        return $this->where('uuid', $value)->first() ?? abort(404);
+        return static::withoutGlobalScopes()->where('uuid', $value)->first() ?? abort(404);
     }
 }

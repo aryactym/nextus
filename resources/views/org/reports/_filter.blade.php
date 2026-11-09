@@ -80,6 +80,26 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.7.3/dist/libs/tom-select/dist/css/tom-select.bootstrap5.min.css">
+<style>
+    /* Tom Select dropdown bisa transparan karena Tabler override --bs-body-bg */
+    .ts-dropdown {
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, .15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    }
+    .ts-dropdown .option {
+        background-color: transparent;
+    }
+    .ts-dropdown .option:hover,
+    .ts-dropdown .option.active {
+        background-color: var(--tblr-primary, #0E6B5C);
+        color: #fff;
+    }
+    .ts-dropdown .option.selected {
+        background-color: rgba(14, 107, 92, .1);
+        color: var(--tblr-primary, #0E6B5C);
+    }
+</style>
 @endpush
 
 @push('scripts')
