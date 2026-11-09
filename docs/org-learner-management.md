@@ -288,3 +288,74 @@ Jangan pernah terima `organization_id` dari request — selalu ambil dari `auth(
 - Org Admin membuat/mengedit kursus — itu tetap domain Admin/Instructor
 - Notifikasi otomatis ke peserta saat belum menyelesaikan kursus
 - Integrasi SSO/LDAP untuk import akun dari sistem HR organisasi mitra
+
+---
+
+## Appendix: Akun Demo & Data Studi Kasus
+
+### Cara menjalankan seeder
+
+```bash
+# Fresh install (semua seeder termasuk MpzSeeder)
+php artisan migrate:fresh --seed
+
+# Hanya data MPZ tanpa reset database
+php artisan db:seed --class=MpzSeeder
+```
+
+`MpzSeeder` otomatis dipanggil dari `DatabaseSeeder` sehingga sudah masuk ke flow fresh install.
+
+---
+
+### Akun demo yang tersedia
+
+Semua akun menggunakan password: **`password`**
+
+#### Platform operator
+
+| Nama | Email | Role | Organisasi |
+|---|---|---|---|
+| Super Admin | `admin@example.com` | Super Admin | Yayasan Filantropi Islam |
+
+#### MPZ Gerak Bareng — Admin Organisasi
+
+| Nama | Email | Role | Jabatan |
+|---|---|---|---|
+| Admin MPZ | `admin@mpzgerakbareng.org` | Org Admin | Koordinator Pelatihan |
+
+#### MPZ Gerak Bareng — Peserta (10 orang)
+
+| Nama | Email | Jabatan | Kategori |
+|---|---|---|---|
+| Ahmad Fauzi | `ahmad.fauzi@mpzgerakbareng.org` | Staf Program | Officer |
+| Siti Rahmawati | `siti.r@mpzgerakbareng.org` | Staf Keuangan | Officer |
+| Budi Santoso | `budi.s@mpzgerakbareng.org` | Supervisor Program | Supervisor |
+| Dewi Kusuma | `dewi.k@mpzgerakbareng.org` | Relawan Senior | Officer |
+| Hendra Wijaya | `hendra.w@mpzgerakbareng.org` | Manajer Lapangan | Manajer |
+| Fatimah Azzahra | `fatimah.a@mpzgerakbareng.org` | Staf Komunikasi | Officer |
+| Rizky Pratama | `rizky.p@mpzgerakbareng.org` | Koordinator Relawan | Supervisor |
+| Nurul Hidayah | `nurul.h@mpzgerakbareng.org` | Analis Data | Officer |
+| Andi Kurniawan | `andi.k@mpzgerakbareng.org` | Staf IT | Officer |
+| Maya Sari | `maya.s@mpzgerakbareng.org` | Direktur Program | Direktur |
+
+---
+
+### Data studi kasus yang di-seed
+
+- **73 enrollment** tersebar di 15 kursus yang tersedia
+- Setiap peserta mengikuti **4–8 kursus** secara acak
+- **~60% enrollment selesai** (completed_at terisi), sisanya in-progress (20–85%)
+- **171 quiz attempts** dengan skor 40–100 (selesai ≥70, in-progress bervariasi)
+- **Sertifikat** diterbitkan untuk semua enrollment yang selesai
+- Tanggal enrollment tersebar **30–180 hari ke belakang** dari tanggal seeder dijalankan
+
+### Skenario demo laporan
+
+| Skenario | URL |
+|---|---|
+| Laporan ringkasan MPZ | `/admin/org/reports?org_id=2` |
+| Capaian per topik MPZ | `/admin/org/reports/by-topic?org_id=2` |
+| Capaian per kursus MPZ | `/admin/org/reports/by-course?org_id=2` |
+| Capaian per peserta MPZ | `/admin/org/reports/by-learner?org_id=2` |
+| Login sebagai Org Admin MPZ | email: `admin@mpzgerakbareng.org` |
+| Manajemen peserta MPZ | `/admin/org/learners` (setelah login sebagai Org Admin) |
