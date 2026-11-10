@@ -26,11 +26,11 @@ class SecurityHeaders
         $response->headers->set(
             'Content-Security-Policy',
             "default-src 'self'; "
-            ."script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.googletagmanager.com https://connect.facebook.net https://app.sandbox.midtrans.com https://app.midtrans.com; "
+            ."script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.ckeditor.com https://www.googletagmanager.com https://connect.facebook.net https://app.sandbox.midtrans.com https://app.midtrans.com; "
             ."style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
             ."font-src 'self' https://fonts.gstatic.com data:; "
             ."img-src 'self' data: https:; "
-            ."connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://app.sandbox.midtrans.com https://app.midtrans.com https://cdn.jsdelivr.net; "
+            ."connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://app.sandbox.midtrans.com https://app.midtrans.com https://cdn.jsdelivr.net https://cdn.ckeditor.com; "
             ."frame-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com https://www.youtube.com https://www.youtube-nocookie.com; "
             ."frame-ancestors 'self';"
         );
