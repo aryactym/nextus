@@ -12,7 +12,7 @@
         <link rel="icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($favicon) }}">
         <link rel="apple-touch-icon" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($favicon) }}">
     @else
-        <link rel="icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" href="{{ asset('images/favicon.ico') }}">
     @endif
 
     {{-- NextUs brand: Plus Jakarta Sans --}}
@@ -486,6 +486,9 @@
                     </div>
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         <div class="text-secondary">© {{ date('Y') }} {{ config('app.name') }}</div>
+                        <img src="{{ asset('images/nextus-poweredby-dompetdhuafaorg.webp') }}"
+                             alt="Powered by Dompet Dhuafa"
+                             style="height: 2rem; margin-top: 0.5rem;">
                     </div>
                 </div>
             </div>
