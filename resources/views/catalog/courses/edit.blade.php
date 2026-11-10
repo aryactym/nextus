@@ -138,6 +138,9 @@
                 <div class="card-header">
                     <h3 class="card-title">Modul &amp; pelajaran</h3>
                     <div class="card-actions">
+                        <a href="{{ route('admin.quiz.template.download') }}" class="btn btn-sm btn-outline-secondary">
+                            Download Template Soal (Excel)
+                        </a>
                         <span class="badge bg-secondary-lt">{{ $course->modules->count() }} modul</span>
                     </div>
                 </div>
@@ -268,6 +271,15 @@
                                                 </select>
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-sm">Tambah soal</button>
+                                        </form>
+                                    </div>
+
+                                    {{-- Import Excel --}}
+                                    <div class="mt-2">
+                                        <form action="{{ route('admin.modules.quiz.import', [$module, $testType]) }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+                                            @csrf
+                                            <input type="file" name="file" class="form-control form-control-sm" accept=".xlsx,.xls,.csv" required style="max-width: 300px;">
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">Import Excel</button>
                                         </form>
                                     </div>
                                 </div>
@@ -489,6 +501,15 @@
                                                             </select>
                                                         </div>
                                                         <button type="submit" class="btn btn-primary btn-sm">Tambah soal</button>
+                                                    </form>
+                                                </div>
+
+                                                {{-- Import Excel untuk kuis lesson --}}
+                                                <div class="mt-2">
+                                                    <form action="{{ route('admin.lessons.quiz.import', $lesson) }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+                                                        @csrf
+                                                        <input type="file" name="file" class="form-control form-control-sm" accept=".xlsx,.xls,.csv" required style="max-width: 300px;">
+                                                        <button type="submit" class="btn btn-sm btn-outline-primary">Import Excel</button>
                                                     </form>
                                                 </div>
                                             </div>

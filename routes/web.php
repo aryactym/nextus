@@ -13,6 +13,7 @@ use App\Domain\Catalog\Http\Controllers\MediaController;
 use App\Domain\Catalog\Http\Controllers\ModuleController;
 use App\Domain\Catalog\Http\Controllers\PublicCourseController;
 use App\Domain\Catalog\Http\Controllers\QuizController;
+use App\Domain\Catalog\Http\Controllers\QuizImportController;
 use App\Domain\Catalog\Http\Controllers\UploadController;
 use App\Domain\Catalog\Models\Course;
 use App\Domain\Learning\Http\Controllers\CertificateController;
@@ -167,6 +168,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('modules/{module}/quiz/{type}/questions', [QuizController::class, 'storeModuleQuestion'])
         ->name('modules.quiz.questions.store')
         ->where('type', 'pre|post');
+
+    // Import/Export soal via Excel
+    Route::get('quiz/template/download', [QuizImportController::class, 'downloadTemplate'])
+        ->name('quiz.template.download');
+    Route::post('modules/{module}/quiz/{type}/import', [QuizImportController::class, 'importModule'])
+        ->name('modules.quiz.import')
+        ->where('type', 'pre|post');
+    Route::post('lessons/{lesson}/quiz/import', [QuizImportController::class, 'importLesson'])
+        ->name('lessons.quiz.import');
     Route::delete('quiz-questions/{question}', [QuizController::class, 'destroyQuestion'])
         ->name('quiz-questions.destroy');
     Route::put('quiz-questions/{question}', [QuizController::class, 'updateQuestion'])
