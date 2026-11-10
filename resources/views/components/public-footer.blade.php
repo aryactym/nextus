@@ -20,6 +20,9 @@
           >
         </a>
         <p class="mt-3">Belajar filantropi Islam untuk orang muda.<br>Ilmu baik, diteruskan.</p>
+        <img src="{{ asset('images/nextus-poweredby-dompetdhuafaorg.webp') }}"
+             alt="Powered by Dompet Dhuafa"
+             style="height: 2rem; margin-top: 0.75rem; border-radius: 0.5rem;">
       </div>
 
       {{-- Kolom 2: Tentang --}}
@@ -74,11 +77,6 @@
     </div>
 
     <div class="legal">&copy; {{ date('Y') }} {{ config('app.name') }}. Seluruh hak dilindungi.</div>
-    <div class="text-center mt-3">
-      <img src="{{ asset('images/nextus-poweredby-dompetdhuafaorg.webp') }}"
-           alt="Powered by Dompet Dhuafa"
-           style="height: 2rem; border-radius: 0.5rem;">
-    </div>
   </div>
 </footer>
 
