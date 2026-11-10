@@ -176,6 +176,13 @@
                     </h3>
                     <div id="module-{{ $module->id }}" class="accordion-collapse collapse{{ $loop->first ? ' show' : '' }}" data-bs-parent="#kurikulum">
                       <div class="accordion-body">
+                        @if ($module->preTest && $module->preTest->questions->isNotEmpty())
+                          <div class="mb-2">
+                            <a class="btn btn-sm btn-outline-primary" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('module.pretest', ['course' => $course->slug, 'module' => $module->uuid])) }}">
+                              Pre-test: {{ $module->getTranslation('title', $locale) }}
+                            </a>
+                          </div>
+                        @endif
                         <ul class="lessons">
                           @foreach ($module->lessons as $lesson)
                             @php $locked = ! $isEnrolled && ! $lesson->is_preview; @endphp
@@ -209,6 +216,13 @@
                             </li>
                           @endforeach
                         </ul>
+                        @if ($module->postTest && $module->postTest->questions->isNotEmpty())
+                          <div class="mt-2">
+                            <a class="btn btn-sm btn-outline-primary" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('module.posttest', ['course' => $course->slug, 'module' => $module->uuid])) }}">
+                              Post-test: {{ $module->getTranslation('title', $locale) }}
+                            </a>
+                          </div>
+                        @endif
                       </div>
                     </div>
                   </div>
