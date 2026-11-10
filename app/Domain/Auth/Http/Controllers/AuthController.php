@@ -17,11 +17,7 @@ class AuthController extends Controller
 {
     public function login()
     {
-        $a = random_int(1, 9);
-        $b = random_int(1, 9);
-        session(['login_captcha_answer' => $a + $b]);
-
-        return view('auth.login', compact('a', 'b'));
+        return view('auth.login');
     }
 
     public function authenticate(Request $request)
@@ -29,12 +25,12 @@ class AuthController extends Controller
         $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
-            'captcha' => ['required', 'integer'],
+            'captcha' => ['required', 'string', 'max:12'],
         ]);
 
-        if ((int) $request->input('captcha') !== (int) session('login_captcha_answer')) {
+        if (! $this->verifyCaptcha((string) $request->input('captcha'))) {
             return back()->withErrors([
-                'captcha' => 'Jawaban verifikasi salah.',
+                'captcha' => 'Kode verifikasi salah atau kedaluwarsa. Muat ulang gambar lalu coba lagi.',
             ])->onlyInput('email');
         }
 
@@ -71,10 +67,17 @@ class AuthController extends Controller
             'nama_organisasi' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'terms' => ['accepted'],
+            'captcha' => ['required', 'string', 'max:12'],
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
+        }
+
+        if (! $this->verifyCaptcha((string) $request->input('captcha'))) {
+            return back()->withErrors([
+                'captcha' => 'Kode verifikasi salah atau kedaluwarsa. Muat ulang gambar lalu coba lagi.',
+            ])->withInput();
         }
 
         $user = User::create([
@@ -103,5 +106,25 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
+    }
+
+    /**
+     * Verifikasi kode CAPTCHA GD dari session: case-insensitive, berlaku sekali pakai,
+     * dan kedaluwarsa sesuai batas waktu di CaptchaController.
+     *
+     * @param  string  $input  jawaban yang dikirim pengguna
+     */
+    private function verifyCaptcha(string $input): bool
+    {
+        $code = session('captcha_code');
+        $expiresAt = session('captcha_expires_at');
+
+        // Kode hanya berlaku untuk satu kali percobaan agar tidak bisa di-brute force.
+        session()->forget(['captcha_code', 'captcha_expires_at']);
+
+        return $code !== null
+            && $expiresAt !== null
+            && $expiresAt >= now()->getTimestamp()
+            && hash_equals(strtoupper($code), strtoupper(trim($input)));
     }
 }

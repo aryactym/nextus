@@ -181,6 +181,8 @@
                 @enderror
               </div>
 
+              <x-captcha-field />
+
               <button class="btn btn-primary btn-submit" type="submit">Buat akun</button>
             </form>
 

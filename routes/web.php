@@ -4,6 +4,7 @@ use App\Domain\Admin\Http\Controllers\PageController;
 use App\Domain\Admin\Http\Controllers\PublicPageController;
 use App\Domain\Admin\Http\Controllers\UserController;
 use App\Domain\Auth\Http\Controllers\AuthController;
+use App\Domain\Auth\Http\Controllers\CaptchaController;
 use App\Domain\Catalog\Http\Controllers\CategoryController;
 use App\Domain\Catalog\Http\Controllers\CourseController;
 use App\Domain\Catalog\Http\Controllers\CourseRequirementController;
@@ -87,6 +88,8 @@ Route::get('/bayar/{order}', [PaymentController::class, 'show'])
 Route::post('/webhooks/midtrans', [WebhookController::class, 'handle'])
     ->name('webhooks.midtrans');
 
+Route::get('/captcha', [CaptchaController::class, 'image'])
+    ->name('captcha.image')->middleware('throttle:captcha');
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'authenticate'])

@@ -69,18 +69,7 @@
                 <a href="#">Lupa kata sandi?</a>
               </div>
 
-              <div class="mb-3">
-                <label class="form-label" for="captcha">Verifikasi: berapa {{ $a ?? 0 }} + {{ $b ?? 0 }}?</label>
-                <input
-                  class="form-control @error('captcha') is-invalid @enderror"
-                  id="captcha" name="captcha" type="number"
-                  inputmode="numeric"
-                  required
-                >
-                @error('captcha')
-                  <div class="field-error" style="display:block">{{ $message }}</div>
-                @enderror
-              </div>
+              <x-captcha-field />
 
               <button class="btn btn-primary btn-submit" type="submit">Masuk</button>
             </form>
