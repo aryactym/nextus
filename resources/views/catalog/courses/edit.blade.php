@@ -189,6 +189,81 @@
                                 </form>
                             </div>
 
+                            {{-- Pre-test & Post-test per modul --}}
+                            @foreach (['pre' => 'Pre-test', 'post' => 'Post-test'] as $testType => $testLabel)
+                                @php
+                                    $testQuiz = $testType === 'pre' ? $module->preTest : $module->postTest;
+                                    $testQuestions = $testQuiz?->questions ?? collect();
+                                @endphp
+                                <div class="border rounded p-3 mb-3 bg-light">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="mb-0">{{ $testLabel }} ({{ $testQuestions->count() }} soal)</h5>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#{{ $testType }}-form-{{ $module->uuid }}"
+                                                aria-expanded="false" aria-controls="{{ $testType }}-form-{{ $module->uuid }}">
+                                            Tambah soal
+                                        </button>
+                                    </div>
+
+                                    @forelse ($testQuestions as $question)
+                                        <div class="border rounded p-2 mb-2 bg-white">
+                                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                                <div>
+                                                    <strong>{{ $question->question }}</strong>
+                                                    <ol class="mb-0 small mt-1">
+                                                        @foreach ($question->options as $optionIndex => $option)
+                                                            <li class="{{ $optionIndex === $question->correct_index ? 'text-success fw-bold' : '' }}">
+                                                                {{ $option }}
+                                                                @if ($optionIndex === $question->correct_index)
+                                                                    (benar)
+                                                                @endif
+                                                            </li>
+                                                        @endforeach
+                                                    </ol>
+                                                </div>
+                                                <form action="{{ route('admin.quiz-questions.destroy', $question) }}" method="POST"
+                                                      onsubmit="return confirm('Hapus soal ini?')" style="display:inline;">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <p class="text-secondary small mb-2">Belum ada soal. Klik "Tambah soal" untuk menambahkan.</p>
+                                    @endforelse
+
+                                    <div class="collapse mt-2" id="{{ $testType }}-form-{{ $module->uuid }}">
+                                        <form action="{{ route('admin.modules.quiz.questions.store', [$module, $testType]) }}" method="POST" class="row g-2">
+                                            @csrf
+                                            <div class="col-12">
+                                                <label class="form-label" for="{{ $testType }}-question-{{ $module->uuid }}">Pertanyaan</label>
+                                                <textarea id="{{ $testType }}-question-{{ $module->uuid }}" name="question" class="form-control" rows="2" required></textarea>
+                                            </div>
+                                            <div class="row g-2 mb-2">
+                                                @for ($optionIndex = 0; $optionIndex < 4; $optionIndex++)
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="{{ $testType }}-option-{{ $module->uuid }}-{{ $optionIndex }}">
+                                                            Pilihan {{ $optionIndex + 1 }}
+                                                        </label>
+                                                        <input type="text" id="{{ $testType }}-option-{{ $module->uuid }}-{{ $optionIndex }}"
+                                                               name="options[{{ $optionIndex }}]" class="form-control" required>
+                                                    </div>
+                                                @endfor
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="{{ $testType }}-correct-{{ $module->uuid }}">Jawaban benar</label>
+                                                <select id="{{ $testType }}-correct-{{ $module->uuid }}" name="correct_index" class="form-select">
+                                                    @for ($optionIndex = 0; $optionIndex < 4; $optionIndex++)
+                                                        <option value="{{ $optionIndex }}">Pilihan {{ $optionIndex + 1 }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-sm">Tambah soal</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+
                             @if ($module->lessons->isNotEmpty())
                                 <div class="list-group list-group-flush my-3">
                                     @foreach ($module->lessons as $lesson)

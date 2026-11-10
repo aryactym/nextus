@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Catalog\Http\Controllers;
 
+use App\Domain\Catalog\Models\CourseModule;
 use App\Domain\Catalog\Models\Lesson;
 use App\Domain\Learning\Models\Quiz;
 use App\Domain\Learning\Models\QuizQuestion;
@@ -52,11 +53,11 @@ class QuizController extends Controller
             ->with('success', 'Soal kuis berhasil ditambahkan.');
     }
 
-    public function storeModuleQuestion(Request $request, \App\Domain\Catalog\Models\CourseModule $module, string $type): RedirectResponse
+    public function storeModuleQuestion(Request $request, CourseModule $module, string $type): RedirectResponse
     {
         abort_unless($request->user()->can('manage courses'), 403);
 
-        $module = \App\Domain\Catalog\Models\CourseModule::query()
+        $module = CourseModule::query()
             ->whereHas('course', fn (Builder $query) => $query->forOrganization())
             ->findOrFail($module->getKey());
 
@@ -90,15 +91,22 @@ class QuizController extends Controller
 
         return redirect()
             ->route('admin.courses.edit', $module->course)
-            ->with('success', 'Soal ' . ($type === 'pre' ? 'pre-test' : 'post-test') . ' berhasil ditambahkan.');
+            ->with('success', 'Soal '.($type === 'pre' ? 'pre-test' : 'post-test').' berhasil ditambahkan.');
     }
 
     public function updateQuestion(Request $request, QuizQuestion $question): RedirectResponse
     {
         abort_unless($request->user()->can('manage courses'), 403);
 
-        $question->load('quiz.lesson.module.course');
-        $course = $question->quiz->lesson->module->course;
+        $question->load('quiz');
+
+        if ($question->quiz->lesson_id) {
+            $question->quiz->load('lesson.module.course');
+            $course = $question->quiz->lesson->module->course;
+        } else {
+            $question->quiz->load('module.course');
+            $course = $question->quiz->module->course;
+        }
 
         abort_unless($course->organization_id === organization_id(), 404);
 
@@ -152,8 +160,15 @@ class QuizController extends Controller
     {
         abort_unless(auth()->user()->can('manage courses'), 403);
 
-        $question->load('quiz.lesson.module.course');
-        $course = $question->quiz->lesson->module->course;
+        $question->load('quiz');
+
+        if ($question->quiz->lesson_id) {
+            $question->quiz->load('lesson.module.course');
+            $course = $question->quiz->lesson->module->course;
+        } else {
+            $question->quiz->load('module.course');
+            $course = $question->quiz->module->course;
+        }
 
         abort_unless($course->organization_id === organization_id(), 404);
 
@@ -161,6 +176,6 @@ class QuizController extends Controller
 
         return redirect()
             ->route('admin.courses.edit', $course)
-            ->with('success', 'Soal kuis berhasil dihapus.');
+            ->with('success', 'Soal berhasil dihapus.');
     }
 }
