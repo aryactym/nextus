@@ -21,7 +21,7 @@
     $editorId = 'rich-editor-'.str()->uuid();
 @endphp
 
-<div class="rich-editor" style="--rich-editor-min-height: {{ $rows * 1.5 }}rem">
+<div class="rich-editor ck-editor__main" style="--rich-editor-min-height: {{ $rows * 1.5 }}rem">
     @if ($label)
         <label class="form-label" for="{{ $editorId }}">{{ $label }}</label>
     @endif
@@ -34,7 +34,7 @@
         class="form-control @error($name) is-invalid @enderror"
         data-ckeditor
         @if ($required) required @endif
-    >{{ $value }}</textarea>
+    >{!! $value !!}</textarea>
 
     @error($name)
         <div class="invalid-feedback d-block">{{ $message }}</div>
