@@ -69,6 +69,19 @@ class CategoryController extends Controller
             ->with('success', 'Kategori berhasil diperbarui.');
     }
 
+    public function show(Category $category)
+    {
+        abort_unless(auth()->user()->can('manage categories'), 403);
+
+        $categories = Category::forOrganization()->orderBy('sort')->get();
+        $coursesInCategory = $category->courses()->withoutGlobalScope('organization')
+            ->where('status', 'published')
+            ->orderBy('title')
+            ->get();
+
+        return view('catalog.categories.show', compact('category', 'categories', 'coursesInCategory'));
+    }
+
     public function destroy(Category $category)
     {
         abort_unless(auth()->user()->can('manage categories'), 403);

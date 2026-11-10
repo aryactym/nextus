@@ -23,6 +23,7 @@ class CourseController extends Controller
             'status' => (string) $request->input('status', ''),
             'access_type' => (string) $request->input('access_type', ''),
             'category' => (string) $request->input('category', ''),
+            'level' => (string) $request->input('level', ''),
         ];
 
         $categories = Category::forOrganization()->orderBy('sort')->get();
@@ -39,6 +40,7 @@ class CourseController extends Controller
             ->when($filters['status'] !== '', fn ($query) => $query->where('status', $filters['status']))
             ->when($filters['access_type'] !== '', fn ($query) => $query->where('access_type', $filters['access_type']))
             ->when($filters['category'] !== '', fn ($query) => $query->where('category_id', $filters['category']))
+            ->when($filters['level'] !== '', fn ($query) => $query->where('level', $filters['level']))
             ->latest()
             ->paginate(10)
             ->withQueryString();

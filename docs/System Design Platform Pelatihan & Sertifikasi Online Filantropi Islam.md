@@ -118,6 +118,8 @@ Semua tabel memakai `id` BIGINT internal + `uuid` publik, timestamps, soft delet
 | `users` | name, email, password, locale, linkedin\_url (opsional), email\_verified\_at |
 | `categories` | name (JSON), slug (JSON), sort |
 | `courses` | title, summary, description (JSON), slug, category\_id, level, duration\_minutes, thumbnail, access\_type, certificate\_type, min\_amount, suggested\_amounts, passing\_grade, status (draft/published/archived), published\_at, created\_by |
+| `course_requirements` | `prerequisite_course_id` (single course prerequisite), `prerequisite_category_id` (wajib selesai semua course di kategori tertentu), `min_grade`, `pendidikan_id`, `min_age`, `max_age`, `notes` |
+| `course_requirements` | `prerequisite_course_id` (course prasyarat tunggal), `prerequisite_category_id` (wajib selesai semua kursus di kategori tertentu), `min_grade`, `pendidikan_id`, `min_age`, `max_age`, `notes` |
 | `course_modules` | course\_id, title (JSON), sort |
 | `lessons` | module\_id, title (JSON), type (video/text/pdf/quiz), content (JSON), video\_url, duration, is\_preview, sort |
 | `enrollments` | user\_id, course\_id, status (active/completed), progress\_percent, enrolled\_at, completed\_at, order\_id (nullable) |
@@ -144,7 +146,11 @@ Semua tabel memakai `id` BIGINT internal + `uuid` publik, timestamps, soft delet
 
 1. Selesaikan pelajaran (progres tersimpan otomatis), lalu kuis akhir.
 2. Skor di atas passing grade dan semua pelajaran wajib selesai: enrollment `completed`.
-3. Sistem cek `certificate_type`:
+3. **Sistem cek requirement prerequisite** (mulai S6 stabilisasi):
+   - Jika course punya `prerequisite_course_id`: user harus lulus course prasyarat tersebut (dengan nilai minimal jika ada).
+   - Jika course punya `prerequisite_category_id`: user harus menyelesaikan **semua** kursus di kategori prasyarat tersebut sebelum bisa daftar.
+   - Jika ada `pendidikan_id`: user harus memiliki pendidikan level minimal.
+4. Sistem cek `certificate_type`:
    - `free`: sertifikat langsung dibuat (job queue).
    - `donation`/`paid`: sertifikat `pending_payment`, tampilkan CTA donasi/bayar, terbit setelah settlement.
 

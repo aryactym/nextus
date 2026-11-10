@@ -23,7 +23,7 @@ class EnrollmentController extends Controller
         $course = Course::withoutGlobalScope('organization')
             ->where('slug', $slug)
             ->where('status', 'published')
-            ->with('requirement.prerequisiteCourse', 'requirement.pendidikan')
+            ->with('requirement.prerequisiteCourse', 'requirement.pendidikan', 'requirement.prerequisiteCategory')
             ->firstOrFail();
 
         $requirementError = $this->checkRequirements($request->user(), $course);
@@ -134,6 +134,14 @@ class EnrollmentController extends Controller
                     return 'Anda harus mencapai nilai minimal '.$requirement->min_grade.' pada kursus '.$requirement->prerequisiteCourse->getTranslation('title', 'id').'.';
                 }
             }
+        }
+
+        // Cek prerequisite kategori (wajib selesai semua kursus di kategori tertentu)
+        $categoryCheck = $requirement->checkUserCompletedPrerequisiteCategory($user);
+        if ($categoryCheck === false) {
+            $prereqCategoryName = $requirement->prerequisiteCategory?->name ?? 'kategori';
+
+            return 'Anda harus telah menyelesaikan semua kursus di kategori '.$prereqCategoryName.' terlebih dahulu.';
         }
 
         return null;

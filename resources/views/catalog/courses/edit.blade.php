@@ -86,9 +86,18 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="level">Level</label>
-                            <input type="text" id="level" name="level"
-                                   class="form-control @error('level') is-invalid @enderror"
-                                   value="{{ old('level', $course->level) }}" placeholder="beginner" required>
+                            <select id="level" name="level"
+                                    class="form-select">
+                                <option value="beginner" {{ old('level') == 'beginner' ? 'selected' : '' }}>
+                                    Beginner
+                                </option>
+                                <option value="intermediate" {{ old('level') == 'intermediate' ? 'selected' : '' }}>
+                                    Intermediate
+                                </option>
+                                <option value="advanced" {{ old('level') == 'advanced' ? 'selected' : '' }}>
+                                    Advanced
+                                </option>
+                            </select>
                             @error('level')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -609,6 +618,24 @@
                             </select>
 
 
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label" for="prerequisite_category_id">Kategori prasyarat</label>
+                            <select id="prerequisite_category_id" name="prerequisite_category_id"
+                                    class="form-select">
+                                <option value="">Tidak ada kategori prasyarat</option>
+                                @foreach (\App\Domain\Catalog\Models\Category::withoutGlobalScope('organization')
+                                    ->orderBy('name')
+                                    ->get() as $category)
+                                <option value="{{ $category->id }}"
+                                    @selected(optional($course->requirement)?->prerequisite_category_id === $category->id)">
+                                    {{ $category->getTranslation('name', 'id') }}
+                                </option>
+                                @endforeach
+                            </select>
+                            <div class="form-hint">Peserta harus menyelesaikan semua kursus di kategori ini terlebih dahulu.</div>
                         </div>
 
                         <div class="mb-3">

@@ -61,6 +61,7 @@
                     <td class="text-end">
                         <div class="btn-list justify-content-end flex-nowrap">
                             <a href="{{ route('admin.categories.edit', $category->uuid) }}" class="btn btn-sm btn-outline-primary">Ubah</a>
+                            <a href="{{ route('admin.categories.show', $category->uuid) }}" class="btn btn-sm btn-outline-secondary">Lihat detail</a>
                             <form action="{{ route('admin.categories.destroy', $category->uuid) }}" method="POST" class="d-inline">
                                 @csrf @method('DELETE')
                                 <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus kategori ini?')">Hapus</button>

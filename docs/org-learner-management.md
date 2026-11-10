@@ -134,6 +134,7 @@ Stat cards di bagian atas:
 | Kursus diselesaikan | `COUNT(enrollments) WHERE completed_at NOT NULL` |
 | Sertifikat diterbitkan | `COUNT(certificates) JOIN users org` |
 | Rata-rata progres | `AVG(enrollments.progress_percent)` |
+| **Peserta yang terpenuhi requirement** | `COUNT(enrollments) WHERE requirement_status = 'fulfilled'` |
 
 Filter periode (Litepicker date range, sudah ada di project) + filter kursus (Tom Select, juga sudah ada).
 

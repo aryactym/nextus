@@ -31,6 +31,7 @@ class CourseRequirementController extends Controller
 
         $data = $request->validate([
             'prerequisite_course_id' => ['nullable', 'exists:courses,id'],
+            'prerequisite_category_id' => ['nullable', 'exists:categories,id'],
             'min_grade' => ['nullable', 'integer', 'min:0', 'max:100'],
             'pendidikan_id' => ['nullable', 'exists:pendidikans,id'],
             'min_age' => ['nullable', 'integer', 'min:1', 'max:150'],

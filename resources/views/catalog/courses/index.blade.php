@@ -56,6 +56,14 @@
                     <option value="paid" @selected($filters['access_type'] === 'paid')>Berbayar</option>
                 </select>
             </div>
+            <div class="col-12 col-md-2">
+                <select name="level" class="form-select" aria-label="Filter level">
+                    <option value="">Semua level</option>
+                    <option value="beginner" @selected($filters['level'] === 'beginner')>Beginner</option>
+                    <option value="intermediate" @selected($filters['level'] === 'intermediate')>Intermediate</option>
+                    <option value="advanced" @selected($filters['level'] === 'advanced')>Advanced</option>
+                </select>
+            </div>
             <div class="col-12 col-md-auto d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Terapkan</button>
                 @if (implode('', $filters) !== '')
@@ -70,7 +78,7 @@
                 <tr>
                     <th class="w-1">#</th>
                     <th>Judul (ID)</th>
-                    <th>Kategori</th>
+                    <th>Level</th>
                     <th>Akses</th>
                     <th>Sertifikat</th>
                     <th>Status</th>
@@ -91,7 +99,17 @@
                             {{ $course->getTranslation('title', 'id') }}
                         </a>
                     </td>
-                    <td>{{ $course->category?->getTranslation('name', 'id') ?? '-' }}</td>
+                    <td>
+                    @if($course->level === 'beginner')
+                        <span class="badge bg-success text-white">Beginner</span>
+                    @elseif($course->level === 'intermediate')
+                        <span class="badge bg-warning text-white">Intermediate</span>
+                    @elseif($course->level === 'advanced')
+                        <span class="badge bg-primary text-white">Advanced</span>
+                    @else
+                        <span class="badge bg-secondary text-white">{{ $course->level }}</span>
+                    @endif
+                </td>
                     <td>{{ $accessLabels[$course->access_type] ?? $course->access_type }}</td>
                     <td>{{ $accessLabels[$course->certificate_type] ?? $course->certificate_type }}</td>
                     <td>

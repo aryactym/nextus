@@ -128,7 +128,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('pages/{page}/edit', [PageController::class, 'edit'])->name('pages.edit');
     Route::put('pages/{page}', [PageController::class, 'update'])->name('pages.update');
 
-    Route::resource('categories', CategoryController::class)->except(['show']);
+    Route::resource('categories', CategoryController::class);
     Route::resource('courses', CourseController::class);
     Route::put('courses/{course}/requirement', [CourseRequirementController::class, 'update'])
         ->name('courses.requirement.update');
