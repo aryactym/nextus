@@ -217,7 +217,8 @@
                                             {{-- Lesson edit form (separate, not nested in course form) --}}
                                             <div class="collapse mt-3" id="lesson-edit-{{ $lesson->uuid }}">
                                                 <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST" enctype="multipart/form-data" class="row g-2"
-                                                      x-data="{ showEn: {{ $lesson->getTranslation('content', 'en') ? 'true' : 'false' }} }">
+                                                      x-data="{ showEn: {{ $lesson->getTranslation('content', 'en') ? 'true' : 'false' }} }"
+                                                      @change="showEn = $event.target.checked">
                                                     @csrf @method('PUT')
                                                     <div class="col-md-5">
                                                         <label class="form-label" for="lesson-title-{{ $lesson->uuid }}">Judul (Indonesia)</label>
@@ -260,7 +261,7 @@
                                                         <input type="url" id="lesson-video-{{ $lesson->uuid }}" name="video_url"
                                                                class="form-control" value="{{ $lesson->video_url }}" placeholder="https://...">
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <label class="form-label" for="lesson-file-{{ $lesson->uuid }}">File PDF</label>
                                                         <input type="file" id="lesson-file-{{ $lesson->uuid }}" name="file"
                                                                class="form-control" accept="application/pdf">
@@ -268,7 +269,7 @@
                                                             <div class="form-hint">File saat ini: {{ basename($lesson->file_path) }}. Kosongkan jika tidak diubah.</div>
                                                         @endif
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <label class="form-label" for="lesson-duration-{{ $lesson->uuid }}">Durasi</label>
                                                         <div class="input-group">
                                                             <input type="number" id="lesson-duration-{{ $lesson->uuid }}" name="duration"
@@ -276,7 +277,7 @@
                                                             <span class="input-group-text">mnt</span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <label class="form-label" for="lesson-sort-{{ $lesson->uuid }}">Urutan</label>
                                                         <input type="number" id="lesson-sort-{{ $lesson->uuid }}" name="sort"
                                                                class="form-control" value="{{ $lesson->sort }}" min="0">
@@ -458,11 +459,11 @@
                                             <label class="form-label">URL video</label>
                                             <input type="url" name="video_url" class="form-control" placeholder="https://...">
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <label class="form-label">File PDF</label>
                                             <input type="file" name="file" class="form-control" accept="application/pdf">
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label class="form-label">Durasi</label>
                                             <div class="input-group">
                                                 <input type="number" name="duration" class="form-control" min="0" placeholder="0">
