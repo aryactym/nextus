@@ -247,7 +247,7 @@
                                                                   class="form-control">{{ $lesson->getTranslation('content', 'en') }}</textarea>
                                                     </div>
                                                     <x-hugerte
-                                                        :selectors="['#lesson-content-{{ $lesson->uuid }}', '#lesson-content-en-{{ $lesson->uuid }}']"
+                                                        :selectors="['#lesson-content-' . $lesson->uuid, '#lesson-content-en-' . $lesson->uuid]"
                                                     />
                                                     <div class="col-md-6">
                                                         <label class="form-label" for="lesson-video-{{ $lesson->uuid }}">URL video</label>
@@ -448,7 +448,7 @@
                                                       placeholder="Lesson content"></textarea>
                                         </div>
                                         <x-hugerte
-                                            :selectors="['#lesson-content-new-{{ $module->uuid }}-id', '#lesson-content-new-{{ $module->uuid }}-en']"
+                                            :selectors="['#lesson-content-new-' . $module->uuid . '-id', '#lesson-content-new-' . $module->uuid . '-en']"
                                         />
                                         <div class="col-md-6">
                                             <label class="form-label">URL video</label>
