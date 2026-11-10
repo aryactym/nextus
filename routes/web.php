@@ -48,6 +48,9 @@ Route::group([
     Route::get('/kursus/{slug}', [PublicCourseController::class, 'show'])->name('catalog.show');
     Route::post('/kursus/{slug}/daftar', [EnrollmentController::class, 'store'])
         ->middleware('auth', 'throttle:enroll')->name('enroll.store');
+    Route::get('/kursus/{slug}/daftar', function (string $slug) {
+        return redirect()->route('catalog.show', $slug);
+    })->name('enroll.page');
     Route::get('/media/thumb/{path}', [MediaController::class, 'thumbnail'])
         ->name('media.thumbnail')->where('path', '.*');
     Route::get('/tentang', fn () => view('pages.tentang'))->name('tentang');
