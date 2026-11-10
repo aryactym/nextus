@@ -135,6 +135,25 @@ class PlayerController extends Controller
 
         $next = $this->nextIncompleteLesson($course, $lesson, $enrollment->refresh());
 
+        // Jika semua lesson di modul selesai, arahkan ke post-test modul (jika ada)
+        $module = $lesson->module;
+        $moduleLessons = $module->lessons;
+        $allComplete = $moduleLessons->every(fn ($l) => $enrollment->lessonProgress()->where('lesson_id', $l->id)->whereNotNull('completed_at')->exists());
+        if ($allComplete) {
+            $sortedModules = $course->modules->sortBy('sort')->values();
+            $idx = $sortedModules->search(fn ($m) => $m->id === $module->id);
+            $nextModule = $idx !== false ? ($sortedModules[$idx + 1] ?? null) : null;
+            if ($nextModule && $nextModule->type === 'post_test' && $nextModule->quizzes->isNotEmpty()) {
+                $quiz = $nextModule->quizzes->first();
+                $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                if (! $passed) {
+                    return redirect()->to(
+                        LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $nextModule->uuid]))
+                    );
+                }
+            }
+        }
+
         return redirect()->to(
             LaravelLocalization::getLocalizedURL(app()->getLocale(), route(
                 'player.show',
@@ -334,14 +353,45 @@ class PlayerController extends Controller
         ]);
 
         if ($type === 'pre') {
+            // Redirect ke materi pertama di modul berikutnya (atau modul ini jika ada lesson)
+            $nextLesson = $module->lessons->sortBy('sort')->first();
+            if ($nextLesson) {
+                return redirect()->to(
+                    LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $nextLesson->uuid]))
+                )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi.' : 'Nilai minimal {$passingScore}.'));
+            }
+            // Jika tidak ada lesson, cari modul berikutnya
+            $sortedModules = $course->modules->sortBy('sort')->values();
+            $idx = $sortedModules->search(fn ($m) => $m->id === $module->id);
+            $nextModule = $idx !== false ? ($sortedModules[$idx + 1] ?? null) : null;
+            if ($nextModule && $nextModule->lessons->isNotEmpty()) {
+                $firstLesson = $nextModule->lessons->sortBy('sort')->first();
+
+                return redirect()->to(
+                    LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $firstLesson->uuid]))
+                )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi.' : 'Nilai minimal {$passingScore}.'));
+            }
+
             return redirect()->to(
                 LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug))
-            )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi modul.' : 'Nilai minimal {$passingScore}.'));
+            )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi.' : 'Nilai minimal {$passingScore}.'));
         }
 
         // Post-test: sync progress to check course completion & final score
         if ($passed) {
             app(CourseProgressService::class)->sync($enrollment->refresh());
+
+            // Redirect ke modul berikutnya (atau course show jika sudah selesai)
+            $sortedModules = $course->modules->sortBy('sort')->values();
+            $idx = $sortedModules->search(fn ($m) => $m->id === $module->id);
+            $nextModule = $idx !== false ? ($sortedModules[$idx + 1] ?? null) : null;
+            if ($nextModule && $nextModule->lessons->isNotEmpty()) {
+                $firstLesson = $nextModule->lessons->sortBy('sort')->first();
+
+                return redirect()->to(
+                    LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $firstLesson->uuid]))
+                )->with('quiz_passed', "Post-test: skor {$score}. Modul selesai! Lanjutkan ke modul berikutnya.");
+            }
         }
 
         return redirect()->to(
