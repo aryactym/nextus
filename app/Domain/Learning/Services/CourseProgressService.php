@@ -7,6 +7,7 @@ namespace App\Domain\Learning\Services;
 use App\Domain\Catalog\Models\Lesson;
 use App\Domain\Learning\Models\Enrollment;
 use App\Domain\Learning\Models\LessonProgress;
+use App\Domain\Learning\Models\Quiz;
 use App\Services\GamificationService;
 use Illuminate\Support\Facades\Log;
 
@@ -32,7 +33,7 @@ class CourseProgressService
         // Cek post-test: semua post-test harus lulus
         $postTests = $enrollment->course->modules
             ->map(fn ($module) => $module->postTest)
-            ->filter()
+            ->filter(fn ($quiz) => $quiz instanceof Quiz && $quiz->exists)
             ->values();
 
         $postTestsPassed = $postTests->every(function ($quiz) use ($enrollment) {
