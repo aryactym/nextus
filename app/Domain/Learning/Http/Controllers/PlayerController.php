@@ -305,10 +305,7 @@ class PlayerController extends Controller
 
         $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
 
-        // If post-test and already passed, redirect to next module or course
-        if ($type === 'post' && $lastAttempt && $lastAttempt->passed) {
-            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug)));
-        }
+        // Jangan redirect — biarkan halaman menampilkan skor seperti pre-test
 
         return view('learning.module-test', compact('course', 'module', 'quiz', 'type', 'enrollment', 'lastAttempt', 'passingScore'));
     }

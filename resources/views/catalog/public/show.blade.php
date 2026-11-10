@@ -369,6 +369,9 @@
                     <div class="progress progress-bar-nu mb-2"><div class="progress-bar" style="width: {{ $enrollment->progress_percent }}%"></div></div>
                     <p class="text-secondary">{{ $enrollment->progress_percent }}% selesai</p>
                   @endif
+                  @if ($enrollment->final_score !== null)
+                    <p class="text-secondary">Nilai akhir: <strong>{{ $enrollment->final_score }}</strong></p>
+                  @endif
                   <a class="btn btn-primary w-100" href="{{ route('learning.dashboard') }}">Lanjutkan belajar</a>
                 @elseif ($course->access_type === 'free')
                   <form action="{{ route('enroll.store', $course->slug) }}" method="POST">
