@@ -73,6 +73,16 @@ Route::group([
         ->middleware('auth')->name('player.complete');
     Route::post('/belajar/{course}/{lesson}/kuis', [PlayerController::class, 'submitQuiz'])
         ->middleware('auth')->name('player.quiz.submit');
+
+    // ---- Pre-test & Post-test per modul ----
+    Route::get('/belajar/{course}/modul/{module}/pre-test', [PlayerController::class, 'showModuleTest'])
+        ->defaults('type', 'pre')->name('module.pretest');
+    Route::post('/belajar/{course}/modul/{module}/pre-test', [PlayerController::class, 'submitModuleTest'])
+        ->defaults('type', 'pre')->middleware('auth')->name('module.pretest.submit');
+    Route::get('/belajar/{course}/modul/{module}/post-test', [PlayerController::class, 'showModuleTest'])
+        ->defaults('type', 'post')->name('module.posttest');
+    Route::post('/belajar/{course}/modul/{module}/post-test', [PlayerController::class, 'submitModuleTest'])
+        ->defaults('type', 'post')->middleware('auth')->name('module.posttest.submit');
 });
 
 // Locale switcher untuk default locale (id) — set session lalu redirect ke /

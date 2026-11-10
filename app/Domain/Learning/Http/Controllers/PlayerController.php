@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Learning\Http\Controllers;
 
 use App\Domain\Catalog\Models\Course;
+use App\Domain\Catalog\Models\CourseModule;
 use App\Domain\Catalog\Models\Lesson;
 use App\Domain\Learning\Models\Enrollment;
 use App\Domain\Learning\Models\QuizAttempt;
@@ -32,6 +33,28 @@ class PlayerController extends Controller
             return $request->user() === null
                 ? redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('login')))
                 : redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug)));
+        }
+
+        // Pre-test wajib: redirect ke pre-test jika belum dikerjakan
+        $module = $lesson->module;
+        $preTest = $module->preTest;
+        if ($preTest && $preTest->questions->isNotEmpty() && $enrollment) {
+            $attempted = $enrollment->quizAttempts()->where('quiz_id', $preTest->id)->exists();
+            if (! $attempted) {
+                return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.pretest', ['course' => $course->slug, 'module' => $module->uuid])));
+            }
+        }
+
+        // Post-test wajib: blokir akses modul berikutnya jika post-test modul sebelumnya belum lulus
+        $previousModule = $course->modules->sortBy('sort')->values()->first(fn ($m) => $m->sort < $module->sort);
+        if ($previousModule && $enrollment) {
+            $prevPostTest = $previousModule->postTest;
+            if ($prevPostTest && $prevPostTest->questions->isNotEmpty()) {
+                $passed = $enrollment->quizAttempts()->where('quiz_id', $prevPostTest->id)->where('passed', true)->exists();
+                if (! $passed) {
+                    return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $previousModule->uuid])));
+                }
+            }
         }
 
         $completedLessonIds = $enrollment
@@ -211,6 +234,79 @@ class PlayerController extends Controller
         $target = $index === false ? null : ($ordered[$index + $offset] ?? null);
 
         return $target instanceof Lesson ? $target : null;
+    }
+
+    public function showModuleTest(Request $request, string $courseSlug, CourseModule $module, string $type): View|RedirectResponse
+    {
+        $course = $this->resolveCourse($courseSlug);
+        abort_unless($module->course_id === $course->id, 404);
+
+        $quiz = $type === 'pre' ? $module->preTest : $module->postTest;
+        abort_if(! $quiz || $quiz->questions->isEmpty(), 404);
+
+        $enrollment = $request->user()?->enrollments()->where('course_id', $course->id)->first();
+        $lastAttempt = ($enrollment && $quiz)
+            ? $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->latest()->first()
+            : null;
+
+        $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
+
+        // If post-test and already passed, redirect to next module or course
+        if ($type === 'post' && $lastAttempt && $lastAttempt->passed) {
+            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug)));
+        }
+
+        return view('learning.module-test', compact('course', 'module', 'quiz', 'type', 'enrollment', 'lastAttempt', 'passingScore'));
+    }
+
+    public function submitModuleTest(Request $request, string $courseSlug, CourseModule $module, string $type): RedirectResponse
+    {
+        $course = $this->resolveCourse($courseSlug);
+        abort_unless($module->course_id === $course->id, 404);
+
+        $quiz = $type === 'pre' ? $module->preTest : $module->postTest;
+        abort_if(! $quiz || $quiz->questions->isEmpty(), 404);
+
+        $enrollment = $request->user()->enrollments()->where('course_id', $course->id)->firstOrFail();
+
+        $validated = $request->validate([
+            'answers' => ['required', 'array'],
+            'answers.*' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $answers = $validated['answers'];
+        $correct = 0;
+
+        foreach ($quiz->questions as $question) {
+            $selected = $answers[$question->id] ?? null;
+            if ($selected !== null && (int) $selected === $question->correct_index) {
+                $correct++;
+            }
+        }
+
+        $total = $quiz->questions->count();
+        $score = $total > 0 ? (int) round($correct / $total * 100) : 0;
+        $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
+        $passed = $score >= $passingScore;
+
+        QuizAttempt::create([
+            'enrollment_id' => $enrollment->id,
+            'quiz_id' => $quiz->id,
+            'score' => $score,
+            'passed' => $passed,
+            'answers' => $answers,
+            'finished_at' => now(),
+        ]);
+
+        if ($type === 'pre') {
+            return redirect()->to(
+                LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug))
+            )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi modul.' : 'Nilai minimal {$passingScore}.'));
+        }
+
+        return redirect()->to(
+            LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug))
+        )->with($passed ? 'quiz_passed' : 'quiz_failed', "Post-test: skor {$score}. ".($passed ? 'Modul selesai!' : 'Nilai minimal {$passingScore}. Coba lagi.'));
     }
 
     private function nextIncompleteLesson(Course $course, Lesson $current, Enrollment $enrollment): ?Lesson

@@ -87,6 +87,26 @@
                 @endif
               </div>
             </div>
+
+            @if ($enrollment && $lesson->module->postTest && $lesson->module->postTest->questions->isNotEmpty())
+              @php
+                $moduleLessons = $lesson->module->lessons;
+                $allModuleComplete = $moduleLessons->every(fn ($l) => $completedLessonIds->contains($l->id));
+                $postTestPassed = $enrollment->quizAttempts()->where('quiz_id', $lesson->module->postTest->id)->where('passed', true)->exists();
+              @endphp
+              @if ($allModuleComplete && ! $postTestPassed)
+                <div class="alert alert-warning mt-3">
+                  <strong>Post-test modul:</strong> Selesaikan post-test untuk melanjutkan ke modul berikutnya.
+                  <a class="btn btn-primary btn-sm ms-2" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('module.posttest', ['course' => $course->slug, 'module' => $lesson->module->uuid])) }}">
+                    Kerjakan Post-test
+                  </a>
+                </div>
+              @elseif ($postTestPassed)
+                <div class="alert alert-success mt-3">
+                  Post-test modul lulus. ✓
+                </div>
+              @endif
+            @endif
           @endif
         </div>
 
