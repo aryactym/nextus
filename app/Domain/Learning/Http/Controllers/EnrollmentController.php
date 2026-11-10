@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Midtrans\Snap;
@@ -86,7 +87,11 @@ class EnrollmentController extends Controller
         );
 
         if ($enrollment->wasRecentlyCreated) {
-            Mail::to($request->user())->send(new EnrollmentConfirmation($enrollment));
+            try {
+                Mail::to($request->user())->send(new EnrollmentConfirmation($enrollment));
+            } catch (\Throwable $e) {
+                Log::warning('Gagal kirim email konfirmasi pendaftaran: '.$e->getMessage());
+            }
         }
 
         return redirect()

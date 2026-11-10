@@ -9,6 +9,10 @@
     $lessonTitle = $lesson->getTranslation('title', $locale);
     $content = $lesson->content ?? [];
     $textHtml = is_string($content) ? $content : ($content[$locale] ?? $content['id'] ?? '');
+    // Fallback ke bahasa Indonesia bila konten bahasa saat ini kosong / tidak diisi
+    if ($locale !== 'id' && trim((string) $textHtml) === '') {
+        $textHtml = $content['id'] ?? '';
+    }
     $percent = $totalLessons > 0 ? (int) round($completedLessonIds->count() / $totalLessons * 100) : 0;
 @endphp
 
