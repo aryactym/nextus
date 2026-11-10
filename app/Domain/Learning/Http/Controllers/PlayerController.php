@@ -304,6 +304,11 @@ class PlayerController extends Controller
             )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi modul.' : 'Nilai minimal {$passingScore}.'));
         }
 
+        // Post-test: sync progress to check course completion & final score
+        if ($passed) {
+            app(CourseProgressService::class)->sync($enrollment->refresh());
+        }
+
         return redirect()->to(
             LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug))
         )->with($passed ? 'quiz_passed' : 'quiz_failed', "Post-test: skor {$score}. ".($passed ? 'Modul selesai!' : 'Nilai minimal {$passingScore}. Coba lagi.'));

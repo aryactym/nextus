@@ -19,13 +19,14 @@ class Enrollment extends Model
 
     protected $fillable = [
         'uuid', 'user_id', 'course_id', 'order_id', 'status',
-        'progress_percent', 'enrolled_at', 'completed_at',
+        'progress_percent', 'final_score', 'enrolled_at', 'completed_at',
     ];
 
     protected $casts = [
         'enrolled_at' => 'datetime',
         'completed_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'final_score' => 'integer',
     ];
 
     public function user(): BelongsTo
