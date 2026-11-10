@@ -2,6 +2,7 @@
 
 namespace App\Domain\Catalog\Models;
 
+use App\Domain\Learning\Models\Quiz;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,12 +19,18 @@ class CourseModule extends Model
     public $translatable = ['title'];
 
     protected $fillable = [
-        'uuid', 'course_id', 'title', 'sort',
+        'uuid', 'course_id', 'title', 'type', 'sort',
     ];
 
     protected $casts = [
         'deleted_at' => 'datetime',
     ];
+
+    public const TYPE_CONTENT = 'content';
+
+    public const TYPE_PRE_TEST = 'pre_test';
+
+    public const TYPE_POST_TEST = 'post_test';
 
     public function course(): BelongsTo
     {
@@ -37,16 +44,16 @@ class CourseModule extends Model
 
     public function quizzes(): HasMany
     {
-        return $this->hasMany(\App\Domain\Learning\Models\Quiz::class, 'module_id');
+        return $this->hasMany(Quiz::class, 'module_id');
     }
 
     public function preTest(): HasOne
     {
-        return $this->hasOne(\App\Domain\Learning\Models\Quiz::class, 'module_id')->where('type', 'pre');
+        return $this->hasOne(Quiz::class, 'module_id')->where('type', 'pre');
     }
 
     public function postTest(): HasOne
     {
-        return $this->hasOne(\App\Domain\Learning\Models\Quiz::class, 'module_id')->where('type', 'post');
+        return $this->hasOne(Quiz::class, 'module_id')->where('type', 'post');
     }
 }

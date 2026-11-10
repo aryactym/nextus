@@ -88,23 +88,30 @@
               </div>
             </div>
 
-            @if ($enrollment && $lesson->module->postTest && $lesson->module->postTest->questions->isNotEmpty())
+            @if ($enrollment)
               @php
                 $moduleLessons = $lesson->module->lessons;
                 $allModuleComplete = $moduleLessons->every(fn ($l) => $completedLessonIds->contains($l->id));
-                $postTestPassed = $enrollment->quizAttempts()->where('quiz_id', $lesson->module->postTest->id)->where('passed', true)->exists();
+                // Cari post_test module setelah modul saat ini
+                $nextPostTestModule = $course->modules->sortBy('sort')->values()->first(fn ($m) => $m->sort > $lesson->module->sort && $m->type === 'post_test');
               @endphp
-              @if ($allModuleComplete && ! $postTestPassed)
-                <div class="alert alert-warning mt-3">
-                  <strong>Post-test modul:</strong> Selesaikan post-test untuk melanjutkan ke modul berikutnya.
-                  <a class="btn btn-primary btn-sm ms-2" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('module.posttest', ['course' => $course->slug, 'module' => $lesson->module->uuid])) }}">
-                    Kerjakan Post-test
-                  </a>
-                </div>
-              @elseif ($postTestPassed)
-                <div class="alert alert-success mt-3">
-                  Post-test modul lulus. ✓
-                </div>
+              @if ($nextPostTestModule && $allModuleComplete)
+                @php
+                  $ptQuiz = $nextPostTestModule->lessons->first()?->quiz;
+                  $postTestPassed = $ptQuiz ? $enrollment->quizAttempts()->where('quiz_id', $ptQuiz->id)->where('passed', true)->exists() : true;
+                @endphp
+                @if ($ptQuiz && ! $postTestPassed)
+                  <div class="alert alert-warning mt-3">
+                    <strong>Post-test:</strong> Selesaikan post-test untuk melanjutkan.
+                    <a class="btn btn-primary btn-sm ms-2" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('player.show', ['course' => $course->slug, 'lesson' => $nextPostTestModule->lessons->first()->uuid])) }}">
+                      Kerjakan Post-test
+                    </a>
+                  </div>
+                @elseif ($postTestPassed)
+                  <div class="alert alert-success mt-3">
+                    Post-test lulus. ✓
+                  </div>
+                @endif
               @endif
             @endif
           @endif

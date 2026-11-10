@@ -35,25 +35,41 @@ class PlayerController extends Controller
                 : redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug)));
         }
 
-        // Pre-test wajib: redirect ke pre-test jika belum dikerjakan
         $module = $lesson->module;
+
+        // Pre-test wajib: jika ada modul pre_test sebelum modul ini yang belum selesai, redirect
+        $sortedModules = $course->modules->sortBy('sort')->values();
+        $currentModuleIndex = $sortedModules->search(fn ($m) => $m->id === $module->id);
+        if ($currentModuleIndex !== false && $enrollment) {
+            for ($i = 0; $i < $currentModuleIndex; $i++) {
+                $prevMod = $sortedModules[$i];
+                if ($prevMod->type === 'pre_test') {
+                    $quiz = $prevMod->lessons->first()?->quiz;
+                    if ($quiz && $quiz->questions->isNotEmpty()) {
+                        $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                        if (! $passed) {
+                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.pretest', ['course' => $course->slug, 'module' => $prevMod->uuid])));
+                        }
+                    }
+                }
+                if ($prevMod->type === 'post_test') {
+                    $quiz = $prevMod->lessons->first()?->quiz;
+                    if ($quiz && $quiz->questions->isNotEmpty()) {
+                        $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                        if (! $passed) {
+                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $prevMod->uuid])));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Backward compat: quiz-on-module pre-test/post-test
         $preTest = $module->preTest;
         if ($preTest && $preTest->questions->isNotEmpty() && $enrollment) {
             $attempted = $enrollment->quizAttempts()->where('quiz_id', $preTest->id)->exists();
             if (! $attempted) {
                 return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.pretest', ['course' => $course->slug, 'module' => $module->uuid])));
-            }
-        }
-
-        // Post-test wajib: blokir akses modul berikutnya jika post-test modul sebelumnya belum lulus
-        $previousModule = $course->modules->sortBy('sort')->values()->first(fn ($m) => $m->sort < $module->sort);
-        if ($previousModule && $enrollment) {
-            $prevPostTest = $previousModule->postTest;
-            if ($prevPostTest && $prevPostTest->questions->isNotEmpty()) {
-                $passed = $enrollment->quizAttempts()->where('quiz_id', $prevPostTest->id)->where('passed', true)->exists();
-                if (! $passed) {
-                    return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $previousModule->uuid])));
-                }
             }
         }
 
