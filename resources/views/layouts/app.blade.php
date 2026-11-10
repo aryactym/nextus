@@ -495,6 +495,46 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.7.3/dist/js/tabler.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-ckeditor]').forEach(function (textarea) {
+            ClassicEditor
+                .create(textarea, {
+                    language: 'id',
+                    initialData: textarea.value,
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'Paragraf', class: 'ck-heading_paragraph' },
+                            { model: 'heading2', view: 'h2', title: 'Judul bagian (H2)', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'Subjudul (H3)', class: 'ck-heading_heading3' },
+                        ],
+                    },
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'underline', 'strikethrough', '|',
+                        'bulletedList', 'numberedList', 'outdent', 'indent', '|',
+                        'link', 'blockQuote', 'insertTable', '|',
+                        'removeFormat', 'undo', 'redo',
+                    ],
+                })
+                .then(function (editor) {
+                    var form = textarea.closest('form');
+                    if (form) {
+                        form.addEventListener('submit', function () {
+                            editor.updateSourceElement();
+                        });
+                    }
+                    editor.model.document.on('change:data', function () {
+                        editor.updateSourceElement();
+                    });
+                })
+                .catch(function (error) {
+                    console.error('CKEditor gagal dimuat:', error);
+                });
+        });
+    });
+</script>
 @stack('scripts')
 </body>
 </html>
