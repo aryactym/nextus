@@ -255,7 +255,7 @@
                                                                         value="{{ $lesson->getTranslation('content', 'en') }}"
                                                                         label="Konten (Inggris)" />
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12">
                                                         <label class="form-label" for="lesson-video-{{ $lesson->uuid }}">URL video</label>
                                                         <input type="url" id="lesson-video-{{ $lesson->uuid }}" name="video_url"
                                                                class="form-control" value="{{ $lesson->video_url }}" placeholder="https://...">
@@ -454,7 +454,7 @@
                                         <div class="col-md-6" x-show="showEn" x-cloak>
                                             <x-rich-editor name="content[en]" label="Konten (Inggris)" rows="2" />
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <label class="form-label">URL video</label>
                                             <input type="url" name="video_url" class="form-control" placeholder="https://...">
                                         </div>
