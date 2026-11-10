@@ -97,17 +97,17 @@
               @endphp
               @if ($nextPostTestModule && $allModuleComplete)
                 @php
-                  $ptQuiz = $nextPostTestModule->lessons->first()?->quiz;
-                  $postTestPassed = $ptQuiz ? $enrollment->quizAttempts()->where('quiz_id', $ptQuiz->id)->where('passed', true)->exists() : true;
+                  $ptQuiz = $nextPostTestModule->quizzes->first();
+                  $postTestPassed = $ptQuiz ? $enrollment->quizAttempts()->where('quiz_id', $ptQuiz->id)->where('passed', true)->exists() : false;
                 @endphp
                 @if ($ptQuiz && ! $postTestPassed)
                   <div class="alert alert-warning mt-3">
                     <strong>Post-test:</strong> Selesaikan post-test untuk melanjutkan.
-                    <a class="btn btn-primary btn-sm ms-2" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('player.show', ['course' => $course->slug, 'lesson' => $nextPostTestModule->lessons->first()->uuid])) }}">
+                    <a class="btn btn-primary btn-sm ms-2" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('module.posttest', ['course' => $course->slug, 'module' => $nextPostTestModule->uuid])) }}">
                       Kerjakan Post-test
                     </a>
                   </div>
-                @elseif ($postTestPassed)
+                @elseif ($ptQuiz && $postTestPassed)
                   <div class="alert alert-success mt-3">
                     Post-test lulus. ✓
                   </div>
