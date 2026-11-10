@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class PlayerController extends Controller
 {
@@ -29,8 +30,8 @@ class PlayerController extends Controller
 
         if (! $lesson->is_preview && ! $enrollment) {
             return $request->user() === null
-                ? redirect()->route('login')
-                : redirect()->route('catalog.show', $course->slug);
+                ? redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('login')))
+                : redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug)));
         }
 
         $completedLessonIds = $enrollment
@@ -95,9 +96,11 @@ class PlayerController extends Controller
 
         $next = $this->nextIncompleteLesson($course, $lesson, $enrollment->refresh());
 
-        return redirect()->route(
-            'player.show',
-            ['course' => $course->slug, 'lesson' => $next?->uuid ?? $lesson->uuid]
+        return redirect()->to(
+            LaravelLocalization::getLocalizedURL(app()->getLocale(), route(
+                'player.show',
+                ['course' => $course->slug, 'lesson' => $next?->uuid ?? $lesson->uuid]
+            ))
         );
     }
 
@@ -176,12 +179,12 @@ class PlayerController extends Controller
             }
 
             return redirect()
-                ->route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])
+                ->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])))
                 ->with('quiz_passed', "Selamat, kamu lulus dengan skor {$score}. Nilai minimal {$passingScore}.");
         }
 
         return redirect()
-            ->route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])
+            ->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])))
             ->with('quiz_failed', "Skor kamu {$score}. Nilai minimal untuk lulus adalah {$passingScore}. Silakan coba lagi.");
     }
 

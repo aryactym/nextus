@@ -189,7 +189,7 @@
                               @endif
                               <span>
                                 @if (! $locked)
-                                  <a class="text-reset" href="{{ route('player.show', ['course' => $course->slug, 'lesson' => $lesson]) }}">{{ $lesson->getTranslation('title', $locale) }}</a>
+                                  <a class="text-reset" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route('player.show', ['course' => $course->slug, 'lesson' => $lesson])) }}">{{ $lesson->getTranslation('title', $locale) }}</a>
                                 @else
                                   {{ $lesson->getTranslation('title', $locale) }}
                                 @endif
