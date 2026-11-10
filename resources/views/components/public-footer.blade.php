@@ -77,7 +77,7 @@
     <div class="text-center mt-3">
       <img src="{{ asset('images/nextus-poweredby-dompetdhuafaorg.webp') }}"
            alt="Powered by Dompet Dhuafa"
-           style="height: 2rem;">
+           style="height: 2rem; border-radius: 0.5rem;">
     </div>
   </div>
 </footer>

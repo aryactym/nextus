@@ -25,6 +25,11 @@
 
     <style>
         [x-cloak] { display: none !important; }
+        .ck-editor__editable_inline {
+            resize: vertical;
+            overflow: auto;
+            min-height: var(--rich-editor-min-height, 12rem);
+        }
         :root {
             --nu-zamrud: #0E6B5C;
             --nu-zamrud-dark: #0C5045;
@@ -489,7 +494,7 @@
                         <div class="text-secondary">© {{ date('Y') }} {{ config('app.name') }}</div>
                         <img src="{{ asset('images/nextus-poweredby-dompetdhuafaorg.webp') }}"
                              alt="Powered by Dompet Dhuafa"
-                             style="height: 2rem; margin-top: 0.5rem;">
+                             style="height: 2rem; margin-top: 0.5rem; border-radius: 0.5rem;">
                     </div>
                 </div>
             </div>
