@@ -291,6 +291,8 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible {
 .lessons { list-style: none; margin: 0; padding: 0; }
 .lessons li { display: flex; align-items: center; gap: .65rem; padding: .55rem 0; border-bottom: 1px dashed var(--nu-kabut); }
 .lessons li:last-child { border-bottom: 0; }
+.lesson-test { display: block; padding: .65rem 0; border-bottom: 1px dashed var(--nu-kabut); font-weight: 500; }
+.lesson-test a { display: flex; align-items: center; gap: .5rem; }
 .lessons svg { flex: none; width: 20px; height: 20px; color: var(--nu-zamrud); }
 .lessons .dur { margin-left: auto; font-size: .85rem; color: var(--nu-batu); white-space: nowrap; }
 .author { display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: #fff; border: 1px solid var(--nu-kabut); border-radius: var(--nu-radius); box-shadow: var(--nu-shadow-sm); }
