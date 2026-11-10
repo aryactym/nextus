@@ -43,22 +43,16 @@ class PlayerController extends Controller
         if ($currentModuleIndex !== false && $enrollment) {
             for ($i = 0; $i < $currentModuleIndex; $i++) {
                 $prevMod = $sortedModules[$i];
-                if ($prevMod->type === 'pre_test') {
-                    $quiz = $prevMod->lessons->first()?->quiz;
-                    if ($quiz && $quiz->questions->isNotEmpty()) {
-                        $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
-                        if (! $passed) {
-                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.pretest', ['course' => $course->slug, 'module' => $prevMod->uuid])));
-                        }
-                    }
-                }
-                if ($prevMod->type === 'post_test') {
-                    $quiz = $prevMod->lessons->first()?->quiz;
-                    if ($quiz && $quiz->questions->isNotEmpty()) {
-                        $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
-                        if (! $passed) {
-                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $prevMod->uuid])));
-                        }
+                $quiz = $prevMod->type === 'pre_test'
+                    ? $prevMod->preTest
+                    : ($prevMod->type === 'post_test' ? $prevMod->postTest : null);
+
+                if ($quiz && $quiz->questions->isNotEmpty()) {
+                    $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                    if (! $passed) {
+                        $routeName = $prevMod->type === 'post_test' ? 'module.posttest' : 'module.pretest';
+
+                        return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route($routeName, ['course' => $course->slug, 'module' => $prevMod->uuid])));
                     }
                 }
             }
@@ -143,13 +137,15 @@ class PlayerController extends Controller
             $sortedModules = $course->modules->sortBy('sort')->values();
             $idx = $sortedModules->search(fn ($m) => $m->id === $module->id);
             $nextModule = $idx !== false ? ($sortedModules[$idx + 1] ?? null) : null;
-            if ($nextModule && $nextModule->type === 'post_test' && $nextModule->quizzes->isNotEmpty()) {
-                $quiz = $nextModule->quizzes->first();
-                $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
-                if (! $passed) {
-                    return redirect()->to(
-                        LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $nextModule->uuid]))
-                    );
+            if ($nextModule && $nextModule->type === 'post_test') {
+                $quiz = $nextModule->postTest;
+                if ($quiz && $quiz->questions->isNotEmpty()) {
+                    $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                    if (! $passed) {
+                        return redirect()->to(
+                            LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $nextModule->uuid]))
+                        );
+                    }
                 }
             }
         }

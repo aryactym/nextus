@@ -30,7 +30,11 @@ class CourseProgressService
         $lessonsComplete = $total > 0 && $done >= $total;
 
         // Cek post-test: semua post-test harus lulus
-        $postTests = $enrollment->course->modules->flatMap->postTest;
+        $postTests = $enrollment->course->modules
+            ->map(fn ($module) => $module->postTest)
+            ->filter()
+            ->values();
+
         $postTestsPassed = $postTests->every(function ($quiz) use ($enrollment) {
             return $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
         });
