@@ -23,6 +23,7 @@ class LessonController extends Controller
         $data = $request->validated();
         $data['sort'] = $data['sort'] ?? $module->lessons()->max('sort') + 1;
         $data['is_preview'] = $data['is_preview'] ?? false;
+        $data['duration'] = $data['duration'] ?? 0;
 
         if ($request->hasFile('file')) {
             $result = $upload->upload($request->file('file'), 'document', 'lessons/'.$module->id);
@@ -44,6 +45,7 @@ class LessonController extends Controller
             ->findOrFail($lesson->getKey());
         $data = $request->validated();
         $data['is_preview'] = $request->boolean('is_preview');
+        $data['duration'] = $data['duration'] ?? $lesson->duration ?? 0;
 
         if ($request->hasFile('file')) {
             if ($lesson->file_path) {
