@@ -305,7 +305,7 @@ class PlayerController extends Controller
 
         $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
 
-        // Jangan redirect — biarkan halaman menampilkan skor seperti pre-test
+        // Biarkan halaman menampilkan skor terakhir seperti pre-test
 
         return view('learning.module-test', compact('course', 'module', 'quiz', 'type', 'enrollment', 'lastAttempt', 'passingScore'));
     }
