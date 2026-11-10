@@ -216,7 +216,8 @@
 
                                             {{-- Lesson edit form (separate, not nested in course form) --}}
                                             <div class="collapse mt-3" id="lesson-edit-{{ $lesson->uuid }}">
-                                                <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST" enctype="multipart/form-data" class="row g-2">
+                                                <form action="{{ route('admin.lessons.update', $lesson) }}" method="POST" enctype="multipart/form-data" class="row g-2"
+                                                      x-data="{ showEn: {{ $lesson->getTranslation('content', 'en') ? 'true' : 'false' }} }">
                                                     @csrf @method('PUT')
                                                     <div class="col-md-5">
                                                         <label class="form-label" for="lesson-title-{{ $lesson->uuid }}">Judul (Indonesia)</label>
@@ -236,12 +237,20 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <label class="form-check mb-2">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                   x-model="showEn"
+                                                                   @if ($lesson->getTranslation('content', 'en')) checked @endif>
+                                                            <span class="form-check-label">Tampilkan konten bahasa Inggris</span>
+                                                        </label>
+                                                    </div>
+                                                    <div :class="showEn ? 'col-md-6' : 'col-md-12'">
                                                         <x-rich-editor name="content[id]"
                                                                         value="{{ $lesson->getTranslation('content', 'id') }}"
                                                                         label="Konten (Indonesia)" />
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6" x-show="showEn" x-cloak>
                                                         <x-rich-editor name="content[en]"
                                                                         value="{{ $lesson->getTranslation('content', 'en') }}"
                                                                         label="Konten (Inggris)" />
@@ -412,7 +421,8 @@
                             </a>
 
                             <div class="collapse mt-3" id="lesson-form-{{ $module->uuid }}">
-                                <form action="{{ route('admin.modules.lessons.store', $module) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('admin.modules.lessons.store', $module) }}" method="POST" enctype="multipart/form-data"
+                                      x-data="{ showEn: false }">
                                     @csrf
                                     <div class="row g-2">
                                         <div class="col-md-5">
@@ -432,10 +442,16 @@
                                                 <option value="quiz">Kuis</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
+                                            <label class="form-check mb-2">
+                                                <input type="checkbox" class="form-check-input" x-model="showEn">
+                                                <span class="form-check-label">Tampilkan konten bahasa Inggris</span>
+                                            </label>
+                                        </div>
+                                        <div :class="showEn ? 'col-md-6' : 'col-md-12'">
                                             <x-rich-editor name="content[id]" label="Konten (Indonesia)" rows="2" />
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" x-show="showEn" x-cloak>
                                             <x-rich-editor name="content[en]" label="Konten (Inggris)" rows="2" />
                                         </div>
                                         <div class="col-md-6">

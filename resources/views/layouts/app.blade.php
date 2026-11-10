@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.7.3/dist/css/tabler.min.css">
 
     <style>
+        [x-cloak] { display: none !important; }
         :root {
             --nu-zamrud: #0E6B5C;
             --nu-zamrud-dark: #0C5045;
@@ -515,10 +516,10 @@
                     },
                     toolbar: [
                         'heading', '|',
-                        'bold', 'italic', 'underline', 'strikethrough', '|',
+                        'bold', 'italic', '|',
                         'bulletedList', 'numberedList', 'outdent', 'indent', '|',
                         'link', 'blockQuote', 'insertTable', '|',
-                        'removeFormat', 'undo', 'redo',
+                        'undo', 'redo',
                     ],
                 })
                 .then(function (editor) {
