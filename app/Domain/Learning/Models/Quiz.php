@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $id
  * @property string $uuid
- * @property int $lesson_id
+ * @property int|null $lesson_id
+ * @property int|null $module_id
+ * @property string $type
  * @property int|null $passing_score
  */
 class Quiz extends Model
@@ -23,6 +25,8 @@ class Quiz extends Model
     protected $fillable = [
         'uuid',
         'lesson_id',
+        'module_id',
+        'type',
         'passing_score',
     ];
 
@@ -33,6 +37,26 @@ class Quiz extends Model
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);
+    }
+
+    public function module(): BelongsTo
+    {
+        return $this->belongsTo(\App\Domain\Catalog\Models\CourseModule::class, 'module_id');
+    }
+
+    public function scopePre($query)
+    {
+        return $query->where('type', 'pre');
+    }
+
+    public function scopePost($query)
+    {
+        return $query->where('type', 'post');
+    }
+
+    public function scopeLessonType($query)
+    {
+        return $query->where('type', 'lesson');
     }
 
     public function questions(): HasMany

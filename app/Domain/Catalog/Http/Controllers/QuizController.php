@@ -52,6 +52,47 @@ class QuizController extends Controller
             ->with('success', 'Soal kuis berhasil ditambahkan.');
     }
 
+    public function storeModuleQuestion(Request $request, \App\Domain\Catalog\Models\CourseModule $module, string $type): RedirectResponse
+    {
+        abort_unless($request->user()->can('manage courses'), 403);
+
+        $module = \App\Domain\Catalog\Models\CourseModule::query()
+            ->whereHas('course', fn (Builder $query) => $query->forOrganization())
+            ->findOrFail($module->getKey());
+
+        abort_unless(in_array($type, ['pre', 'post'], true), 422);
+
+        $validated = $request->validate([
+            'question' => ['required', 'string', 'max:500'],
+            'options' => ['required', 'array', 'min:2', 'max:6'],
+            'options.*' => ['required', 'string', 'max:255'],
+            'correct_index' => ['required', 'integer', 'min:0', 'max:5'],
+        ]);
+
+        $options = array_values($validated['options']);
+
+        if ((int) $validated['correct_index'] >= count($options)) {
+            return back()
+                ->withErrors(['correct_index' => 'Jawaban benar harus salah satu pilihan yang tersedia.'])
+                ->withInput();
+        }
+
+        $quiz = Quiz::firstOrCreate([
+            'module_id' => $module->id,
+            'type' => $type,
+        ]);
+        $quiz->questions()->create([
+            'question' => $validated['question'],
+            'options' => $options,
+            'correct_index' => (int) $validated['correct_index'],
+            'sort' => ($quiz->questions()->max('sort') ?? 0) + 1,
+        ]);
+
+        return redirect()
+            ->route('admin.courses.edit', $module->course)
+            ->with('success', 'Soal ' . ($type === 'pre' ? 'pre-test' : 'post-test') . ' berhasil ditambahkan.');
+    }
+
     public function updateQuestion(Request $request, QuizQuestion $question): RedirectResponse
     {
         abort_unless($request->user()->can('manage courses'), 403);

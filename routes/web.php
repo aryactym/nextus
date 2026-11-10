@@ -65,6 +65,14 @@ Route::group([
     // ---- Blog (publik) ----
     Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
     Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+
+    // ---- Belajar (player) — di dalam localized group agar locale terjaga ----
+    Route::get('/belajar/{course}/{lesson}', [PlayerController::class, 'show'])
+        ->name('player.show');
+    Route::post('/belajar/{course}/{lesson}/selesai', [PlayerController::class, 'complete'])
+        ->middleware('auth')->name('player.complete');
+    Route::post('/belajar/{course}/{lesson}/kuis', [PlayerController::class, 'submitQuiz'])
+        ->middleware('auth')->name('player.quiz.submit');
 });
 
 // Locale switcher untuk default locale (id) — set session lalu redirect ke /
@@ -113,12 +121,6 @@ Route::get('/belajar/profil', [ProfileController::class, 'edit'])
     ->middleware('auth')->name('learning.profile.edit');
 Route::put('/belajar/profil', [ProfileController::class, 'update'])
     ->middleware('auth')->name('learning.profile.update');
-Route::get('/belajar/{course}/{lesson}', [PlayerController::class, 'show'])
-    ->name('player.show');
-Route::post('/belajar/{course}/{lesson}/selesai', [PlayerController::class, 'complete'])
-    ->middleware('auth')->name('player.complete');
-Route::post('/belajar/{course}/{lesson}/kuis', [PlayerController::class, 'submitQuiz'])
-    ->middleware('auth')->name('player.quiz.submit');
 Route::get('/sertifikat/{code}', [CertificateController::class, 'show'])
     ->middleware('auth')->name('certificates.show');
 Route::get('/sertifikat/{code}/pdf', [CertificateController::class, 'download'])
@@ -152,6 +154,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('lessons.destroy');
     Route::post('lessons/{lesson}/quiz/questions', [QuizController::class, 'storeQuestion'])
         ->name('lessons.quiz.questions.store');
+    Route::post('modules/{module}/quiz/{type}/questions', [QuizController::class, 'storeModuleQuestion'])
+        ->name('modules.quiz.questions.store')
+        ->where('type', 'pre|post');
     Route::delete('quiz-questions/{question}', [QuizController::class, 'destroyQuestion'])
         ->name('quiz-questions.destroy');
     Route::put('quiz-questions/{question}', [QuizController::class, 'updateQuestion'])

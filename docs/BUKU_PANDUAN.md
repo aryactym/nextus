@@ -195,6 +195,7 @@ URL: `/belajar/{slug-kursus}/{uuid-pelajaran}`
 | `text` | Konten teks/HTML |
 | `pdf` | File PDF inline |
 | `quiz` | Soal pilihan ganda |
+| `pre` / `post` | Pre-test / Post-test per modul |
 
 ### Navigasi
 - Breadcrumb kursus → modul → pelajaran
@@ -206,6 +207,12 @@ URL: `/belajar/{slug-kursus}/{uuid-pelajaran}`
 - Soal pilihan ganda, jawab semua → submit
 - Nilai muncul langsung, dibandingkan `passing_grade` kursus
 - Lulus → pelajaran otomatis ditandai selesai
+
+### Pre-test & Post-test per Modul
+- **Pre-test**: kuis wajib yang harus diselesaikan sebelum mengakses materi modul.
+- **Post-test**: kuis wajib lulus untuk melanjutkan ke modul berikutnya.
+- Di panel admin, setiap modul memiliki tombol "Tambah Pre-test" dan "Tambah Post-test".
+- Soal dikelola seperti kuis biasa (pertanyaan, pilihan, jawaban benar).
 
 ---
 
@@ -316,6 +323,7 @@ Menampilkan stat: total peserta, selesai, sertifikat, pendapatan. Tabel peserta 
 - Field: judul (ID & EN), slug, kategori, level, durasi, ringkasan, deskripsi (**HugeRTE**)
 - Sidebar: status, tipe akses, tipe sertifikat, passing grade, thumbnail, latar sertifikat
 - Modul & pelajaran dikelola di halaman edit (accordion per modul)
+- Setiap modul dapat memiliki **Pre-test** dan **Post-test** (kuis wajib sebelum/sesudah modul)
 - Requirement kursus (prasyarat, pendidikan, usia) diset di panel bawah halaman edit
 
 ---
