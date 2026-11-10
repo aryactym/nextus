@@ -176,6 +176,22 @@
                     </h3>
                     <div id="module-{{ $module->id }}" class="accordion-collapse collapse{{ $loop->first ? ' show' : '' }}" data-bs-parent="#kurikulum">
                       <div class="accordion-body">
+                        @if (in_array($module->type, ['pre_test', 'post_test'], true))
+                          @php
+                            $testQuiz = $module->quizzes->first();
+                            $testQuestions = $testQuiz?->questions ?? collect();
+                          @endphp
+                          @if ($testQuestions->isNotEmpty())
+                            <div class="lesson-item lesson-test mb-2">
+                              <a class="text-reset" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($locale, route($module->type === 'pre_test' ? 'module.pretest' : 'module.posttest', ['course' => $course->slug, 'module' => $module->uuid])) }}">
+                                <span class="badge {{ $module->type === 'pre_test' ? 'bg-warning-lt' : 'bg-success-lt' }}">{{ $module->type === 'pre_test' ? 'Pre-test' : 'Post-test' }}</span>
+                                {{ $module->getTranslation('title', $locale) }}
+                              </a>
+                            </div>
+                          @else
+                            <p class="text-secondary small">Belum ada soal.</p>
+                          @endif
+                        @else
                         <ul class="lessons">
                           @foreach ($module->lessons as $lesson)
                             @php $locked = ! $isEnrolled && ! $lesson->is_preview; @endphp
@@ -209,6 +225,7 @@
                             </li>
                           @endforeach
                         </ul>
+                        @endif
                       </div>
                     </div>
                   </div>

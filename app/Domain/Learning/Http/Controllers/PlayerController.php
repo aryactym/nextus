@@ -257,6 +257,25 @@ class PlayerController extends Controller
         $course = $this->resolveCourse($courseSlug);
         abort_unless($module->course_id === $course->id, 404);
 
+        // Post-test: cek semua lesson modul sebelumnya selesai
+        if ($type === 'post') {
+            $sortedModules = $course->modules->sortBy('sort')->values();
+            $moduleIndex = $sortedModules->search(fn ($m) => $m->id === $module->id);
+            if ($moduleIndex !== false && $moduleIndex > 0) {
+                $prevModule = $sortedModules[$moduleIndex - 1];
+                if ($prevModule->type === 'content') {
+                    $enrollment = $request->user()?->enrollments()->where('course_id', $course->id)->first();
+                    if ($enrollment) {
+                        $prevLessons = $prevModule->lessons;
+                        $allComplete = $prevLessons->every(fn ($l) => $enrollment->lessonProgress()->where('lesson_id', $l->id)->whereNotNull('completed_at')->exists());
+                        if (! $allComplete) {
+                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug)));
+                        }
+                    }
+                }
+            }
+        }
+
         $quiz = $type === 'pre' ? $module->preTest : $module->postTest;
         abort_if(! $quiz || $quiz->questions->isEmpty(), 404);
 

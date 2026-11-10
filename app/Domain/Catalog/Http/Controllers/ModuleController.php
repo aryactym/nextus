@@ -6,6 +6,7 @@ use App\Domain\Catalog\Http\Requests\StoreModuleRequest;
 use App\Domain\Catalog\Http\Requests\UpdateModuleRequest;
 use App\Domain\Catalog\Models\Course;
 use App\Domain\Catalog\Models\CourseModule;
+use App\Domain\Learning\Models\Quiz;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,15 @@ class ModuleController extends Controller
         $course = Course::forOrganization()->findOrFail($course->getKey());
         $data = $request->validated();
         $data['sort'] = $data['sort'] ?? $course->modules()->max('sort') + 1;
-        $course->modules()->create($data);
+        $module = $course->modules()->create($data);
+
+        // Auto-create quiz untuk modul pre_test/post_test
+        if (in_array($data['type'] ?? 'content', ['pre_test', 'post_test'], true)) {
+            Quiz::firstOrCreate([
+                'module_id' => $module->id,
+                'type' => $data['type'] === 'pre_test' ? 'pre' : 'post',
+            ]);
+        }
 
         return redirect()->route('admin.courses.edit', $course)
             ->with('success', 'Modul berhasil ditambahkan.');
