@@ -74,6 +74,11 @@
     </div>
 
     <div class="legal">&copy; {{ date('Y') }} {{ config('app.name') }}. Seluruh hak dilindungi.</div>
+    <div class="text-center mt-3">
+      <img src="{{ asset('images/nextus-poweredby-dompetdhuafaorg.webp') }}"
+           alt="Powered by Dompet Dhuafa"
+           style="height: 2rem;">
+    </div>
   </div>
 </footer>
 

@@ -50,6 +50,8 @@
   @if (! empty($favicon))
     <link rel="icon" type="image/{{ Storage::disk('public')->mimeType($favicon) }}" href="{{ Storage::disk('public')->url($favicon) }}">
     <link rel="apple-touch-icon" href="{{ Storage::disk('public')->url($favicon) }}">
+  @else
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}">
   @endif
 
   {{-- Fonts: Plus Jakarta Sans --}}
