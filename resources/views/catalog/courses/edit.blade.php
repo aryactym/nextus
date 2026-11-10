@@ -237,14 +237,14 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label class="form-label" for="lesson-content-{{ $lesson->uuid }}">Konten (Indonesia)</label>
-                                                        <textarea id="lesson-content-{{ $lesson->uuid }}" name="content[id]" rows="3"
-                                                                  class="form-control">{{ $lesson->getTranslation('content', 'id') }}</textarea>
+                                                        <x-rich-editor name="content[id]"
+                                                                        value="{{ $lesson->getTranslation('content', 'id') }}"
+                                                                        label="Konten (Indonesia)" />
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label class="form-label" for="lesson-content-en-{{ $lesson->uuid }}">Konten (Inggris)</label>
-                                                        <textarea id="lesson-content-en-{{ $lesson->uuid }}" name="content[en]" rows="3"
-                                                                  class="form-control">{{ $lesson->getTranslation('content', 'en') }}</textarea>
+                                                        <x-rich-editor name="content[en]"
+                                                                        value="{{ $lesson->getTranslation('content', 'en') }}"
+                                                                        label="Konten (Inggris)" />
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label" for="lesson-video-{{ $lesson->uuid }}">URL video</label>
@@ -433,16 +433,10 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Konten (Indonesia)</label>
-                                            <textarea id="lesson-content-new-{{ $module->uuid }}-id"
-                                                      name="content[id]" class="form-control" rows="2"
-                                                      placeholder="Konten pelajaran"></textarea>
+                                            <x-rich-editor name="content[id]" label="Konten (Indonesia)" rows="2" />
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Konten (Inggris)</label>
-                                            <textarea id="lesson-content-new-{{ $module->uuid }}-en"
-                                                      name="content[en]" class="form-control" rows="2"
-                                                      placeholder="Lesson content"></textarea>
+                                            <x-rich-editor name="content[en]" label="Konten (Inggris)" rows="2" />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">URL video</label>
