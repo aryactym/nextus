@@ -81,7 +81,13 @@ class DemoSeeder extends Seeder
 
             $outline = [
                 [
+                    'title' => 'Pre-test',
+                    'type' => 'pre_test',
+                    'lessons' => [],
+                ],
+                [
                     'title' => 'Konsep dasar',
+                    'type' => 'content',
                     'lessons' => [
                         ['title' => 'Mengapa topik ini penting', 'type' => 'video', 'duration' => 10, 'is_preview' => true, 'content' => $summary],
                         ['title' => 'Istilah dan kerangka dasar', 'type' => 'text', 'duration' => 15, 'is_preview' => false, 'content' => 'Mengenal istilah utama, prinsip, dan kerangka kerja yang dipakai sepanjang kursus.'],
@@ -90,6 +96,7 @@ class DemoSeeder extends Seeder
                 ],
                 [
                     'title' => 'Praktik di lapangan',
+                    'type' => 'content',
                     'lessons' => [
                         ['title' => 'Langkah praktis di lapangan', 'type' => 'text', 'duration' => 15, 'is_preview' => false, 'content' => 'Panduan langkah demi langkah untuk menerapkan materi dalam kegiatan sehari-hari.'],
                         ['title' => 'Studi kasus dan diskusi', 'type' => 'video', 'duration' => 20, 'is_preview' => false, 'content' => 'Contoh situasi nyata, keputusan yang diambil, dan pelajaran dari lapangan.'],
@@ -98,19 +105,42 @@ class DemoSeeder extends Seeder
                 ],
                 [
                     'title' => 'Amanah dan tindak lanjut',
+                    'type' => 'content',
                     'lessons' => [
                         ['title' => 'Prinsip amanah dan transparansi', 'type' => 'text', 'duration' => 12, 'is_preview' => false, 'content' => 'Menjaga kepercayaan donatur dan penerima manfaat melalui pencatatan yang jujur.'],
                         ['title' => 'Rencana tindak lanjut', 'type' => 'text', 'duration' => 10, 'is_preview' => false, 'content' => 'Menyusun rencana sederhana yang bisa langsung dijalankan setelah kursus.'],
                         ['title' => 'Asesmen akhir', 'type' => 'quiz', 'duration' => 15, 'is_preview' => false, 'content' => 'Asesmen akhir untuk mengukur pemahaman dan syarat sertifikat.'],
                     ],
                 ],
+                [
+                    'title' => 'Post-test',
+                    'type' => 'post_test',
+                    'lessons' => [],
+                ],
             ];
 
+            // Hapus modul lama untuk course ini (re-seed bersih)
+            $course->modules()->delete();
+
             foreach ($outline as $moduleIndex => $moduleData) {
-                $module = $course->modules()->updateOrCreate(
-                    ['sort' => $moduleIndex + 1],
-                    ['title' => ['id' => $moduleData['title']]],
-                );
+                $module = $course->modules()->create([
+                    'title' => ['id' => $moduleData['title']],
+                    'type' => $moduleData['type'] ?? 'content',
+                    'sort' => $moduleIndex + 1,
+                ]);
+
+                // Auto-create quiz for pre_test/post_test modules
+                if (in_array($moduleData['type'] ?? 'content', ['pre_test', 'post_test'], true)) {
+                    $quizType = $moduleData['type'] === 'pre_test' ? 'pre' : 'post';
+                    $quiz = Quiz::firstOrCreate([
+                        'module_id' => $module->id,
+                        'type' => $quizType,
+                    ]);
+                    // Seed questions if empty
+                    if (! $quiz->questions()->exists()) {
+                        $this->seedQuizQuestions($quiz, $title, $summary);
+                    }
+                }
 
                 foreach ($moduleData['lessons'] as $lessonIndex => $lessonData) {
                     $lesson = $module->lessons()->updateOrCreate(
@@ -135,9 +165,13 @@ class DemoSeeder extends Seeder
     /**
      * Isi soal bawaan untuk pelajaran bertipe kuis bila belum ada.
      */
-    private function seedQuizQuestions(Lesson $lesson, string $courseTitle, string $summary): void
+    private function seedQuizQuestions(Lesson|Quiz $target, string $courseTitle, string $summary): void
     {
-        $quiz = Quiz::firstOrCreate(['lesson_id' => $lesson->id]);
+        if ($target instanceof Lesson) {
+            $quiz = Quiz::firstOrCreate(['lesson_id' => $target->id]);
+        } else {
+            $quiz = $target;
+        }
 
         if ($quiz->questions()->exists()) {
             return;
