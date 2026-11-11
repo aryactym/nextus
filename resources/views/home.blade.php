@@ -132,6 +132,12 @@
           </div>
         @endforelse
       </div>
+
+      @if ($courses->count() === 6)
+        <div class="text-center mt-4">
+          <a class="btn btn-outline-primary" href="{{ route('catalog.index') }}">Selengkapnya</a>
+        </div>
+      @endif
     </div>
   </section>
 
