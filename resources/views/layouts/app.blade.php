@@ -399,6 +399,26 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('manage organizations')
+                            <li class="nav-item {{ request()->routeIs('admin.organizations.*') ? 'active' : '' }}">
+                                <a class="nav-link {{ request()->routeIs('admin.organizations.*') ? 'active' : '' }}"
+                                   href="{{ route('admin.organizations.index') }}">
+                                    <span class="nav-link-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round" class="icon" aria-hidden="true">
+                                            <path d="M3 21v-13l6 -4l6 4v13"/>
+                                            <path d="M9 21v-4h6v4"/>
+                                            <path d="M15 8l6 3v10"/>
+                                            <path d="M6 8h2"/>
+                                            <path d="M6 12h2"/>
+                                            <path d="M6 16h2"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">Organisasi</span>
+                                </a>
+                            </li>
+                        @endcan
                         @can('manage settings')
                             <li class="nav-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                 <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"

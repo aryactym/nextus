@@ -27,6 +27,7 @@ use App\Domain\Payment\Http\Controllers\WebhookController;
 use App\Domain\Settings\Http\Controllers\SettingController;
 use App\Domain\Settings\Http\Controllers\SponsorController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Org\LearnerController;
@@ -184,6 +185,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('payments/{order}', [OrderController::class, 'show'])->name('payments.show');
 
     Route::resource('users', UserController::class)->except(['show']);
+
+    Route::resource('organizations', OrganizationController::class)->except(['show']);
 
     Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');

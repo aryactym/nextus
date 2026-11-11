@@ -24,6 +24,7 @@ class MpzSeeder extends Seeder
             ['slug' => 'mpz-gerak-bareng'],
             [
                 'name' => ['id' => 'MPZ Gerak Bareng'],
+                'type' => 'mpz_dd',
                 'status' => 'active',
                 'default_locale' => 'id',
             ]

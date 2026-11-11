@@ -24,6 +24,7 @@ class PermissionSeeder extends Seeder
             'manage events',
             'manage org learners',
             'view org reports',
+            'manage organizations',
         ];
 
         foreach ($permissions as $name) {
