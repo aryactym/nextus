@@ -209,6 +209,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible {
 .form-control.is-invalid, .form-select.is-invalid { border-color: var(--nu-bahaya); }
 .form-alert { display: none; border: 1px solid var(--nu-bahaya); border-left-width: 6px; border-radius: var(--nu-radius-sm); background: #fdf2f1; padding: .75rem 1rem; margin-bottom: 1.25rem; color: #7a1a14; }
 .form-alert.show { display: block; }
+.form-alert-success { border-color: var(--nu-zamrud); background: #e8f5ee; color: #0b3d2e; }
 .pw-meter { display: flex; gap: .25rem; margin-top: .5rem; }
 .pw-meter span { flex: 1; height: .3rem; border-radius: 99px; background: var(--nu-kabut); }
 .pw-meter[data-s="1"] span:nth-child(-n+1) { background: var(--nu-bahaya); }

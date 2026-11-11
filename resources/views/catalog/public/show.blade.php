@@ -116,7 +116,7 @@
         <div class="col-lg-8 order-2 order-lg-1">
 
           @if (session('enroll_success'))
-            <div class="form-alert show mb-3" role="status">{{ session('enroll_success') }}</div>
+            <div class="form-alert form-alert-success show mb-3" role="status">{{ session('enroll_success') }}</div>
           @endif
           @if (session('enroll_error'))
             <div class="form-alert show mb-3" role="alert">{{ session('enroll_error') }}</div>
