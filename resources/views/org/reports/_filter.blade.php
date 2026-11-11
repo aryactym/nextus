@@ -7,7 +7,10 @@
       $orgs       — collection of organisations (only non-empty for Super Admin / Admin)
       $orgId      — currently selected org ID
 --}}
-@php $canPickOrg = isset($orgs) && $orgs->isNotEmpty(); @endphp
+@php
+    $canPickOrg = isset($orgs) && $orgs->isNotEmpty();
+    $typeLabels = App\Http\Controllers\Admin\OrganizationController::TYPES;
+@endphp
 
 <div class="card mb-3">
     <div class="card-body">
@@ -24,7 +27,7 @@
                         @foreach ($orgs as $org)
                             <option value="{{ $org->id }}"
                                 @selected((string) ($f['org_id'] ?? $orgId ?? null) === (string) $org->id)>
-                                {{ $org->getTranslation('name', 'id') }}
+                                {{ $org->getTranslation('name', 'id') }} — {{ $typeLabels[$org->type] ?? $org->type }}
                             </option>
                         @endforeach
                     </select>

@@ -59,8 +59,9 @@ class ReportController extends Controller
 
         return Organization::whereNull('deleted_at')
             ->where('status', 'active')
+            ->has('users')
             ->orderBy('name->id')
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'type']);
     }
 
     private function coursesForOrg(int $orgId): Collection
