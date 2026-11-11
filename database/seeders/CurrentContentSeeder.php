@@ -64,6 +64,12 @@ class CurrentContentSeeder extends Seeder
                 ]
             );
 
+            // Sinkronkan pengaturan featured dari data seed (tanpa menimpa konten modul existing)
+            $course->update([
+                'is_featured' => $courseData['is_featured'] ?? false,
+                'featured_sort' => $courseData['featured_sort'] ?? 0,
+            ]);
+
             if ($course->modules()->exists()) {
                 continue;
             }
