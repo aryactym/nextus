@@ -80,23 +80,22 @@
 
       </div>
     </div>
-  </section>
-
-</x-layouts.public>
-
-@push('scripts')
-<script>
-// Toggle tampilkan/sembunyikan kata sandi
-document.querySelectorAll('.toggle-pw').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var input = document.getElementById(this.dataset.for);
-    if (!input) return;
-    var show = input.type === 'password';
-    input.type = show ? 'text' : 'password';
-    this.textContent = show ? 'Sembunyikan' : 'Tampilkan';
-    this.setAttribute('aria-pressed', show ? 'true' : 'false');
+  @push('scripts')
+  <script>
+  // Toggle tampilkan/sembunyikan kata sandi
+  document.querySelectorAll('.toggle-pw').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var input = document.getElementById(this.dataset.for);
+      if (!input) return;
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      this.textContent = show ? 'Sembunyikan' : 'Tampilkan';
+      this.setAttribute('aria-pressed', show ? 'true' : 'false');
+    });
   });
-});
-</script>
-@endpush
+  </script>
+  @endpush
+
+  </section>
+</x-layouts.public>
 

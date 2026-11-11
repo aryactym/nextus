@@ -86,6 +86,11 @@
         <p>Kursus pilihan yang direkomendasikan untuk kamu.</p>
       </div>
       <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          @foreach ($featuredCourses->chunk(4) as $index => $chunk)
+            <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
+          @endforeach
+        </div>
         <div class="carousel-inner">
           @foreach ($featuredCourses->chunk(4) as $index => $chunk)
             <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
@@ -247,6 +252,45 @@
       </div>
     </div>
   </section>
+
+@push('styles')
+<style>
+  #featuredCarousel .carousel-control-prev,
+  #featuredCarousel .carousel-control-next {
+    width: 3rem;
+    opacity: 1;
+  }
+  #featuredCarousel .carousel-control-prev-icon,
+  #featuredCarousel .carousel-control-next-icon {
+    background-color: #0f172a;
+    border-radius: 999px;
+    padding: 1.2rem;
+    background-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  #featuredCarousel .carousel-indicators [data-bs-target] {
+    background-color: #94a3b8;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    opacity: 1;
+  }
+  #featuredCarousel .carousel-indicators .active {
+    background-color: #0f172a;
+  }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var el = document.getElementById('featuredCarousel');
+  if (el && window.bootstrap && window.bootstrap.Carousel) {
+    try { new bootstrap.Carousel(el, { interval: false, ride: false }); } catch (e) { console.error(e); }
+  }
+});
+</script>
+@endpush
 
 </x-layouts.public>
 

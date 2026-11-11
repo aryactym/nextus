@@ -7,6 +7,7 @@ use App\Domain\Catalog\Models\Course;
 use App\Domain\Learning\Models\Quiz;
 use App\Domain\Organization\Models\Organization;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
 
 class CurrentContentSeeder extends Seeder
 {
@@ -15,6 +16,13 @@ class CurrentContentSeeder extends Seeder
         $path = __DIR__.'/data/content.json';
         if (! file_exists($path)) {
             return;
+        }
+
+        // Salin file upload (thumbnail, dll.) agar tersedia pada instalasi awal
+        $uploadsSource = __DIR__.'/data/uploads';
+        $uploadsTarget = storage_path('app/private/uploads');
+        if (is_dir($uploadsSource)) {
+            File::copyDirectory($uploadsSource, $uploadsTarget);
         }
 
         $courses = json_decode(file_get_contents($path), true);
