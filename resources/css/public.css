@@ -133,7 +133,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible {
 .course-meta span + span { padding-left: 1rem; border-left: 1px solid var(--nu-kabut); }
 .course-card .card-footer { background: var(--nu-kertas); border-top: 1px solid var(--nu-kabut); padding: .75rem 1.25rem; font-size: .875rem; font-weight: 500; color: var(--nu-batu); }
 .badge-access { font-weight: 600; }
-.course-card .topic-label { font-size: .8rem; font-weight: 600; color: var(--nu-zamrud); margin-bottom: .35rem; display: block; }
+.course-card .topic-label { display: inline-block; font-size: .75rem; font-weight: 600; color: var(--nu-zamrud); background: rgba(14, 107, 92, .1); border: 1px solid rgba(14, 107, 92, .2); border-radius: 999px; padding: .2rem .6rem; margin-bottom: .5rem; }
 
 /* ====== Verifikasi band ====== */
 .verify { background: var(--nu-malam); color: #fff; padding: clamp(2.5rem,5vw,3.5rem) 0; }
