@@ -19,6 +19,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/pengantar-zakat.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "dasar-ziswaf",
         "modules": [
@@ -411,6 +413,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/dasar-pelaporan-program.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "tata-kelola",
         "modules": [
@@ -803,6 +807,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/dasar-fasilitasi-tot.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "manajemen-lembaga",
         "modules": [
@@ -1195,6 +1201,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/wakaf-sedekah-pemula.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "dasar-ziswaf",
         "modules": [
@@ -1587,6 +1595,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/penyaluran-zakat.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "pengelolaan-zakat",
         "modules": [
@@ -1979,6 +1989,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/pendampingan-umkm.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "pemberdayaan",
         "modules": [
@@ -2371,6 +2383,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/safeguarding-relawan.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "relawan-kebencanaan",
         "modules": [
@@ -2763,6 +2777,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/respon-kebencanaan.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "relawan-kebencanaan",
         "modules": [
@@ -3155,6 +3171,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/digitalisasi-lembaga.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "manajemen-lembaga",
         "modules": [
@@ -3547,6 +3565,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/manajemen-risiko-program.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "tata-kelola",
         "modules": [
@@ -3939,6 +3959,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/komunikasi-publik-lembaga.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "manajemen-lembaga",
         "modules": [
@@ -4331,6 +4353,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/audit-internal-sederhana.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "tata-kelola",
         "modules": [
@@ -4723,6 +4747,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/zakat-perusahaan-kepatuhan.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "pengelolaan-zakat",
         "modules": [
@@ -5115,6 +5141,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/pemetaan-mustahik.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "pemberdayaan",
         "modules": [
@@ -5507,6 +5535,8 @@
         "visibility": "public",
         "is_featured": false,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/kesiapsiagaan-bencana-komunitas.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "relawan-kebencanaan",
         "modules": [
@@ -5900,6 +5930,8 @@
         "visibility": "public",
         "is_featured": true,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/zakat-fundamental.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "dasar-ziswaf",
         "modules": [
@@ -6141,6 +6173,8 @@
         "visibility": "public",
         "is_featured": true,
         "featured_sort": 0,
+        "thumbnail": "courses\/thumbnails\/wakaf-fundamental.webp",
+        "certificate_background": null,
         "organization_id": 1,
         "category_slug": "dasar-ziswaf",
         "modules": [

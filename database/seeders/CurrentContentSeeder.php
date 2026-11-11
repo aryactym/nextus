@@ -7,7 +7,6 @@ use App\Domain\Catalog\Models\Course;
 use App\Domain\Learning\Models\Quiz;
 use App\Domain\Organization\Models\Organization;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
 
 class CurrentContentSeeder extends Seeder
 {
@@ -51,18 +50,11 @@ class CurrentContentSeeder extends Seeder
                     'visibility' => $courseData['visibility'] ?? 'public',
                     'is_featured' => $courseData['is_featured'] ?? false,
                     'featured_sort' => $courseData['featured_sort'] ?? 0,
+                    'thumbnail' => $courseData['thumbnail'] ?? null,
+                    'certificate_background' => $courseData['certificate_background'] ?? null,
                     'published_at' => now(),
                 ]
             );
-
-            if (! $course->thumbnail) {
-                $source = public_path('images/course-'.(abs(crc32($course->slug)) % 3 + 1).'.webp');
-                if (file_exists($source)) {
-                    $path = 'courses/thumbnails/'.$course->slug.'.webp';
-                    Storage::disk('uploads')->put($path, file_get_contents($source));
-                    $course->update(['thumbnail' => $path]);
-                }
-            }
 
             if ($course->modules()->exists()) {
                 continue;

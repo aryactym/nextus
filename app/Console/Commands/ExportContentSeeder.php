@@ -85,6 +85,8 @@ class ExportContentSeeder extends Command
                 'visibility' => $course->visibility,
                 'is_featured' => (bool) $course->is_featured,
                 'featured_sort' => $course->featured_sort,
+                'thumbnail' => $course->thumbnail,
+                'certificate_background' => $course->certificate_background,
                 'organization_id' => $course->organization_id,
                 'category_slug' => optional($course->category)->slug,
                 'modules' => $modules,
