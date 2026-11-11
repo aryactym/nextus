@@ -130,24 +130,9 @@ class PlayerController extends Controller
         $next = $this->nextIncompleteLesson($course, $lesson, $enrollment->refresh());
 
         // Jika semua lesson di modul selesai, arahkan ke post-test modul (jika ada)
-        $module = $lesson->module;
-        $moduleLessons = $module->lessons;
-        $allComplete = $moduleLessons->every(fn ($l) => $enrollment->lessonProgress()->where('lesson_id', $l->id)->whereNotNull('completed_at')->exists());
-        if ($allComplete) {
-            $sortedModules = $course->modules->sortBy('sort')->values();
-            $idx = $sortedModules->search(fn ($m) => $m->id === $module->id);
-            $nextModule = $idx !== false ? ($sortedModules[$idx + 1] ?? null) : null;
-            if ($nextModule && $nextModule->type === 'post_test') {
-                $quiz = $nextModule->postTest;
-                if ($quiz && $quiz->questions->isNotEmpty()) {
-                    $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
-                    if (! $passed) {
-                        return redirect()->to(
-                            LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $nextModule->uuid]))
-                        );
-                    }
-                }
-            }
+        $postTestRedirect = $this->redirectToNextPostTest($course, $lesson, $enrollment);
+        if ($postTestRedirect) {
+            return $postTestRedirect;
         }
 
         return redirect()->to(
@@ -232,9 +217,17 @@ class PlayerController extends Controller
                 Log::warning('Gamifikasi kuis gagal.', ['user_id' => $request->user()->id, 'quiz_id' => $quiz->id, 'course_id' => $course->id, 'error' => $e->getMessage()]);
             }
 
-            return redirect()
+            $redirect = redirect()
                 ->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $lesson->uuid])))
                 ->with('quiz_passed', "Selamat, kamu lulus dengan skor {$score}. Nilai minimal {$passingScore}.");
+
+            // Jika semua lesson modul ini selesai (mis. kuis final), ke post-test berikutnya
+            $postTestRedirect = $this->redirectToNextPostTest($course, $lesson, $enrollment);
+            if ($postTestRedirect) {
+                return $postTestRedirect->with('quiz_passed', "Selamat, kamu lulus dengan skor {$score}. Modul selesai! Lanjut ke post-test.");
+            }
+
+            return $redirect;
         }
 
         return redirect()
@@ -390,6 +383,39 @@ class PlayerController extends Controller
         return redirect()->to(
             LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug))
         )->with($passed ? 'quiz_passed' : 'quiz_failed', "Post-test: skor {$score}. ".($passed ? 'Modul selesai!' : 'Nilai minimal {$passingScore}. Coba lagi.'));
+    }
+
+    /**
+     * Jika semua lesson di modul selesai, arahkan ke post-test modul berikutnya.
+     * Mengembalikan redirect ke post-test bila perlu, null bila belum semua lesson selesai.
+     */
+    private function redirectToNextPostTest(Course $course, Lesson $lesson, Enrollment $enrollment): ?RedirectResponse
+    {
+        $module = $lesson->module;
+        $moduleLessons = $module->lessons;
+        $allComplete = $moduleLessons->every(fn ($l) => $enrollment->lessonProgress()->where('lesson_id', $l->id)->whereNotNull('completed_at')->exists());
+
+        if (! $allComplete) {
+            return null;
+        }
+
+        $sortedModules = $course->modules->sortBy('sort')->values();
+        $idx = $sortedModules->search(fn ($m) => $m->id === $module->id);
+        $nextModule = $idx !== false ? ($sortedModules[$idx + 1] ?? null) : null;
+
+        if ($nextModule && $nextModule->type === 'post_test') {
+            $quiz = $nextModule->postTest;
+            if ($quiz && $quiz->questions->isNotEmpty()) {
+                $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                if (! $passed) {
+                    return redirect()->to(
+                        LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $nextModule->uuid]))
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 
     private function nextIncompleteLesson(Course $course, Lesson $current, Enrollment $enrollment): ?Lesson
