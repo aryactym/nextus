@@ -23,7 +23,7 @@
                 <div class="col-12 col-md-3">
                     <label class="form-label form-label-sm">Organisasi</label>
                     <select name="org_id" id="org-filter" class="form-select form-select-sm">
-                        <option value="">— Pilih organisasi —</option>
+                        <option value="">Semua organisasi</option>
                         @foreach ($orgs as $org)
                             <option value="{{ $org->id }}"
                                 @selected((string) ($f['org_id'] ?? $orgId ?? null) === (string) $org->id)>

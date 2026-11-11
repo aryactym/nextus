@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrgReportService
 {
-    public function __construct(private readonly int $orgId) {}
+    public function __construct(private readonly ?int $orgId) {}
 
     // -----------------------------------------------------------------------
     // Helpers
@@ -34,7 +34,10 @@ class OrgReportService
     private function baseQuery(?string $dateFrom, ?string $dateTo, ?int $courseId): Builder
     {
         return Enrollment::query()
-            ->whereHas('user', fn ($q) => $q->withoutGlobalScopes()->where('organization_id', $this->orgId))
+            ->when($this->orgId, fn ($q) => $q->whereHas(
+                'user',
+                fn ($uq) => $uq->withoutGlobalScopes()->where('organization_id', $this->orgId)
+            ))
             ->when($dateFrom, fn ($q) => $q->whereDate('enrolled_at', '>=', $dateFrom))
             ->when($dateTo, fn ($q) => $q->whereDate('enrolled_at', '<=', $dateTo))
             ->when($courseId, fn ($q) => $q->where('course_id', $courseId));
@@ -48,7 +51,7 @@ class OrgReportService
     public function summary(?string $dateFrom, ?string $dateTo, ?int $courseId): array
     {
         $learnerCount = User::withoutGlobalScopes()
-            ->where('organization_id', $this->orgId)
+            ->when($this->orgId, fn ($q) => $q->where('organization_id', $this->orgId))
             ->whereNull('deleted_at')
             ->count();
 
@@ -75,7 +78,7 @@ class OrgReportService
             ->join('users', 'enrollments.user_id', '=', 'users.id')
             ->join('courses', 'enrollments.course_id', '=', 'courses.id')
             ->join('categories', 'courses.category_id', '=', 'categories.id')
-            ->where('users.organization_id', $this->orgId)
+            ->when($this->orgId, fn ($q) => $q->where('users.organization_id', $this->orgId))
             ->whereNull('users.deleted_at')
             ->whereNull('enrollments.deleted_at')
             ->whereNull('courses.deleted_at')
@@ -105,7 +108,7 @@ class OrgReportService
             ->join('courses', 'enrollments.course_id', '=', 'courses.id')
             ->leftJoin('categories', 'courses.category_id', '=', 'categories.id')
             ->leftJoin('certificates', 'certificates.enrollment_id', '=', 'enrollments.id')
-            ->where('users.organization_id', $this->orgId)
+            ->when($this->orgId, fn ($q) => $q->where('users.organization_id', $this->orgId))
             ->whereNull('users.deleted_at')
             ->whereNull('enrollments.deleted_at')
             ->whereNull('courses.deleted_at')
@@ -136,7 +139,7 @@ class OrgReportService
             ->join('users', 'enrollments.user_id', '=', 'users.id')
             ->join('courses', 'enrollments.course_id', '=', 'courses.id')
             ->leftJoin('certificates', 'certificates.enrollment_id', '=', 'enrollments.id')
-            ->where('users.organization_id', $this->orgId)
+            ->when($this->orgId, fn ($q) => $q->where('users.organization_id', $this->orgId))
             ->where('courses.uuid', $courseUuid)
             ->whereNull('users.deleted_at')
             ->whereNull('enrollments.deleted_at')
@@ -169,7 +172,7 @@ class OrgReportService
         return DB::table('enrollments')
             ->join('users', 'enrollments.user_id', '=', 'users.id')
             ->leftJoin('certificates', 'certificates.enrollment_id', '=', 'enrollments.id')
-            ->where('users.organization_id', $this->orgId)
+            ->when($this->orgId, fn ($q) => $q->where('users.organization_id', $this->orgId))
             ->whereNull('users.deleted_at')
             ->whereNull('enrollments.deleted_at')
             ->when($dateFrom, fn ($q) => $q->whereDate('enrollments.enrolled_at', '>=', $dateFrom))

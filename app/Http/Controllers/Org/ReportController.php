@@ -16,7 +16,7 @@ use Illuminate\View\View;
 
 class ReportController extends Controller
 {
-    private function service(int $orgId): OrgReportService
+    private function service(?int $orgId): OrgReportService
     {
         return new OrgReportService($orgId);
     }
@@ -36,14 +36,15 @@ class ReportController extends Controller
 
     /**
      * Resolve which org to report on.
-     * Super Admin / Admin (manage users) can pick any org via ?org_id=.
+     * Super Admin / Admin (manage users) can pick any org via ?org_id=, or leave it
+     * empty (or pick "Semua organisasi") to aggregate across all organizations.
      * Org Admin always sees their own org only.
      *
      * @param  array{org_id: int|null}  $f
      */
-    private function resolvedOrgId(array $f): int
+    private function resolvedOrgId(array $f): ?int
     {
-        if (auth()->user()->can('manage users') && $f['org_id']) {
+        if (auth()->user()->can('manage users') || auth()->user()->can('manage organizations')) {
             return $f['org_id'];
         }
 
@@ -64,10 +65,10 @@ class ReportController extends Controller
             ->get(['id', 'name', 'type']);
     }
 
-    private function coursesForOrg(int $orgId): Collection
+    private function coursesForOrg(?int $orgId): Collection
     {
         return Course::withoutGlobalScopes()
-            ->where('organization_id', $orgId)
+            ->when($orgId, fn ($q) => $q->where('organization_id', $orgId))
             ->where('status', 'published')
             ->orderBy('title->id')
             ->get(['id', 'uuid', 'title']);
