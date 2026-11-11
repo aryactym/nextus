@@ -24,6 +24,34 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label" for="organization_id">Organisasi</label>
+                    @if (isset($organizations) && $organizations !== null)
+                        @php
+                            $typeLabels = [
+                                'divisi_dd' => 'Divisi DD',
+                                'mpz_dd' => 'MPZ DD',
+                                'cabang' => 'Cabang',
+                                'lainnya' => 'Others',
+                            ];
+                            $currentOrgId = old('organization_id', $learner->organization_id ?? auth()->user()->organization_id);
+                        @endphp
+                        <select id="organization_id" name="organization_id"
+                                class="form-select @error('organization_id') is-invalid @enderror">
+                            @foreach ($organizations as $org)
+                                <option value="{{ $org->id }}" @selected((int) $currentOrgId === $org->id)>
+                                    {{ $org->name }} — {{ $typeLabels[$org->type] ?? $org->type }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-hint">Pilih organisasi tempat peserta terdaftar.</div>
+                        @error('organization_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    @else
+                        <input type="text" class="form-control" disabled
+                               value="{{ $learner->organization?->name ?? auth()->user()->organization?->name ?? '-' }}">
+                    @endif
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label" for="pendidikan_id">Pendidikan terakhir</label>
                     <select id="pendidikan_id" name="pendidikan_id"
                             class="form-select @error('pendidikan_id') is-invalid @enderror">

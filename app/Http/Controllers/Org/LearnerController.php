@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Org;
 
 use App\Domain\Catalog\Models\Pendidikan;
+use App\Domain\Organization\Models\Organization;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +36,39 @@ class LearnerController extends Controller
             $this->canAccessAllOrganizations() || $learner->organization_id === $this->orgId(),
             403
         );
+    }
+
+    /**
+     * Super admin (manage organizations) boleh memindahkan peserta ke organisasi
+     * mana pun lewat dropdown; role lain tetap di organisasi semula.
+     */
+    private function organizationIdFromRequest(Request $request, array $validated, int $fallbackId): int
+    {
+        if (auth()->user()->can('manage organizations') && $request->filled('organization_id')) {
+            $id = (int) $request->input('organization_id');
+
+            if (Organization::withoutGlobalScopes()->whereKey($id)->exists()) {
+                return $id;
+            }
+        }
+
+        return $fallbackId;
+    }
+
+    /**
+     * Dropdown pilih organisasi hanya untuk super admin (manage organizations).
+     *
+     * @return Collection<int, Organization>|null
+     */
+    private function organizationsForSelect(): ?Collection
+    {
+        if (! auth()->user()->can('manage organizations')) {
+            return null;
+        }
+
+        return Organization::withoutGlobalScopes()
+            ->orderBy('name')
+            ->get(['id', 'name', 'type']);
     }
 
     public function index(Request $request): View
@@ -66,7 +101,10 @@ class LearnerController extends Controller
 
         $pendidikans = Pendidikan::orderBy('level')->get();
 
-        return view('org.learners.create', compact('pendidikans'));
+        return view('org.learners.create', [
+            'pendidikans' => $pendidikans,
+            'organizations' => $this->organizationsForSelect(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -83,11 +121,13 @@ class LearnerController extends Controller
             'nama_organisasi' => ['nullable', 'string', 'max:255'],
         ]);
 
+        $organizationId = $this->organizationIdFromRequest($request, $validated, (int) $this->orgId());
+
         $user = User::withoutGlobalScopes()->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'organization_id' => $this->orgId(),
+            'organization_id' => $organizationId,
             'pendidikan_id' => $validated['pendidikan_id'] ?? null,
             'nama_jabatan' => $validated['nama_jabatan'] ?? null,
             'kategori_jabatan' => $validated['kategori_jabatan'] ?? null,
@@ -122,7 +162,13 @@ class LearnerController extends Controller
 
         $pendidikans = Pendidikan::orderBy('level')->get();
 
-        return view('org.learners.edit', compact('learner', 'pendidikans'));
+        $learner->loadMissing('organization');
+
+        return view('org.learners.edit', [
+            'learner' => $learner,
+            'pendidikans' => $pendidikans,
+            'organizations' => $this->organizationsForSelect(),
+        ]);
     }
 
     public function update(Request $request, User $learner): RedirectResponse
@@ -140,9 +186,12 @@ class LearnerController extends Controller
             'nama_organisasi' => ['nullable', 'string', 'max:255'],
         ]);
 
+        $organizationId = $this->organizationIdFromRequest($request, $validated, (int) $learner->organization_id);
+
         $learner->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'organization_id' => $organizationId,
             'pendidikan_id' => $validated['pendidikan_id'] ?? null,
             'nama_jabatan' => $validated['nama_jabatan'] ?? null,
             'kategori_jabatan' => $validated['kategori_jabatan'] ?? null,
