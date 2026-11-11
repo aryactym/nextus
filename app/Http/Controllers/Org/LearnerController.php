@@ -77,10 +77,13 @@ class LearnerController extends Controller
 
         $q = trim((string) $request->input('q', ''));
         $status = (string) $request->input('status', '');
+        $canAllOrgs = auth()->user()->can('manage organizations');
+        $orgId = $canAllOrgs && $request->filled('org_id') ? (int) $request->input('org_id') : null;
 
         $learners = User::withoutGlobalScopes()
-            ->with('roles', 'enrollments')
-            ->where('organization_id', $this->orgId())
+            ->with(['roles', 'enrollments', 'organization'])
+            ->when($orgId, fn ($query) => $query->where('organization_id', $orgId))
+            ->when(! $canAllOrgs, fn ($query) => $query->where('organization_id', $this->orgId()))
             ->when($q !== '', fn ($query) => $query->where(function ($query) use ($q): void {
                 $query->where('name', 'like', '%'.$q.'%')
                     ->orWhere('email', 'like', '%'.$q.'%')
@@ -92,7 +95,16 @@ class LearnerController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('org.learners.index', compact('learners', 'q', 'status'));
+        $organizations = $canAllOrgs
+            ? Organization::withoutGlobalScopes()
+                ->whereNull('deleted_at')
+                ->where('status', 'active')
+                ->has('users')
+                ->orderBy('name->id')
+                ->get(['id', 'name', 'type'])
+            : null;
+
+        return view('org.learners.index', compact('learners', 'q', 'status', 'organizations', 'orgId'));
     }
 
     public function create(): View

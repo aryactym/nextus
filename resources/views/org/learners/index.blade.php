@@ -46,6 +46,19 @@
                            placeholder="Cari nama, email, atau jabatan">
                 </div>
             </div>
+            @if (isset($organizations) && $organizations !== null)
+                <div class="col-12 col-md-3">
+                    <select name="org_id" class="form-select" aria-label="Filter organisasi">
+                        <option value="">Semua organisasi</option>
+                        @php $typeLabels = App\Http\Controllers\Admin\OrganizationController::TYPES; @endphp
+                        @foreach ($organizations as $org)
+                            <option value="{{ $org->id }}" @selected((string) ($orgId ?? '') === (string) $org->id)>
+                                {{ $org->name }} — {{ $typeLabels[$org->type] ?? $org->type }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
             <div class="col-6 col-md-3">
                 <select name="status" class="form-select" aria-label="Filter status">
                     <option value="" @selected($status === '')>Semua</option>
@@ -55,7 +68,7 @@
             </div>
             <div class="col-6 col-md-auto d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Terapkan</button>
-                @if ($q !== '' || $status !== '')
+                @if ($q !== '' || $status !== '' || ($orgId ?? null))
                     <a href="{{ route('admin.org.learners.index') }}" class="btn btn-link">Reset</a>
                 @endif
             </div>
@@ -68,6 +81,7 @@
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
+                    <th>Organisasi</th>
                     <th>Jabatan</th>
                     <th class="text-center">Kursus aktif</th>
                     <th class="text-center">Selesai</th>
@@ -93,6 +107,7 @@
                             @endif
                         </td>
                         <td class="text-secondary">{{ $learner->email }}</td>
+                        <td class="text-secondary small">{{ $learner->organization?->name ?? '-' }}</td>
                         <td class="text-secondary small">
                             {{ $learner->nama_jabatan ?? '—' }}
                             @if ($learner->kategori_jabatan)
