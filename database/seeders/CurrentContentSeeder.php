@@ -36,9 +36,17 @@ class CurrentContentSeeder extends Seeder
         foreach ($courses as $courseData) {
             $category = null;
             if (! empty($courseData['category_slug'])) {
-                $category = Category::firstOrCreate(
+                $categoryNames = [
+                    'dasar-ziswaf' => 'Dasar Ziswaf',
+                    'pengelolaan-zakat' => 'Pengelolaan Zakat',
+                    'pemberdayaan' => 'Pemberdayaan Masyarakat',
+                    'tata-kelola' => 'Tata Kelola & Kepatuhan',
+                    'manajemen-lembaga' => 'Manajemen Lembaga',
+                    'relawan-kebencanaan' => 'Relawan & Kebencanaan',
+                ];
+                $category = Category::updateOrCreate(
                     ['slug' => $courseData['category_slug'], 'organization_id' => $organization->id],
-                    ['name' => ['id' => $courseData['category_slug']], 'sort' => 1]
+                    ['name' => ['id' => $categoryNames[$courseData['category_slug']] ?? ucfirst(str_replace('-', ' ', $courseData['category_slug']))], 'sort' => 1]
                 );
             }
 
