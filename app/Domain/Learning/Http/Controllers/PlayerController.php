@@ -40,7 +40,8 @@ class PlayerController extends Controller
         // Pre-test wajib: jika ada modul pre_test sebelum modul ini yang belum selesai, redirect
         $sortedModules = $course->modules->sortBy('sort')->values();
         $currentModuleIndex = $sortedModules->search(fn ($m) => $m->id === $module->id);
-        if ($currentModuleIndex !== false && $enrollment) {
+        // Preview tetap bisa diakses tanpa pre-test
+        if ($currentModuleIndex !== false && $enrollment && ! $lesson->is_preview) {
             for ($i = 0; $i < $currentModuleIndex; $i++) {
                 $prevMod = $sortedModules[$i];
                 $quiz = $prevMod->type === 'pre_test'
@@ -48,11 +49,19 @@ class PlayerController extends Controller
                     : ($prevMod->type === 'post_test' ? $prevMod->postTest : null);
 
                 if ($quiz && $quiz->questions->isNotEmpty()) {
-                    $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
-                    if (! $passed) {
-                        $routeName = $prevMod->type === 'post_test' ? 'module.posttest' : 'module.pretest';
+                    // Pre-test tidak memiliki ambang kelulusan: cukup sudah dikerjakan.
+                    if ($prevMod->type === 'pre_test') {
+                        $attempted = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->exists();
+                        if (! $attempted) {
+                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.pretest', ['course' => $course->slug, 'module' => $prevMod->uuid])));
+                        }
+                    } else {
+                        $passed = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->where('passed', true)->exists();
+                        if (! $passed) {
+                            $routeName = $prevMod->type === 'post_test' ? 'module.posttest' : 'module.pretest';
 
-                        return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route($routeName, ['course' => $course->slug, 'module' => $prevMod->uuid])));
+                            return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route($routeName, ['course' => $course->slug, 'module' => $prevMod->uuid])));
+                        }
                     }
                 }
             }
@@ -60,7 +69,7 @@ class PlayerController extends Controller
 
         // Backward compat: quiz-on-module pre-test/post-test
         $preTest = $module->preTest;
-        if ($preTest && $preTest->questions->isNotEmpty() && $enrollment) {
+        if ($preTest && $preTest->questions->isNotEmpty() && $enrollment && ! $lesson->is_preview) {
             $attempted = $enrollment->quizAttempts()->where('quiz_id', $preTest->id)->exists();
             if (! $attempted) {
                 return redirect()->to(LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.pretest', ['course' => $course->slug, 'module' => $module->uuid])));
@@ -292,11 +301,19 @@ class PlayerController extends Controller
             ? $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->latest()->first()
             : null;
 
-        $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
+        // Pre-test tidak memiliki ambang kelulusan, jadi tidak menampilkan nilai minimal.
+        $passingScore = $type === 'pre'
+            ? null
+            : ($quiz->passing_score ?? $course->passing_grade ?? 75);
+
+        $maxAttempts = $quiz->max_attempts;
+        $attemptCount = $enrollment
+            ? $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->count()
+            : 0;
 
         // Biarkan halaman menampilkan skor terakhir seperti pre-test
 
-        return view('learning.module-test', compact('course', 'module', 'quiz', 'type', 'enrollment', 'lastAttempt', 'passingScore'));
+        return view('learning.module-test', compact('course', 'module', 'quiz', 'type', 'enrollment', 'lastAttempt', 'passingScore', 'maxAttempts', 'attemptCount'));
     }
 
     public function submitModuleTest(Request $request, string $courseSlug, CourseModule $module, string $type): RedirectResponse
@@ -308,6 +325,17 @@ class PlayerController extends Controller
         abort_if(! $quiz || $quiz->questions->isEmpty(), 404);
 
         $enrollment = $request->user()->enrollments()->where('course_id', $course->id)->firstOrFail();
+
+        // Batas percobaan (default 1x, kecuali diatur)
+        $maxAttempts = $quiz->max_attempts ?? 1;
+        $usedAttempts = $enrollment->quizAttempts()->where('quiz_id', $quiz->id)->count();
+        if ($usedAttempts >= $maxAttempts) {
+            $routeName = $type === 'pre' ? 'module.pretest' : 'module.posttest';
+
+            return redirect()->to(
+                LaravelLocalization::getLocalizedURL(app()->getLocale(), route($routeName, ['course' => $course->slug, 'module' => $module->uuid]))
+            )->with('quiz_failed', 'Batas percobaan '.($type === 'pre' ? 'pre-test' : 'post-test').' ('.$maxAttempts.') telah tercapai.');
+        }
 
         $validated = $request->validate([
             'answers' => ['required', 'array'],
@@ -326,8 +354,9 @@ class PlayerController extends Controller
 
         $total = $quiz->questions->count();
         $score = $total > 0 ? (int) round($correct / $total * 100) : 0;
-        $passingScore = $quiz->passing_score ?? $course->passing_grade ?? 75;
-        $passed = $score >= $passingScore;
+        // Pre-test tidak memiliki ambang kelulusan; selalu dianggap selesai.
+        $passingScore = $type === 'pre' ? null : ($quiz->passing_score ?? $course->passing_grade ?? 75);
+        $passed = $type === 'pre' ? true : $score >= $passingScore;
 
         QuizAttempt::create([
             'enrollment_id' => $enrollment->id,
@@ -344,7 +373,7 @@ class PlayerController extends Controller
             if ($nextLesson) {
                 return redirect()->to(
                     LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $nextLesson->uuid]))
-                )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi.' : 'Nilai minimal {$passingScore}.'));
+                )->with('quiz_passed', "Pre-test: skor {$score}. Lanjutkan ke materi.");
             }
             // Jika tidak ada lesson, cari modul berikutnya
             $sortedModules = $course->modules->sortBy('sort')->values();
@@ -355,12 +384,12 @@ class PlayerController extends Controller
 
                 return redirect()->to(
                     LaravelLocalization::getLocalizedURL(app()->getLocale(), route('player.show', ['course' => $course->slug, 'lesson' => $firstLesson->uuid]))
-                )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi.' : 'Nilai minimal {$passingScore}.'));
+                )->with('quiz_passed', "Pre-test: skor {$score}. Lanjutkan ke materi.");
             }
 
             return redirect()->to(
                 LaravelLocalization::getLocalizedURL(app()->getLocale(), route('catalog.show', $course->slug))
-            )->with($passed ? 'quiz_passed' : 'quiz_failed', "Pre-test: skor {$score}. ".($passed ? 'Lanjutkan ke materi.' : 'Nilai minimal {$passingScore}.'));
+            )->with('quiz_passed', "Pre-test: skor {$score}. Lanjutkan ke materi.");
         }
 
         // Post-test: sync progress to check course completion & final score

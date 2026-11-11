@@ -37,6 +37,8 @@ class StoreCourseRequest extends FormRequest
             'allow_custom_amount' => ['boolean'],
             'currency' => ['sometimes', 'string', 'size:3'],
             'passing_grade' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'is_featured' => ['sometimes', 'boolean'],
+            'featured_sort' => ['nullable', 'integer', 'min:0'],
             'status' => ['required', 'in:draft,published,archived'],
         ];
     }

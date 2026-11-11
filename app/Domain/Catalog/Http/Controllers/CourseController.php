@@ -68,6 +68,8 @@ class CourseController extends Controller
         $data['allow_custom_amount'] = $data['allow_custom_amount'] ?? true;
         $data['currency'] = $data['currency'] ?? 'IDR';
         $data['passing_grade'] = $data['passing_grade'] ?? 75;
+        $data['is_featured'] = $data['is_featured'] ?? false;
+        $data['featured_sort'] = $data['featured_sort'] ?? 0;
 
         if ($request->hasFile('thumbnail')) {
             $result = $upload->upload($request->file('thumbnail'), 'image', 'courses/thumbnails');
@@ -141,6 +143,8 @@ class CourseController extends Controller
         $data['allow_custom_amount'] = $data['allow_custom_amount'] ?? true;
         $data['currency'] = $data['currency'] ?? 'IDR';
         $data['passing_grade'] = $data['passing_grade'] ?? 75;
+        $data['is_featured'] = $request->boolean('is_featured');
+        $data['featured_sort'] = $data['featured_sort'] ?? $course->featured_sort ?? 0;
 
         if ($request->hasFile('thumbnail')) {
             if ($course->thumbnail) {

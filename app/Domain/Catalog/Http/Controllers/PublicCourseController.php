@@ -66,14 +66,23 @@ class PublicCourseController extends Controller
 
     public function home(): View
     {
+        $featuredCourses = Course::withoutGlobalScope('organization')
+            ->where('status', 'published')
+            ->where('is_featured', true)
+            ->with('category')
+            ->orderBy('featured_sort')
+            ->orderByDesc('published_at')
+            ->limit(12)
+            ->get();
+
         $courses = Course::withoutGlobalScope('organization')
             ->where('status', 'published')
             ->with('category')
             ->orderByDesc('published_at')
-            ->limit(6)
+            ->limit(4)
             ->get();
 
-        return view('home', compact('courses'));
+        return view('home', compact('featuredCourses', 'courses'));
     }
 
     public function show(string $slug): View|RedirectResponse

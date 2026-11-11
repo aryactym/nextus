@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Learning\Models;
 
+use App\Domain\Catalog\Models\CourseModule;
 use App\Domain\Catalog\Models\Lesson;
 use App\Support\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $module_id
  * @property string $type
  * @property int|null $passing_score
+ * @property int|null $max_attempts
  */
 class Quiz extends Model
 {
@@ -28,10 +30,12 @@ class Quiz extends Model
         'module_id',
         'type',
         'passing_score',
+        'max_attempts',
     ];
 
     protected $casts = [
         'passing_score' => 'integer',
+        'max_attempts' => 'integer',
     ];
 
     public function lesson(): BelongsTo
@@ -41,7 +45,7 @@ class Quiz extends Model
 
     public function module(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Catalog\Models\CourseModule::class, 'module_id');
+        return $this->belongsTo(CourseModule::class, 'module_id');
     }
 
     public function scopePre($query)

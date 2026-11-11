@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PendidikanSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(SponsorSeeder::class);
-        $this->call(DemoSeeder::class);
+        $this->call(CurrentContentSeeder::class);
         $this->call(MpzSeeder::class);
         $this->call(EventSeeder::class);
         $this->call(OrganizationSeeder::class);

@@ -132,10 +132,10 @@ class OrgReportService
     // Per course drill-down (learner list for one course)
     // -----------------------------------------------------------------------
 
-    /** @return Collection<int, object{learner_name: string, learner_email: string, progress_percent: int, completed_at: string|null, has_certificate: bool}> */
+    /** @return Collection<int, object{learner_name: string, learner_email: string, progress_percent: int, completed_at: string|null, has_certificate: bool, pretest_score: int|null, posttest_score: int|null}> */
     public function byCourseDetail(string $courseUuid, ?string $dateFrom, ?string $dateTo): Collection
     {
-        return DB::table('enrollments')
+        $rows = DB::table('enrollments')
             ->join('users', 'enrollments.user_id', '=', 'users.id')
             ->join('courses', 'enrollments.course_id', '=', 'courses.id')
             ->leftJoin('certificates', 'certificates.enrollment_id', '=', 'enrollments.id')
@@ -146,6 +146,7 @@ class OrgReportService
             ->when($dateFrom, fn ($q) => $q->whereDate('enrollments.enrolled_at', '>=', $dateFrom))
             ->when($dateTo, fn ($q) => $q->whereDate('enrollments.enrolled_at', '<=', $dateTo))
             ->select(
+                'enrollments.id as enrollment_id',
                 'users.uuid as user_uuid',
                 'users.name as learner_name',
                 'users.email as learner_email',
@@ -155,11 +156,51 @@ class OrgReportService
                 DB::raw('COUNT(certificates.id) > 0 as has_certificate'),
             )
             ->groupBy(
-                'users.uuid', 'users.name', 'users.email',
+                'enrollments.id', 'users.uuid', 'users.name', 'users.email',
                 'enrollments.progress_percent', 'enrollments.enrolled_at', 'enrollments.completed_at',
             )
             ->orderBy('users.name')
             ->get();
+
+        if ($rows->isEmpty()) {
+            return $rows;
+        }
+
+        // Ambil nilai pre-test & post-test terakhir per peserta
+        $enrollmentIds = $rows->pluck('enrollment_id')->all();
+
+        $attempts = DB::table('quiz_attempts')
+            ->join('quizzes', 'quiz_attempts.quiz_id', '=', 'quizzes.id')
+            ->join('course_modules', 'quizzes.module_id', '=', 'course_modules.id')
+            ->join('courses', 'course_modules.course_id', '=', 'courses.id')
+            ->whereIn('quiz_attempts.enrollment_id', $enrollmentIds)
+            ->where('courses.uuid', $courseUuid)
+            ->select(
+                'quiz_attempts.enrollment_id',
+                'quiz_attempts.score',
+                'quizzes.type',
+                'quiz_attempts.finished_at',
+            )
+            ->orderByDesc('quiz_attempts.finished_at')
+            ->get();
+
+        $preScores = [];
+        $postScores = [];
+        foreach ($attempts as $attempt) {
+            if ($attempt->type === 'pre' && ! array_key_exists($attempt->enrollment_id, $preScores)) {
+                $preScores[$attempt->enrollment_id] = (int) $attempt->score;
+            }
+            if ($attempt->type === 'post' && ! array_key_exists($attempt->enrollment_id, $postScores)) {
+                $postScores[$attempt->enrollment_id] = (int) $attempt->score;
+            }
+        }
+
+        foreach ($rows as $row) {
+            $row->pretest_score = $preScores[$row->enrollment_id] ?? null;
+            $row->posttest_score = $postScores[$row->enrollment_id] ?? null;
+        }
+
+        return $rows;
     }
 
     // -----------------------------------------------------------------------

@@ -37,6 +37,8 @@
                         <th>Peserta</th>
                         <th>Email</th>
                         <th>Progres</th>
+                        <th>Pre-test</th>
+                        <th>Post-test</th>
                         <th>Mendaftar</th>
                         <th>Selesai</th>
                         <th>Sertifikat</th>
@@ -55,6 +57,12 @@
                                     </div>
                                     <span class="text-muted small">{{ $row->progress_percent }}%</span>
                                 </div>
+                            </td>
+                            <td class="text-center small">
+                                {{ $row->pretest_score !== null ? $row->pretest_score : '—' }}
+                            </td>
+                            <td class="text-center small">
+                                {{ $row->posttest_score !== null ? $row->posttest_score : '—' }}
                             </td>
                             <td class="text-secondary small">
                                 {{ $row->enrolled_at ? \Carbon\Carbon::parse($row->enrolled_at)->format('d M Y') : '—' }}

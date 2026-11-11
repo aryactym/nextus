@@ -79,6 +79,8 @@
                                 <th>Kursus</th>
                                 <th>Topik</th>
                                 <th>Progres</th>
+                                <th>Pre-test</th>
+                                <th>Post-test</th>
                                 <th>Selesai</th>
                                 <th>Sertifikat</th>
                             </tr>
@@ -101,6 +103,14 @@
                                             <span class="text-muted small">{{ $enrollment->progress_percent }}%</span>
                                         </div>
                                     </td>
+                                    @php
+                                        $preQuizIds = $enrollment->course?->modules?->flatMap(fn ($m) => $m->quizzes ?? collect())->where('type', 'pre')->pluck('id') ?? collect();
+                                        $postQuizIds = $enrollment->course?->modules?->flatMap(fn ($m) => $m->quizzes ?? collect())->where('type', 'post')->pluck('id') ?? collect();
+                                        $preScore = $enrollment->quizAttempts->whereIn('quiz_id', $preQuizIds)->sortByDesc('finished_at')->first()?->score;
+                                        $postScore = $enrollment->quizAttempts->whereIn('quiz_id', $postQuizIds)->sortByDesc('finished_at')->first()?->score;
+                                    @endphp
+                                    <td class="text-center small">{{ $preScore !== null ? $preScore : '—' }}</td>
+                                    <td class="text-center small">{{ $postScore !== null ? $postScore : '—' }}</td>
                                     <td class="small">
                                         @if ($enrollment->completed_at)
                                             <span class="badge bg-green-lt">

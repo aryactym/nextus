@@ -54,10 +54,22 @@
               </div>
             @endif
 
-            <p class="text-secondary">
-              Jawab semua pertanyaan. Nilai minimal untuk lulus adalah <strong>{{ $passingScore }}</strong>.
+            @if ($type === 'post')
+              <p class="text-secondary">
+                Jawab semua pertanyaan. Nilai minimal untuk lulus adalah <strong>{{ $passingScore }}</strong>.
+              </p>
+            @else
+              <p class="text-secondary">
+                Jawab semua pertanyaan. Pre-test tidak memiliki nilai minimal kelulusan.
+              </p>
+            @endif
+
+            @php $maxAttemptsDisplay = $maxAttempts ?? 1; @endphp
+            <p class="text-secondary small">
+              Percobaan: <strong>{{ $attemptCount }}</strong> / <strong>{{ $maxAttemptsDisplay }}</strong>
             </p>
 
+            @if ($attemptCount < ($maxAttempts ?? 1))
             <form method="POST" action="{{ $type === 'pre' ? route('module.pretest.submit', ['course' => $course->slug, 'module' => $module->uuid]) : route('module.posttest.submit', ['course' => $course->slug, 'module' => $module->uuid]) }}">
               @csrf
 
@@ -88,9 +100,51 @@
 
               <button type="submit" class="btn btn-primary">Kirim jawaban</button>
             </form>
+            @else
+              <div class="alert alert-danger" role="alert">
+                Batas percobaan {{ $type === 'pre' ? 'pre-test' : 'post-test' }} ({{ $maxAttemptsDisplay }}) telah tercapai.
+              </div>
+            @endif
           @endif
         </div>
       </div>
     </div>
   </section>
+@auth
+  @unless(auth()->user()->can('manage organizations'))
+    <style>
+      body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    </style>
+    <script>
+      (function () {
+        document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+        document.addEventListener('copy', function (e) { e.preventDefault(); });
+        document.addEventListener('cut', function (e) { e.preventDefault(); });
+        document.addEventListener('paste', function (e) { e.preventDefault(); });
+        document.addEventListener('keydown', function (e) {
+          var key = (e.key || '').toLowerCase();
+          if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'p', 's', 'u', 'a'].includes(key)) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          if (key === 'printscreen' || e.key === 'PrintScreen') {
+            e.preventDefault();
+            e.stopPropagation();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText('').catch(function () {});
+            }
+            window.getSelection && window.getSelection().removeAllRanges();
+          }
+        }, true);
+        document.addEventListener('keyup', function (e) {
+          if ((e.key || '').toLowerCase() === 'printscreen') {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText('').catch(function () {});
+            }
+          }
+        }, true);
+      })();
+    </script>
+  @endunless
+@endauth
 </x-layouts.public>

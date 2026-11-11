@@ -94,6 +94,34 @@ class QuizController extends Controller
             ->with('success', 'Soal '.($type === 'pre' ? 'pre-test' : 'post-test').' berhasil ditambahkan.');
     }
 
+    public function updateModuleSettings(Request $request, CourseModule $module, string $type): RedirectResponse
+    {
+        abort_unless($request->user()->can('manage courses'), 403);
+
+        $module = CourseModule::query()
+            ->whereHas('course', fn (Builder $query) => $query->forOrganization())
+            ->findOrFail($module->getKey());
+
+        abort_unless(in_array($type, ['pre', 'post'], true), 422);
+
+        $validated = $request->validate([
+            'max_attempts' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        $quiz = Quiz::firstOrCreate([
+            'module_id' => $module->id,
+            'type' => $type,
+        ]);
+
+        $quiz->update([
+            'max_attempts' => $validated['max_attempts'] ?? 1,
+        ]);
+
+        return redirect()
+            ->route('admin.courses.edit', $module->course)
+            ->with('success', 'Pengaturan '.($type === 'pre' ? 'pre-test' : 'post-test').' berhasil diperbarui.');
+    }
+
     public function updateQuestion(Request $request, QuizQuestion $question): RedirectResponse
     {
         abort_unless($request->user()->can('manage courses'), 403);

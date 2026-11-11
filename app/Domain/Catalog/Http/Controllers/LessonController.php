@@ -9,7 +9,9 @@ use App\Domain\Catalog\Models\Lesson;
 use App\Http\Controllers\Controller;
 use App\Services\UploadService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
@@ -63,6 +65,34 @@ class LessonController extends Controller
 
         return redirect()->route('admin.courses.edit', $lesson->module->course)
             ->with('success', 'Pelajaran berhasil diperbarui.');
+    }
+
+    public function reorder(Request $request, CourseModule $module): JsonResponse|RedirectResponse
+    {
+        abort_unless($request->user()->can('manage courses'), 403);
+
+        $module = CourseModule::query()
+            ->whereHas('course', fn (Builder $query) => $query->forOrganization())
+            ->findOrFail($module->getKey());
+
+        $validated = $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['required', 'string'],
+        ]);
+
+        foreach (array_values($validated['order']) as $index => $uuid) {
+            Lesson::query()
+                ->where('module_id', $module->id)
+                ->where('uuid', $uuid)
+                ->update(['sort' => $index + 1]);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('admin.courses.edit', $module->course)
+            ->with('success', 'Urutan pelajaran berhasil diperbarui.');
     }
 
     public function destroy(Lesson $lesson, UploadService $upload)

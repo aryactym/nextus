@@ -217,7 +217,21 @@
                                         </button>
                                     </div>
 
-                                    @forelse ($testQuestions as $question)
+                                    <form action="{{ route('admin.modules.quiz.settings.update', [$module, $testType]) }}" method="POST" class="row g-2 align-items-end mb-3">
+                                         @csrf
+                                         @method('PUT')
+                                         <div class="col-md-4">
+                                             <label class="form-label small mb-1">Maksimal percobaan</label>
+                                             <input type="number" name="max_attempts" class="form-control form-control-sm"
+                                                    min="1" max="100"
+                                                    value="{{ old('max_attempts', $testQuiz?->max_attempts ?? 1) }}">
+                                         </div>
+                                         <div class="col-md-2">
+                                             <button type="submit" class="btn btn-sm btn-outline-primary">Simpan</button>
+                                         </div>
+                                     </form>
+
+                                     @forelse ($testQuestions as $question)
                                         <div class="border rounded p-2 mb-2 bg-white">
                                             <div class="d-flex justify-content-between align-items-start gap-2">
                                                 <div>
@@ -284,11 +298,14 @@
                                     </div>
                                 </div>
                             @elseif ($module->lessons->isNotEmpty())
-                                <div class="list-group list-group-flush my-3">
+                                <div class="list-group list-group-flush my-3 lesson-sortable"
+                                     id="lessons-sortable-{{ $module->uuid }}"
+                                     data-reorder-url="{{ route('admin.modules.lessons.reorder', $module) }}">
                                     @foreach ($module->lessons as $lesson)
-                                        <div class="list-group-item px-0">
+                                        <div class="list-group-item px-0" draggable="true" data-lesson-uuid="{{ $lesson->uuid }}">
                                             <div class="d-flex justify-content-between align-items-center gap-2">
                                                 <div class="d-flex align-items-center gap-2">
+                                                    <span class="drag-handle me-2" style="user-select:none; cursor:grab;">&#9776;</span>
                                                     <span class="badge {{ $lessonBadges[$lesson->type] ?? 'bg-secondary-lt' }}">
                                                         {{ ucfirst($lesson->type) }}
                                                     </span>
@@ -671,6 +688,24 @@
                         @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" form="course-form" value="1"
+                                   @checked(old('is_featured', $course->is_featured))>
+                            <label class="form-check-label" for="is_featured">Tampilkan di beranda (Kelas Pilihan Editor)</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="featured_sort">Urutan featured</label>
+                        <input type="number" id="featured_sort" name="featured_sort" form="course-form"
+                               class="form-control @error('featured_sort') is-invalid @enderror"
+                               value="{{ old('featured_sort', $course->featured_sort) }}" min="0">
+                        @error('featured_sort')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <hr>
 
                     <div class="mb-3">
@@ -839,5 +874,60 @@
     </div>
 
 <x-hugerte :selectors="['#description_id']" />
+
+<style>
+    .drag-handle { cursor: grab; color: #64748b; }
+    .drag-handle:active { cursor: grabbing; }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.lesson-sortable').forEach(function (container) {
+        var dragged = null;
+        container.querySelectorAll('[draggable="true"]').forEach(function (item) {
+            item.addEventListener('dragstart', function (e) {
+                dragged = item;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', item.getAttribute('data-lesson-uuid') || '');
+                item.classList.add('opacity-50');
+            });
+            item.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                if (!dragged || dragged === item) return;
+                var rect = item.getBoundingClientRect();
+                var midpoint = rect.top + rect.height / 2;
+                if (e.clientY < midpoint) {
+                    container.insertBefore(dragged, item);
+                } else {
+                    container.insertBefore(dragged, item.nextSibling);
+                }
+            });
+            item.addEventListener('dragend', function () {
+                item.classList.remove('opacity-50');
+                if (!dragged) return;
+                var order = Array.from(container.querySelectorAll('[data-lesson-uuid]'))
+                    .map(function (el) { return el.getAttribute('data-lesson-uuid'); });
+                fetch(container.getAttribute('data-reorder-url'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ order: order })
+                }).then(function (res) {
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        console.error('Reorder failed', res.status);
+                    }
+                }).catch(function (err) {
+                    console.error('Reorder error', err);
+                });
+                dragged = null;
+            });
+        });
+    });
+});
+</script>
 
 @endsection

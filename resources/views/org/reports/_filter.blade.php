@@ -14,7 +14,7 @@
 
 <div class="card mb-3">
     <div class="card-body">
-        <form method="GET" action="{{ route($routeName) }}" class="row g-2 align-items-end" id="report-filter-form">
+        <form method="GET" action="{{ route($routeName, array_filter(['courseUuid' => $courseUuid ?? null])) }}" class="row g-2 align-items-end" id="report-filter-form">
             <input type="hidden" name="date_from" id="filter_date_from" value="{{ $f['date_from'] }}">
             <input type="hidden" name="date_to"   id="filter_date_to"   value="{{ $f['date_to'] }}">
 
@@ -74,7 +74,7 @@
             <div class="col-12 col-md-auto d-flex gap-2">
                 <button type="submit" class="btn btn-primary btn-sm">Terapkan</button>
                 @if ($f['date_from'] || $f['date_to'] || $f['course_id'] || ($f['org_id'] ?? null))
-                    <a href="{{ route($routeName) }}" class="btn btn-link btn-sm">Reset</a>
+                    <a href="{{ route($routeName, array_filter(['courseUuid' => $courseUuid ?? null])) }}" class="btn btn-link btn-sm">Reset</a>
                 @endif
             </div>
         </form>

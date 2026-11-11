@@ -160,7 +160,9 @@ class LearnerController extends Controller
 
         $learner->load([
             'enrollments.course.category',
+            'enrollments.course.modules.quizzes',
             'enrollments.certificate',
+            'enrollments.quizAttempts',
             'pendidikan',
         ]);
 

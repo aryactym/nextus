@@ -144,7 +144,7 @@ Semua tabel memakai `id` BIGINT internal + `uuid` publik, timestamps, soft delet
 
 **8.2 Belajar & kelulusan**
 
-1. Modul dimulai dengan **pre-test** (wajib) — learner harus lulus pre-test (passing grade) sebelum mengakses materi modul; lulus → masuk ke pelajaran pertama modul.
+1. Modul dimulai dengan **pre-test** (wajib) — learner harus mengerjakan pre-test sebelum mengakses materi modul; pre-test tidak memiliki ambang kelulusan → masuk ke pelajaran pertama modul.
 2. Selesaikan pelajaran (progres tersimpan otomatis).
 3. Setelah semua pelajaran modul selesai, **post-test** (wajib lulus) — learner harus lulus post-test untuk lanjut ke modul berikutnya / menyelesaikan course.
 4. Course `completed` hanya jika semua lesson + semua post-test lulus.

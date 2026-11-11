@@ -77,12 +77,67 @@
     </div>
   </section>
 
+  <!-- ============ KELAS PILIHAN EDITOR ============ -->
+  @if (isset($featuredCourses) && $featuredCourses->isNotEmpty())
+  <section class="section" aria-labelledby="h-featured">
+    <div class="container-xl">
+      <div class="section-head">
+        <h2 class="h2" id="h-featured">Kelas Pilihan Editor</h2>
+        <p>Kursus pilihan yang direkomendasikan untuk kamu.</p>
+      </div>
+      <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          @foreach ($featuredCourses->chunk(4) as $index => $chunk)
+            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+              <div class="row g-4">
+                @foreach ($chunk as $course)
+                  <div class="col-md-6 col-lg-3">
+                    <article class="h-100">
+                      <div class="card course-card h-100">
+                        @if ($course->thumbnail)
+                          <img class="course-img" src="{{ route('media.thumbnail', ['path' => $course->thumbnail]) }}" alt="{{ $course->getTranslation('title', app()->getLocale()) }}" width="640" height="360" loading="lazy">
+                        @else
+                          <div class="course-img" style="background:var(--nu-zamrud-100);display:flex;align-items:center;justify-content:center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--nu-zamrud-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                          </div>
+                        @endif
+                        <div class="card-body">
+                          <h3 class="h3">
+                            <a class="text-reset text-decoration-none stretched-link" href="{{ route('catalog.show', $course->slug) }}">
+                              {{ $course->getTranslation('title', app()->getLocale()) }}
+                            </a>
+                          </h3>
+                          <p class="text-secondary">{{ Str::limit($course->getTranslation('summary', app()->getLocale()), 80) }}</p>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          @endforeach
+        </div>
+        @if ($featuredCourses->count() > 4)
+          <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Sebelumnya</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Berikutnya</span>
+          </button>
+        @endif
+      </div>
+    </div>
+  </section>
+  @endif
+
   <!-- ============ KURSUS TERSEDIA ============ -->
   <section class="section" aria-labelledby="h-kursus" id="kursus">
     <div class="container-xl">
       <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
         <div class="section-head mb-0">
-          <h2 class="h2" id="h-kursus">Kursus tersedia</h2>
+          <h2 class="h2" id="h-kursus">Kursus Terbaru</h2>
           <p>Kursus mandiri yang bisa langsung kamu ikuti.</p>
         </div>
         <a class="btn btn-outline-primary" href="{{ route('catalog.index') }}">Semua kursus</a>
@@ -93,7 +148,7 @@
           $accessLabels = ['free' => 'Gratis', 'donation' => 'Donasi untuk masuk', 'paid' => 'Berbayar'];
         @endphp
         @forelse ($courses as $course)
-          <article class="col-md-6 col-lg-4">
+          <article class="col-md-6 col-lg-3">
             <div class="card course-card h-100">
               @if ($course->thumbnail)
                 <img class="course-img" src="{{ route('media.thumbnail', ['path' => $course->thumbnail]) }}" alt="{{ $course->getTranslation('title', app()->getLocale()) }}" width="640" height="360" loading="lazy">

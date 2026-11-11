@@ -35,6 +35,8 @@ class UpdateCourseRequest extends FormRequest
             'allow_custom_amount' => ['sometimes', 'boolean'],
             'currency' => ['sometimes', 'string', 'size:3'],
             'passing_grade' => ['sometimes', 'nullable', 'integer', 'min:0', 'max:100'],
+            'is_featured' => ['sometimes', 'boolean'],
+            'featured_sort' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'status' => ['sometimes', 'required', 'in:draft,published,archived'],
         ];
     }

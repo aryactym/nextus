@@ -24,13 +24,15 @@ class Course extends Model
         'title', 'summary', 'description', 'slug', 'level', 'duration_minutes',
         'thumbnail', 'certificate_background', 'access_type', 'certificate_type', 'min_amount',
         'suggested_amounts', 'allow_custom_amount', 'currency', 'passing_grade',
-        'status', 'published_at', 'created_by',
+        'status', 'published_at', 'created_by', 'is_featured', 'featured_sort',
     ];
 
     protected $casts = [
         'suggested_amounts' => 'array',
         'deleted_at' => 'datetime',
         'published_at' => 'datetime',
+        'is_featured' => 'boolean',
+        'featured_sort' => 'integer',
     ];
 
     public function organization(): BelongsTo

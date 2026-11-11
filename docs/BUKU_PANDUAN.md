@@ -210,7 +210,7 @@ URL: `/belajar/{slug-kursus}/{uuid-pelajaran}`
 
 ### Pre-test & Post-test per Modul
 Pre-test dan post-test adalah **modul tersendiri** (`type`: `content` / `pre_test` / `post_test`) dengan quiz terkait otomatis dibuat.
-- **Pre-test**: wajib diisi sebelum mengakses materi modul; lulus (passing grade) → masuk ke pelajaran pertama modul.
+- **Pre-test**: wajib dikerjakan sebelum mengakses materi modul; tidak memiliki ambang kelulusan → masuk ke pelajaran pertama modul.
 - **Post-test**: wajib lulus untuk melanjutkan ke modul berikutnya / menyelesaikan course.
 - Gagal post-test → boleh mengulang sampai lulus; course belum selesai.
 - Di panel admin, setiap modul memiliki tombol "Tambah Pre-test" dan "Tambah Post-test".

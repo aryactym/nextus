@@ -156,6 +156,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('modules.update');
     Route::delete('modules/{module}', [ModuleController::class, 'destroy'])
         ->name('modules.destroy');
+    Route::post('modules/{module}/lessons/reorder', [LessonController::class, 'reorder'])
+        ->name('modules.lessons.reorder');
     Route::post('modules/{module}/lessons', [LessonController::class, 'store'])
         ->name('modules.lessons.store');
     Route::put('lessons/{lesson}', [LessonController::class, 'update'])
@@ -164,6 +166,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         ->name('lessons.destroy');
     Route::post('lessons/{lesson}/quiz/questions', [QuizController::class, 'storeQuestion'])
         ->name('lessons.quiz.questions.store');
+    Route::put('modules/{module}/quiz/{type}/settings', [QuizController::class, 'updateModuleSettings'])
+        ->name('modules.quiz.settings.update');
     Route::post('modules/{module}/quiz/{type}/questions', [QuizController::class, 'storeModuleQuestion'])
         ->name('modules.quiz.questions.store')
         ->where('type', 'pre|post');
