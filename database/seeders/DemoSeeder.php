@@ -48,6 +48,8 @@ class DemoSeeder extends Seeder
             ['Zakat Perusahaan dan Kepatuhan', 'zakat-perusahaan-kepatuhan', 'pengelolaan-zakat', 'advanced', 330, 'donation', 'donation', 'Mengelola zakat perusahaan sesuai ketentuan.'],
             ['Pemetaan Sosial Ekonomi Mustahik', 'pemetaan-mustahik', 'pemberdayaan', 'intermediate', 240, 'free', 'free', 'Mengumpulkan dan membaca data penerima manfaat.'],
             ['Kesiapsiagaan Bencana Berbasis Komunitas', 'kesiapsiagaan-bencana-komunitas', 'relawan-kebencanaan', 'advanced', 360, 'donation', 'donation', 'Menyusun rencana kesiapsiagaan bersama warga.'],
+            ['Zakat Fundamental', 'zakat-fundamental', 'dasar-ziswaf', 'beginner', 120, 'free', 'free', 'Memahami dasar zakat dan penerima manfaat.'],
+            ['Wakaf Fundamental', 'wakaf-fundamental', 'dasar-ziswaf', 'beginner', 60, 'free', 'free', 'Memahami dasar wakaf dan penerima manfaat.'],
         ];
 
         foreach ($courses as $index => $row) {
@@ -79,7 +81,7 @@ class DemoSeeder extends Seeder
                 }
             }
 
-            $outline = [
+            $defaultOutline = [
                 [
                     'title' => 'Pre-test',
                     'type' => 'pre_test',
@@ -119,8 +121,53 @@ class DemoSeeder extends Seeder
                 ],
             ];
 
+            $outlines = [
+                'zakat-fundamental' => [
+                    [
+                        'title' => 'Pre-test',
+                        'type' => 'pre_test',
+                        'lessons' => [],
+                    ],
+                    [
+                        'title' => 'Dasar Zakat',
+                        'type' => 'content',
+                        'lessons' => [
+                            ['title' => 'Pengantar Zakat', 'type' => 'video', 'duration' => 12, 'is_preview' => true, 'content' => 'Pengantar zakat untuk relawan dan penerima manfaat.', 'video_url' => 'https://www.youtube.com/watch?v=heH8AF4E2co'],
+                            ['title' => 'Zakat Fundamental', 'type' => 'video', 'duration' => 18, 'is_preview' => false, 'content' => 'Tentang Zakat dan Sejarah Panjangnya | Ust. Ahmad Fauzi Q', 'video_url' => 'https://www.youtube.com/watch?v=DrbxpAR6jMk'],
+                            ['title' => 'Zakat Pertanian', 'type' => 'video', 'duration' => 15, 'is_preview' => false, 'content' => 'Zakat pertanian sebagai bentuk zakat yang tepat sasaran.', 'video_url' => 'https://www.youtube.com/watch?v=q2617zc3MNM'],
+                        ],
+                    ],
+                    [
+                        'title' => 'Post-test',
+                        'type' => 'post_test',
+                        'lessons' => [],
+                    ],
+                ],
+                'wakaf-fundamental' => [
+                    [
+                        'title' => 'Pre-test',
+                        'type' => 'pre_test',
+                        'lessons' => [],
+                    ],
+                    [
+                        'title' => 'Dasar Wakaf',
+                        'type' => 'content',
+                        'lessons' => [
+                            ['title' => 'Wakaf Fundamental', 'type' => 'video', 'duration' => 15, 'is_preview' => true, 'content' => 'Ini Dia Beda Zakat dan Wakaf', 'video_url' => 'https://www.youtube.com/watch?v=GxF-CfKP-LE'],
+                        ],
+                    ],
+                    [
+                        'title' => 'Post-test',
+                        'type' => 'post_test',
+                        'lessons' => [],
+                    ],
+                ],
+            ];
+
             // Hapus modul lama untuk course ini (re-seed bersih)
             $course->modules()->delete();
+
+            $outline = $outlines[$slug] ?? $defaultOutline;
 
             foreach ($outline as $moduleIndex => $moduleData) {
                 $module = $course->modules()->create([
@@ -151,6 +198,7 @@ class DemoSeeder extends Seeder
                             'content' => ['id' => $lessonData['content']],
                             'duration' => $lessonData['duration'],
                             'is_preview' => $lessonData['is_preview'],
+                            'video_url' => $lessonData['video_url'] ?? null,
                         ],
                     );
 
