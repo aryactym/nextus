@@ -43,6 +43,24 @@
           </a>
         @endif
       </div>
+
+      @php
+        $nextPostTestModule = $course->modules
+          ->sortBy('sort')
+          ->values()
+          ->first(fn ($m) => $m->sort > $lesson->module->sort && $m->type === 'post_test');
+      @endphp
+      @if ($nextPostTestModule)
+        @php
+          $ptQuiz = $nextPostTestModule->quizzes->first();
+          $postTestPassed = $ptQuiz ? $enrollment->quizAttempts()->where('quiz_id', $ptQuiz->id)->where('passed', true)->exists() : false;
+        @endphp
+        @if ($ptQuiz && ! $postTestPassed)
+          <a class="btn btn-primary" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL(app()->getLocale(), route('module.posttest', ['course' => $course->slug, 'module' => $nextPostTestModule->uuid])) }}">
+            Lanjut ke Post-test
+          </a>
+        @endif
+      @endif
     @else
       <form method="POST" action="{{ route('player.quiz.submit', ['course' => $course->slug, 'lesson' => $lesson->uuid]) }}">
         @csrf
@@ -77,4 +95,3 @@
     @endif
   </div>
 </div>
-
