@@ -40,9 +40,7 @@ Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
 ], function () {
-    Route::get('/', function () {
-        return view('home');
-    })->name('home');
+    Route::get('/', [PublicCourseController::class, 'home'])->name('home');
 
     // ---- Halaman publik ----
     Route::get('/kursus', [PublicCourseController::class, 'index'])->name('catalog.index');

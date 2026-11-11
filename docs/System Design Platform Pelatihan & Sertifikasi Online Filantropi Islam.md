@@ -120,10 +120,10 @@ Semua tabel memakai `id` BIGINT internal + `uuid` publik, timestamps, soft delet
 | `courses` | title, summary, description (JSON), slug, category\_id, level, duration\_minutes, thumbnail, access\_type, certificate\_type, min\_amount, suggested\_amounts, passing\_grade, status (draft/published/archived), published\_at, created\_by |
 | `course_requirements` | `prerequisite_course_id` (single course prerequisite), `prerequisite_category_id` (wajib selesai semua course di kategori tertentu), `min_grade`, `pendidikan_id`, `min_age`, `max_age`, `notes` |
 | `course_requirements` | `prerequisite_course_id` (course prasyarat tunggal), `prerequisite_category_id` (wajib selesai semua kursus di kategori tertentu), `min_grade`, `pendidikan_id`, `min_age`, `max_age`, `notes` |
-| `course_modules` | course\_id, title (JSON), sort |
+| `course_modules` | course\_id, title (JSON), sort, type (`content` / `pre_test` / `post_test`) |
 | `lessons` | module\_id, title (JSON), type (video/text/pdf/quiz), content (JSON), video\_url, duration, is\_preview, sort |
 | `quizzes` | lesson\_id (nullable), module\_id (nullable), type (lesson/pre/post), passing\_score |
-| `enrollments` | user\_id, course\_id, status (active/completed), progress\_percent, enrolled\_at, completed\_at, order\_id (nullable) |
+| `enrollments` | user\_id, course\_id, status (active/completed), progress\_percent, final\_score, enrolled\_at, completed\_at, order\_id (nullable) |
 | `lesson_progress` | enrollment\_id, lesson\_id, completed\_at, last\_position |
 | `questions` / `question_options` | quiz\_id, type, text (JSON), explanation (JSON), points / question\_id, text (JSON), is\_correct |
 | `quiz_attempts` / `attempt_answers` | enrollment\_id, quiz\_id, score, passed, started\_at, finished\_at / attempt\_id, question\_id, answer |
@@ -144,10 +144,12 @@ Semua tabel memakai `id` BIGINT internal + `uuid` publik, timestamps, soft delet
 
 **8.2 Belajar & kelulusan**
 
-1. Modul dimulai dengan **pre-test** (wajib) — learner harus menyelesaikan pre-test sebelum mengakses materi modul.
+1. Modul dimulai dengan **pre-test** (wajib) — learner harus lulus pre-test (passing grade) sebelum mengakses materi modul; lulus → masuk ke pelajaran pertama modul.
 2. Selesaikan pelajaran (progres tersimpan otomatis).
-3. Setelah semua pelajaran selesai, **post-test** (wajib lulus) — learner harus lulus post-test untuk lanjut ke modul berikutnya.
-4. Skor di atas passing grade dan semua pelajaran wajib selesai: enrollment `completed`.
+3. Setelah semua pelajaran modul selesai, **post-test** (wajib lulus) — learner harus lulus post-test untuk lanjut ke modul berikutnya / menyelesaikan course.
+4. Course `completed` hanya jika semua lesson + semua post-test lulus.
+5. `final_score` = rata-rata skor post-test lulus terakhir; null bila belum lulus.
+6. Sertifikat hanya diproses saat enrollment `completed`.
 3. **Sistem cek requirement prerequisite** (mulai S6 stabilisasi):
    - Jika course punya `prerequisite_course_id`: user harus lulus course prasyarat tersebut (dengan nilai minimal jika ada).
    - Jika course punya `prerequisite_category_id`: user harus menyelesaikan **semua** kursus di kategori prasyarat tersebut sebelum bisa daftar.

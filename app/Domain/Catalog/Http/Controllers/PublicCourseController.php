@@ -64,6 +64,18 @@ class PublicCourseController extends Controller
         ));
     }
 
+    public function home(): View
+    {
+        $courses = Course::withoutGlobalScope('organization')
+            ->where('status', 'published')
+            ->with('category')
+            ->orderByDesc('published_at')
+            ->limit(6)
+            ->get();
+
+        return view('home', compact('courses'));
+    }
+
     public function show(string $slug): View|RedirectResponse
     {
         $course = Course::withoutGlobalScope('organization')

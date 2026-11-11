@@ -195,7 +195,6 @@ URL: `/belajar/{slug-kursus}/{uuid-pelajaran}`
 | `text` | Konten teks/HTML |
 | `pdf` | File PDF inline |
 | `quiz` | Soal pilihan ganda |
-| `pre` / `post` | Pre-test / Post-test per modul |
 
 ### Navigasi
 - Breadcrumb kursus → modul → pelajaran
@@ -207,12 +206,16 @@ URL: `/belajar/{slug-kursus}/{uuid-pelajaran}`
 - Soal pilihan ganda, jawab semua → submit
 - Nilai muncul langsung, dibandingkan `passing_grade` kursus
 - Lulus → pelajaran otomatis ditandai selesai
+- Kuis pelajaran lulus → sistem langsung arahkan ke post-test modul berikutnya (jika ada)
 
 ### Pre-test & Post-test per Modul
-- **Pre-test**: kuis wajib yang harus diselesaikan sebelum mengakses materi modul.
-- **Post-test**: kuis wajib lulus untuk melanjutkan ke modul berikutnya.
+Pre-test dan post-test adalah **modul tersendiri** (`type`: `content` / `pre_test` / `post_test`) dengan quiz terkait otomatis dibuat.
+- **Pre-test**: wajib diisi sebelum mengakses materi modul; lulus (passing grade) → masuk ke pelajaran pertama modul.
+- **Post-test**: wajib lulus untuk melanjutkan ke modul berikutnya / menyelesaikan course.
+- Gagal post-test → boleh mengulang sampai lulus; course belum selesai.
 - Di panel admin, setiap modul memiliki tombol "Tambah Pre-test" dan "Tambah Post-test".
-- Soal dikelola seperti kuis biasa (pertanyaan, pilihan, jawaban benar).
+- Soal dikelola seperti kuis biasa (pertanyaan, pilihan, jawaban benar); bisa diisi manual atau impor Excel (tombol "Unduh Template" & "Impor" di halaman edit kursus).
+- Nilai akhir course (`final_score`) = rata-rata skor post-test lulus terakhir per modul.
 
 ---
 
@@ -244,7 +247,7 @@ Kursus `donation` atau `paid` membutuhkan pembayaran.
 ## Sertifikat dan Verifikasi
 
 ### Penerbitan Otomatis
-Sertifikat terbit ketika enrollment selesai (semua pelajaran ditandai selesai). Tipe sertifikat:
+Sertifikat terbit ketika enrollment berstatus `completed`: semua pelajaran selesai **dan semua post-test modul lulus**. Kursus tanpa post-test selesai saat semua pelajaran selesai. Tipe sertifikat:
 - `free` → terbit langsung setelah selesai
 - `donation` / `paid` → terbit setelah pembayaran settlement via webhook
 
