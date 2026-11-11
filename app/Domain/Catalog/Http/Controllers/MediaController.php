@@ -24,6 +24,17 @@ class MediaController extends Controller
         $disk = Storage::disk('uploads');
 
         if (! $disk->exists($path)) {
+            // Fallback agar gambar tidak 404 pada instalasi awal
+            $fallback = base_path('database/seeders/data/uploads/'.$path);
+            if (is_file($fallback)) {
+                return response()->file($fallback, ['Cache-Control' => 'public, max-age=86400']);
+            }
+
+            $publicFallback = public_path('images/course-1.webp');
+            if (is_file($publicFallback)) {
+                return response()->file($publicFallback, ['Cache-Control' => 'public, max-age=86400']);
+            }
+
             abort(404, 'File tidak ditemukan.');
         }
 
